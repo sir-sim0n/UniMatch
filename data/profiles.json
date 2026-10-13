@@ -1,0 +1,777 @@
+{
+  "schemaVersion": 1,
+  "fictional": true,
+  "notice": "All 45 profiles and biographies are fictional demo characters. South African given names do not identify real students. No real student records or institutional endorsement. Use fictional visitor details only.",
+  "profiles": [
+    {
+      "id": "fictional-001",
+      "displayName": "Lerato",
+      "age": 18,
+      "universityId": "uct",
+      "campusId": "uct-upper",
+      "degreeId": "computer-science",
+      "yearId": "year-1",
+      "genderId": "woman",
+      "showGender": true,
+      "bio": "I enjoy small coding projects, five-a-side football and swapping playlists. My ideal study break includes a puzzle.",
+      "interestIds": [
+        "coding",
+        "football",
+        "music",
+        "chess",
+        "gaming"
+      ]
+    },
+    {
+      "id": "fictional-002",
+      "displayName": "Sipho",
+      "age": 21,
+      "universityId": "uct",
+      "campusId": "uct-upper",
+      "degreeId": "engineering",
+      "yearId": "year-3",
+      "genderId": "man",
+      "showGender": true,
+      "bio": "Usually sketching a new invention or finding a tune to learn. I like collaborative projects and relaxed football games.",
+      "interestIds": [
+        "coding",
+        "football",
+        "music",
+        "art"
+      ]
+    },
+    {
+      "id": "fictional-003",
+      "displayName": "Alex",
+      "age": 24,
+      "universityId": "uct",
+      "campusId": "uct-upper",
+      "degreeId": "natural-sciences",
+      "yearId": null,
+      "genderId": "nonbinary",
+      "showGender": false,
+      "bio": "A fictional science student who keeps a tiny herb garden and a growing collection of nature sketches.",
+      "interestIds": [
+        "gardening",
+        "hiking",
+        "photography"
+      ]
+    },
+    {
+      "id": "fictional-004",
+      "displayName": "Thando",
+      "age": 20,
+      "universityId": "uct",
+      "campusId": "uct-upper",
+      "degreeId": "humanities",
+      "yearId": "year-2",
+      "genderId": "agender",
+      "showGender": true,
+      "bio": "My notebook holds film reviews, book recommendations and more doodles than lecture summaries.",
+      "interestIds": [
+        "reading",
+        "film",
+        "art"
+      ]
+    },
+    {
+      "id": "fictional-005",
+      "displayName": "Naledi",
+      "age": 28,
+      "universityId": "uct",
+      "campusId": "uct-upper",
+      "degreeId": "psychology",
+      "yearId": "postgraduate",
+      "genderId": "genderfluid",
+      "showGender": false,
+      "bio": "Returning to study has made me appreciate slow weekends. I enjoy cooking for a small group and helping with community projects.",
+      "interestIds": [
+        "cooking",
+        "volunteering",
+        "music"
+      ]
+    },
+    {
+      "id": "fictional-006",
+      "displayName": "Ayesha",
+      "age": 22,
+      "universityId": "uct",
+      "campusId": "uct-middle",
+      "degreeId": "law",
+      "yearId": "year-4",
+      "genderId": "man",
+      "showGender": false,
+      "bio": "Curious about how rules shape everyday life. Away from books, I enjoy coding puzzles and a friendly football match.",
+      "interestIds": [
+        "coding",
+        "football",
+        "music"
+      ]
+    },
+    {
+      "id": "fictional-007",
+      "displayName": "Liam",
+      "age": 19,
+      "universityId": "uct",
+      "campusId": "uct-middle",
+      "degreeId": "law",
+      "yearId": "year-1",
+      "genderId": "woman",
+      "showGender": true,
+      "bio": "I collect imaginary café names for stories I have yet to write. Reading outdoors is my favourite way to take a break.",
+      "interestIds": [
+        "reading"
+      ]
+    },
+    {
+      "id": "fictional-008",
+      "displayName": "Zanele",
+      "age": 26,
+      "universityId": "uct",
+      "campusId": "uct-middle",
+      "degreeId": "commerce",
+      "yearId": "postgraduate",
+      "genderId": "another-gender",
+      "showGender": true,
+      "bio": "I like planning a meal from whatever is in the cupboard, then discussing a good film over dinner.",
+      "interestIds": [
+        "cooking",
+        "film",
+        "gardening"
+      ]
+    },
+    {
+      "id": "fictional-009",
+      "displayName": "Kabelo",
+      "age": 23,
+      "universityId": "uct",
+      "campusId": "uct-middle",
+      "degreeId": "humanities",
+      "yearId": "year-3",
+      "genderId": "nonbinary",
+      "showGender": true,
+      "bio": "Always ready to learn a new dance step or explore a drawing technique. I enjoy making things with friends.",
+      "interestIds": [
+        "dance",
+        "art",
+        "music"
+      ]
+    },
+    {
+      "id": "fictional-010",
+      "displayName": "Mia",
+      "age": 31,
+      "universityId": "uct",
+      "campusId": "uct-middle",
+      "degreeId": "psychology",
+      "yearId": null,
+      "genderId": "not-specified",
+      "showGender": false,
+      "bio": "Part-time study leaves room for weekend hikes and photographs of interesting clouds.",
+      "interestIds": [
+        "hiking",
+        "photography",
+        "running"
+      ]
+    },
+    {
+      "id": "fictional-011",
+      "displayName": "Lindiwe",
+      "age": 20,
+      "universityId": "up",
+      "campusId": "up-hatfield",
+      "degreeId": "computer-science",
+      "yearId": "year-2",
+      "genderId": "man",
+      "showGender": true,
+      "bio": "I build tiny games and occasionally persuade friends to test them. A good soundtrack makes debugging more cheerful.",
+      "interestIds": [
+        "coding",
+        "gaming",
+        "music"
+      ]
+    },
+    {
+      "id": "fictional-012",
+      "displayName": "Johan",
+      "age": 21,
+      "universityId": "up",
+      "campusId": "up-hatfield",
+      "degreeId": "commerce",
+      "yearId": "year-3",
+      "genderId": "woman",
+      "showGender": true,
+      "bio": "A recipe notebook and a chess board are my usual companions on a quiet weekend.",
+      "interestIds": [
+        "cooking",
+        "chess",
+        "reading"
+      ]
+    },
+    {
+      "id": "fictional-013",
+      "displayName": "Karabo",
+      "age": 25,
+      "universityId": "up",
+      "campusId": "up-hatfield",
+      "degreeId": "engineering",
+      "yearId": "year-5",
+      "genderId": "nonbinary",
+      "showGender": false,
+      "bio": "I like making useful things, trying new running routes and volunteering on practical projects.",
+      "interestIds": [
+        "coding",
+        "running",
+        "volunteering"
+      ]
+    },
+    {
+      "id": "fictional-014",
+      "displayName": "Anele",
+      "age": 18,
+      "universityId": "up",
+      "campusId": "up-hatfield",
+      "degreeId": "natural-sciences",
+      "yearId": "year-1",
+      "genderId": "agender",
+      "showGender": true,
+      "bio": "New to university life and keen to try a little of everything, especially sketching and short nature walks.",
+      "interestIds": [
+        "art",
+        "hiking"
+      ]
+    },
+    {
+      "id": "fictional-015",
+      "displayName": "Fatima",
+      "age": 35,
+      "universityId": "up",
+      "campusId": "up-hatfield",
+      "degreeId": "architecture",
+      "yearId": "postgraduate",
+      "genderId": "genderfluid",
+      "showGender": true,
+      "bio": "A fictional postgraduate with an eye for interesting buildings. I enjoy photography, old films and a patient game of chess.",
+      "interestIds": [
+        "photography",
+        "film",
+        "chess"
+      ]
+    },
+    {
+      "id": "fictional-016",
+      "displayName": "Sizwe",
+      "age": 22,
+      "universityId": "up",
+      "campusId": "up-groenkloof",
+      "degreeId": "education",
+      "yearId": "year-4",
+      "genderId": "woman",
+      "showGender": false,
+      "bio": "Learning how to make lessons feel like discoveries. I enjoy reading, gardening and sharing simple recipes.",
+      "interestIds": [
+        "reading",
+        "gardening",
+        "cooking"
+      ]
+    },
+    {
+      "id": "fictional-017",
+      "displayName": "Amogelang",
+      "age": 19,
+      "universityId": "up",
+      "campusId": "up-groenkloof",
+      "degreeId": "education",
+      "yearId": "year-1",
+      "genderId": "man",
+      "showGender": true,
+      "bio": "Football and music help me reset after a full day of studying. I also enjoy helping organise small volunteer projects.",
+      "interestIds": [
+        "football",
+        "music",
+        "volunteering"
+      ]
+    },
+    {
+      "id": "fictional-018",
+      "displayName": "Priya",
+      "age": 24,
+      "universityId": "up",
+      "campusId": "up-groenkloof",
+      "degreeId": "education",
+      "yearId": null,
+      "genderId": "another-gender",
+      "showGender": false,
+      "bio": "I fill spare pages with drawings and enjoy dance sessions where nobody needs to be an expert.",
+      "interestIds": [
+        "art",
+        "dance",
+        "film"
+      ]
+    },
+    {
+      "id": "fictional-019",
+      "displayName": "Ruan",
+      "age": 27,
+      "universityId": "up",
+      "campusId": "up-groenkloof",
+      "degreeId": "education",
+      "yearId": "postgraduate",
+      "genderId": "nonbinary",
+      "showGender": true,
+      "bio": "Interested in learning through play. My weekends often involve a board game, a book or a small coding experiment.",
+      "interestIds": [
+        "gaming",
+        "reading",
+        "coding",
+        "chess"
+      ]
+    },
+    {
+      "id": "fictional-020",
+      "displayName": "Nandi",
+      "age": 42,
+      "universityId": "up",
+      "campusId": "up-groenkloof",
+      "degreeId": "education",
+      "yearId": "year-2",
+      "genderId": "not-specified",
+      "showGender": true,
+      "bio": "Starting a new chapter as a mature student. I enjoy tending plants and taking gentle walks with a camera.",
+      "interestIds": [
+        "gardening",
+        "photography",
+        "hiking"
+      ]
+    },
+    {
+      "id": "fictional-021",
+      "displayName": "Tshiamo",
+      "age": 20,
+      "universityId": "wits",
+      "campusId": "wits-east",
+      "degreeId": "humanities",
+      "yearId": "year-2",
+      "genderId": "genderfluid",
+      "showGender": true,
+      "bio": "Music, movement and colourful sketches fill my breaks between classes. I am happiest when learning something creative.",
+      "interestIds": [
+        "music",
+        "dance",
+        "art"
+      ]
+    },
+    {
+      "id": "fictional-022",
+      "displayName": "Chad",
+      "age": 23,
+      "universityId": "wits",
+      "campusId": "wits-east",
+      "degreeId": "natural-sciences",
+      "yearId": "year-3",
+      "genderId": "man",
+      "showGender": false,
+      "bio": "I enjoy science questions with surprising answers, friendly football and coding small simulations.",
+      "interestIds": [
+        "coding",
+        "football",
+        "music",
+        "gaming",
+        "reading"
+      ]
+    },
+    {
+      "id": "fictional-023",
+      "displayName": "Lerato",
+      "age": 29,
+      "universityId": "wits",
+      "campusId": "wits-east",
+      "degreeId": "psychology",
+      "yearId": "postgraduate",
+      "genderId": "woman",
+      "showGender": true,
+      "bio": "Curious about how people learn. A long walk and an interesting book make a good afternoon.",
+      "interestIds": [
+        "hiking",
+        "reading",
+        "volunteering"
+      ]
+    },
+    {
+      "id": "fictional-024",
+      "displayName": "Thando",
+      "age": 18,
+      "universityId": "wits",
+      "campusId": "wits-east",
+      "degreeId": "arts",
+      "yearId": "year-1",
+      "genderId": "nonbinary",
+      "showGender": false,
+      "bio": "A fictional first-year student exploring film, photography and the challenge of keeping one houseplant alive.",
+      "interestIds": [
+        "film",
+        "photography",
+        "gardening"
+      ]
+    },
+    {
+      "id": "fictional-025",
+      "displayName": "Zinhle",
+      "age": 33,
+      "universityId": "wits",
+      "campusId": "wits-east",
+      "degreeId": "humanities",
+      "yearId": null,
+      "genderId": "agender",
+      "showGender": true,
+      "bio": "I like quiet libraries, ambitious recipes and films that leave plenty to discuss afterwards.",
+      "interestIds": [
+        "reading",
+        "cooking",
+        "film"
+      ]
+    },
+    {
+      "id": "fictional-026",
+      "displayName": "Mpho",
+      "age": 21,
+      "universityId": "wits",
+      "campusId": "wits-west",
+      "degreeId": "engineering",
+      "yearId": "year-3",
+      "genderId": "woman",
+      "showGender": true,
+      "bio": "My favourite projects combine careful planning with a little playful experimentation. Running clears my head.",
+      "interestIds": [
+        "coding",
+        "running",
+        "chess"
+      ]
+    },
+    {
+      "id": "fictional-027",
+      "displayName": "Keagan",
+      "age": 22,
+      "universityId": "wits",
+      "campusId": "wits-west",
+      "degreeId": "commerce",
+      "yearId": "year-4",
+      "genderId": "man",
+      "showGender": false,
+      "bio": "I enjoy discovering new music, dancing badly but enthusiastically and cooking a meal with friends.",
+      "interestIds": [
+        "music",
+        "dance",
+        "cooking"
+      ]
+    },
+    {
+      "id": "fictional-028",
+      "displayName": "Tshegofatso",
+      "age": 26,
+      "universityId": "wits",
+      "campusId": "wits-west",
+      "degreeId": "architecture",
+      "yearId": "year-6-plus",
+      "genderId": "another-gender",
+      "showGender": true,
+      "bio": "Always noticing shapes in ordinary places. I like photographing buildings and sketching ideas for imaginary spaces.",
+      "interestIds": [
+        "photography",
+        "art",
+        "hiking"
+      ]
+    },
+    {
+      "id": "fictional-029",
+      "displayName": "Shanice",
+      "age": 30,
+      "universityId": "wits",
+      "campusId": "wits-west",
+      "degreeId": "engineering",
+      "yearId": "postgraduate",
+      "genderId": "not-specified",
+      "showGender": false,
+      "bio": "A fictional student who likes chess problems, small coding challenges and helping others learn a new skill.",
+      "interestIds": [
+        "chess",
+        "coding",
+        "volunteering"
+      ]
+    },
+    {
+      "id": "fictional-030",
+      "displayName": "Tumelo",
+      "age": 44,
+      "universityId": "wits",
+      "campusId": "wits-west",
+      "degreeId": "commerce",
+      "yearId": null,
+      "genderId": "nonbinary",
+      "showGender": true,
+      "bio": "Balancing study with a love of growing herbs. A slow weekend in the garden is a good weekend.",
+      "interestIds": [
+        "gardening"
+      ]
+    },
+    {
+      "id": "fictional-031",
+      "displayName": "Boitumelo",
+      "age": 20,
+      "universityId": "nwu",
+      "campusId": "nwu-potchefstroom",
+      "degreeId": "education",
+      "yearId": null,
+      "genderId": "woman",
+      "showGender": true,
+      "bio": "I collect second-hand books and enjoy helping friends work through tricky lessons. A weekend walk is my favourite way to recharge.",
+      "interestIds": [
+        "reading",
+        "volunteering",
+        "hiking"
+      ]
+    },
+    {
+      "id": "fictional-032",
+      "displayName": "Pieter",
+      "age": 23,
+      "universityId": "nwu",
+      "campusId": "nwu-potchefstroom",
+      "degreeId": "engineering",
+      "yearId": "year-2",
+      "genderId": "man",
+      "showGender": true,
+      "bio": "I like building small gadgets, comparing playlists and finding a good route for an early run. Always up for a friendly chess game.",
+      "interestIds": [
+        "coding",
+        "music",
+        "running",
+        "chess"
+      ]
+    },
+    {
+      "id": "fictional-033",
+      "displayName": "Reabetswe",
+      "age": 21,
+      "universityId": "nwu",
+      "campusId": "nwu-potchefstroom",
+      "degreeId": "psychology",
+      "yearId": "year-3",
+      "genderId": "nonbinary",
+      "showGender": false,
+      "bio": "My sketchbook travels everywhere with me. I enjoy thoughtful films, colourful murals and quiet afternoons with a novel.",
+      "interestIds": [
+        "art",
+        "film",
+        "reading"
+      ]
+    },
+    {
+      "id": "fictional-034",
+      "displayName": "Nomsa",
+      "age": 25,
+      "universityId": "nwu",
+      "campusId": "nwu-potchefstroom",
+      "degreeId": "commerce",
+      "yearId": "postgraduate",
+      "genderId": "woman",
+      "showGender": true,
+      "bio": "Cooking for friends is my favourite study-break ritual. I also enjoy taking photographs and learning a new dance routine.",
+      "interestIds": [
+        "cooking",
+        "photography",
+        "dance"
+      ]
+    },
+    {
+      "id": "fictional-035",
+      "displayName": "Yusuf",
+      "age": 28,
+      "universityId": "nwu",
+      "campusId": "nwu-potchefstroom",
+      "degreeId": "natural-sciences",
+      "yearId": null,
+      "genderId": "man",
+      "showGender": false,
+      "bio": "Returning to study has renewed my curiosity. I grow herbs, follow local walking trails and volunteer whenever my timetable allows.",
+      "interestIds": [
+        "gardening",
+        "hiking",
+        "volunteering"
+      ]
+    },
+    {
+      "id": "fictional-036",
+      "displayName": "Bongani",
+      "age": 22,
+      "universityId": "nwu",
+      "campusId": "nwu-vanderbijlpark",
+      "degreeId": "computer-science",
+      "yearId": "year-2",
+      "genderId": "man",
+      "showGender": true,
+      "bio": "I build tiny games, play casual football and make playlists for every mood. A co-op gaming evening is my idea of a good break.",
+      "interestIds": [
+        "coding",
+        "gaming",
+        "football",
+        "music"
+      ]
+    },
+    {
+      "id": "fictional-037",
+      "displayName": "Anika",
+      "age": 19,
+      "universityId": "nwu",
+      "campusId": "nwu-vanderbijlpark",
+      "degreeId": "arts",
+      "yearId": "year-3",
+      "genderId": "woman",
+      "showGender": true,
+      "bio": "I am happiest with a camera in my hand or paint on my sleeves. I enjoy dance, independent films and trying new creative projects.",
+      "interestIds": [
+        "photography",
+        "art",
+        "dance",
+        "film"
+      ]
+    },
+    {
+      "id": "fictional-038",
+      "displayName": "Lesedi",
+      "age": 24,
+      "universityId": "nwu",
+      "campusId": "nwu-vanderbijlpark",
+      "degreeId": "law",
+      "yearId": "postgraduate",
+      "genderId": "genderfluid",
+      "showGender": false,
+      "bio": "I like lively book discussions and the concentration of a chess match. Community projects keep my weekends interesting.",
+      "interestIds": [
+        "reading",
+        "chess",
+        "volunteering"
+      ]
+    },
+    {
+      "id": "fictional-039",
+      "displayName": "Dev",
+      "age": 26,
+      "universityId": "nwu",
+      "campusId": "nwu-vanderbijlpark",
+      "degreeId": "architecture",
+      "yearId": null,
+      "genderId": "agender",
+      "showGender": true,
+      "bio": "I notice building shapes on every walk. I sketch imaginary spaces and enjoy cooking something new after a long day.",
+      "interestIds": [
+        "art",
+        "photography",
+        "cooking"
+      ]
+    },
+    {
+      "id": "fictional-040",
+      "displayName": "Refilwe",
+      "age": 31,
+      "universityId": "nwu",
+      "campusId": "nwu-vanderbijlpark",
+      "degreeId": "humanities",
+      "yearId": "year-2",
+      "genderId": "woman",
+      "showGender": true,
+      "bio": "Music is the soundtrack to my study sessions. I enjoy long reads, gentle runs and making time for friends between assignments.",
+      "interestIds": [
+        "music",
+        "reading",
+        "running"
+      ]
+    },
+    {
+      "id": "fictional-041",
+      "displayName": "Kgomotso",
+      "age": 21,
+      "universityId": "nwu",
+      "campusId": "nwu-mahikeng",
+      "degreeId": "education",
+      "yearId": "year-3",
+      "genderId": "nonbinary",
+      "showGender": true,
+      "bio": "I enjoy helping others learn, sharing recipes and spending time outside. There is always room for another plant on my windowsill.",
+      "interestIds": [
+        "volunteering",
+        "cooking",
+        "gardening"
+      ]
+    },
+    {
+      "id": "fictional-042",
+      "displayName": "Siyabonga",
+      "age": 23,
+      "universityId": "nwu",
+      "campusId": "nwu-mahikeng",
+      "degreeId": "commerce",
+      "yearId": "postgraduate",
+      "genderId": "man",
+      "showGender": true,
+      "bio": "Friendly football games and a good playlist make my week. I also enjoy photography and exploring new ways to tell a story.",
+      "interestIds": [
+        "football",
+        "music",
+        "photography"
+      ]
+    },
+    {
+      "id": "fictional-043",
+      "displayName": "Dineo",
+      "age": 20,
+      "universityId": "nwu",
+      "campusId": "nwu-mahikeng",
+      "degreeId": "natural-sciences",
+      "yearId": null,
+      "genderId": "woman",
+      "showGender": false,
+      "bio": "I keep a notebook of questions about the world. Hiking, small coding experiments and a puzzle over tea are favourite diversions.",
+      "interestIds": [
+        "hiking",
+        "coding",
+        "chess"
+      ]
+    },
+    {
+      "id": "fictional-044",
+      "displayName": "Charlene",
+      "age": 27,
+      "universityId": "nwu",
+      "campusId": "nwu-mahikeng",
+      "degreeId": "psychology",
+      "yearId": "year-2",
+      "genderId": "not-specified",
+      "showGender": false,
+      "bio": "I enjoy film evenings, reading and trying a new recipe with friends. I am learning to make more time for creative hobbies.",
+      "interestIds": [
+        "film",
+        "reading",
+        "cooking",
+        "art"
+      ]
+    },
+    {
+      "id": "fictional-045",
+      "displayName": "Tebogo",
+      "age": 34,
+      "universityId": "nwu",
+      "campusId": "nwu-mahikeng",
+      "degreeId": "humanities",
+      "yearId": "year-3",
+      "genderId": "another-gender",
+      "showGender": true,
+      "bio": "Back at university with a love of music and a patient approach to learning. I unwind with gardening and occasional volunteer projects.",
+      "interestIds": [
+        "music",
+        "gardening",
+        "volunteering"
+      ]
+    }
+  ]
+}

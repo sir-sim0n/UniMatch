@@ -1,0 +1,229 @@
+{
+  "schemaVersion": 1,
+  "universities": [
+    {
+      "id": "uct",
+      "label": "University of Cape Town",
+      "campuses": [
+        {
+          "id": "uct-upper",
+          "label": "Upper Campus"
+        },
+        {
+          "id": "uct-middle",
+          "label": "Middle Campus"
+        }
+      ]
+    },
+    {
+      "id": "up",
+      "label": "University of Pretoria",
+      "campuses": [
+        {
+          "id": "up-hatfield",
+          "label": "Hatfield Campus"
+        },
+        {
+          "id": "up-groenkloof",
+          "label": "Groenkloof Campus"
+        }
+      ]
+    },
+    {
+      "id": "wits",
+      "label": "University of the Witwatersrand",
+      "campuses": [
+        {
+          "id": "wits-east",
+          "label": "East Campus"
+        },
+        {
+          "id": "wits-west",
+          "label": "West Campus"
+        }
+      ]
+    },
+    {
+      "id": "nwu",
+      "label": "North-West University",
+      "campuses": [
+        {
+          "id": "nwu-potchefstroom",
+          "label": "Potchefstroom"
+        },
+        {
+          "id": "nwu-vanderbijlpark",
+          "label": "Vanderbijlpark"
+        },
+        {
+          "id": "nwu-mahikeng",
+          "label": "Mahikeng"
+        }
+      ]
+    }
+  ],
+  "degrees": [
+    {
+      "id": "computer-science",
+      "label": "Computer Science"
+    },
+    {
+      "id": "engineering",
+      "label": "Engineering"
+    },
+    {
+      "id": "education",
+      "label": "Education"
+    },
+    {
+      "id": "law",
+      "label": "Law"
+    },
+    {
+      "id": "commerce",
+      "label": "Commerce"
+    },
+    {
+      "id": "psychology",
+      "label": "Psychology"
+    },
+    {
+      "id": "humanities",
+      "label": "Humanities"
+    },
+    {
+      "id": "natural-sciences",
+      "label": "Natural Sciences"
+    },
+    {
+      "id": "arts",
+      "label": "Arts"
+    },
+    {
+      "id": "architecture",
+      "label": "Architecture"
+    }
+  ],
+  "interests": [
+    {
+      "id": "coding",
+      "label": "Coding"
+    },
+    {
+      "id": "football",
+      "label": "Football"
+    },
+    {
+      "id": "music",
+      "label": "Music"
+    },
+    {
+      "id": "reading",
+      "label": "Reading"
+    },
+    {
+      "id": "hiking",
+      "label": "Hiking"
+    },
+    {
+      "id": "cooking",
+      "label": "Cooking"
+    },
+    {
+      "id": "gaming",
+      "label": "Gaming"
+    },
+    {
+      "id": "photography",
+      "label": "Photography"
+    },
+    {
+      "id": "art",
+      "label": "Art"
+    },
+    {
+      "id": "dance",
+      "label": "Dance"
+    },
+    {
+      "id": "chess",
+      "label": "Chess"
+    },
+    {
+      "id": "volunteering",
+      "label": "Volunteering"
+    },
+    {
+      "id": "running",
+      "label": "Running"
+    },
+    {
+      "id": "film",
+      "label": "Film"
+    },
+    {
+      "id": "gardening",
+      "label": "Gardening"
+    }
+  ],
+  "genders": [
+    {
+      "id": "woman",
+      "label": "Woman"
+    },
+    {
+      "id": "man",
+      "label": "Man"
+    },
+    {
+      "id": "nonbinary",
+      "label": "Non-binary"
+    },
+    {
+      "id": "agender",
+      "label": "Agender"
+    },
+    {
+      "id": "genderfluid",
+      "label": "Genderfluid"
+    },
+    {
+      "id": "another-gender",
+      "label": "Another gender"
+    },
+    {
+      "id": "not-specified",
+      "label": "Prefer not to say"
+    }
+  ],
+  "years": [
+    {
+      "id": "year-1",
+      "label": "First year"
+    },
+    {
+      "id": "year-2",
+      "label": "Second year"
+    },
+    {
+      "id": "year-3",
+      "label": "Third year"
+    },
+    {
+      "id": "year-4",
+      "label": "Fourth year"
+    },
+    {
+      "id": "year-5",
+      "label": "Fifth year"
+    },
+    {
+      "id": "year-6-plus",
+      "label": "Sixth year or later"
+    },
+    {
+      "id": "postgraduate",
+      "label": "Postgraduate"
+    }
+  ]
+}

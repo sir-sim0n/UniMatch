@@ -1,0 +1,9 @@
+{
+  "emscripten": "4.0.15",
+  "cmake": "3.31.6",
+  "ninjaPythonPackage": "1.11.1.4",
+  "ninjaExecutable": "1.11.1.git.kitware.jobserver-1",
+  "node": "22.16.0",
+  "nlohmannJson": "3.12.0",
+  "nlohmannJsonCommit": "55f93686c01528224f448c19128836e7df245f72"
+}

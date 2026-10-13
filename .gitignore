@@ -1,0 +1,13 @@
+/build/
+/.tools/
+/.venv/
+/.cache/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+# Local reference material is not part of the application repository.
+/The Prompt.docx
+/The Prompt.txt
+/UniMatch.pdf
+/Stage-0-Setup.md

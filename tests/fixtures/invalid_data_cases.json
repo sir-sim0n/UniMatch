@@ -1,0 +1,759 @@
+[
+  {
+    "name": "underage",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/age",
+        "value": 17
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/age",
+    "errorCode": "range"
+  },
+  {
+    "name": "overage",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/age",
+        "value": 101
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/age",
+    "errorCode": "range"
+  },
+  {
+    "name": "negative age",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/age",
+        "value": -1
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/age",
+    "errorCode": "range"
+  },
+  {
+    "name": "fractional age",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/age",
+        "value": 20.5
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/age",
+    "errorCode": "integer"
+  },
+  {
+    "name": "whole float age",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/age",
+        "value": 20.0
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/age",
+    "errorCode": "integer"
+  },
+  {
+    "name": "text age",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/age",
+        "value": "20"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/age",
+    "errorCode": "integer"
+  },
+  {
+    "name": "boolean age",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/age",
+        "value": true
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/age",
+    "errorCode": "integer"
+  },
+  {
+    "name": "null age",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/age",
+        "value": null
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/age",
+    "errorCode": "integer"
+  },
+  {
+    "name": "huge unsigned age",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/age",
+        "value": 18446744073709551615
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/age",
+    "errorCode": "range"
+  },
+  {
+    "name": "missing id",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "remove",
+        "path": "/profiles/0/id"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/id",
+    "errorCode": "type"
+  },
+  {
+    "name": "missing displayName",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "remove",
+        "path": "/profiles/0/displayName"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/displayName",
+    "errorCode": "type"
+  },
+  {
+    "name": "missing age",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "remove",
+        "path": "/profiles/0/age"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/age",
+    "errorCode": "integer"
+  },
+  {
+    "name": "missing universityId",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "remove",
+        "path": "/profiles/0/universityId"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/universityId",
+    "errorCode": "type"
+  },
+  {
+    "name": "missing campusId",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "remove",
+        "path": "/profiles/0/campusId"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/campusId",
+    "errorCode": "type"
+  },
+  {
+    "name": "missing degreeId",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "remove",
+        "path": "/profiles/0/degreeId"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/degreeId",
+    "errorCode": "type"
+  },
+  {
+    "name": "missing genderId",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "remove",
+        "path": "/profiles/0/genderId"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/genderId",
+    "errorCode": "type"
+  },
+  {
+    "name": "missing showGender",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "remove",
+        "path": "/profiles/0/showGender"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/showGender",
+    "errorCode": "boolean"
+  },
+  {
+    "name": "missing bio",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "remove",
+        "path": "/profiles/0/bio"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/bio",
+    "errorCode": "type"
+  },
+  {
+    "name": "missing interestIds",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "remove",
+        "path": "/profiles/0/interestIds"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/interestIds",
+    "errorCode": "array"
+  },
+  {
+    "name": "blank name",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/displayName",
+        "value": " \t 　 "
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/displayName",
+    "errorCode": "required"
+  },
+  {
+    "name": "long name",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/displayName",
+        "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/displayName",
+    "errorCode": "length"
+  },
+  {
+    "name": "blank bio",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/bio",
+        "value": "\n  "
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/bio",
+    "errorCode": "required"
+  },
+  {
+    "name": "long bio",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/bio",
+        "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/bio",
+    "errorCode": "length"
+  },
+  {
+    "name": "duplicate profile ID",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/1/id",
+        "value": "fictional-001"
+      }
+    ],
+    "errorPath": "/dataset/profiles/1/id",
+    "errorCode": "duplicate"
+  },
+  {
+    "name": "reserved visitor ID",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/id",
+        "value": "visitor:local"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/id",
+    "errorCode": "reserved_id"
+  },
+  {
+    "name": "invalid ID syntax",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/id",
+        "value": "Bad ID"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/id",
+    "errorCode": "id"
+  },
+  {
+    "name": "wrong university",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/universityId",
+        "value": "missing"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/universityId",
+    "errorCode": "reference"
+  },
+  {
+    "name": "wrong campus owner",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/campusId",
+        "value": "wits-east"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/campusId",
+    "errorCode": "campus"
+  },
+  {
+    "name": "unknown campus",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/campusId",
+        "value": "missing"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/campusId",
+    "errorCode": "campus"
+  },
+  {
+    "name": "unknown degreeId",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/degreeId",
+        "value": "missing"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/degreeId",
+    "errorCode": "reference"
+  },
+  {
+    "name": "unknown genderId",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/genderId",
+        "value": "missing"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/genderId",
+    "errorCode": "reference"
+  },
+  {
+    "name": "unknown yearId",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/yearId",
+        "value": "missing"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/yearId",
+    "errorCode": "reference"
+  },
+  {
+    "name": "visibility string",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/showGender",
+        "value": "false"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/showGender",
+    "errorCode": "boolean"
+  },
+  {
+    "name": "zero interests",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/interestIds",
+        "value": []
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/interestIds",
+    "errorCode": "interest_count"
+  },
+  {
+    "name": "six interests",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/interestIds",
+        "value": [
+          "coding",
+          "football",
+          "music",
+          "art",
+          "dance",
+          "chess"
+        ]
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/interestIds",
+    "errorCode": "interest_count"
+  },
+  {
+    "name": "duplicate interest",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/interestIds",
+        "value": [
+          "coding",
+          "coding"
+        ]
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/interestIds/1",
+    "errorCode": "duplicate"
+  },
+  {
+    "name": "unknown interest",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/interestIds",
+        "value": [
+          "missing"
+        ]
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/interestIds/0",
+    "errorCode": "reference"
+  },
+  {
+    "name": "interest type",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0/interestIds",
+        "value": [
+          12
+        ]
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/interestIds/0",
+    "errorCode": "type"
+  },
+  {
+    "name": "unknown profile field",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "add",
+        "path": "/profiles/0/email",
+        "value": "not-a-contact"
+      }
+    ],
+    "errorPath": "/dataset/profiles/0/email",
+    "errorCode": "unknown_field"
+  },
+  {
+    "name": "not fictional",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/fictional",
+        "value": false
+      }
+    ],
+    "errorPath": "/dataset/fictional",
+    "errorCode": "fictional"
+  },
+  {
+    "name": "future dataset schema",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/schemaVersion",
+        "value": 2
+      }
+    ],
+    "errorPath": "/dataset/schemaVersion",
+    "errorCode": "range"
+  },
+  {
+    "name": "schema string",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/schemaVersion",
+        "value": "1"
+      }
+    ],
+    "errorPath": "/dataset/schemaVersion",
+    "errorCode": "integer"
+  },
+  {
+    "name": "empty dataset",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles",
+        "value": []
+      }
+    ],
+    "errorPath": "/dataset/profiles",
+    "errorCode": "array"
+  },
+  {
+    "name": "non-object profile",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/profiles/0",
+        "value": []
+      }
+    ],
+    "errorPath": "/dataset/profiles/0",
+    "errorCode": "type"
+  },
+  {
+    "name": "missing notice",
+    "target": "dataset",
+    "patch": [
+      {
+        "op": "remove",
+        "path": "/notice"
+      }
+    ],
+    "errorPath": "/dataset/notice",
+    "errorCode": "type"
+  },
+  {
+    "name": "catalogue version",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/schemaVersion",
+        "value": 2
+      }
+    ],
+    "errorPath": "/catalogues/schemaVersion",
+    "errorCode": "range"
+  },
+  {
+    "name": "empty universities",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/universities",
+        "value": []
+      }
+    ],
+    "errorPath": "/catalogues/universities",
+    "errorCode": "array"
+  },
+  {
+    "name": "empty degrees",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/degrees",
+        "value": []
+      }
+    ],
+    "errorPath": "/catalogues/degrees",
+    "errorCode": "array"
+  },
+  {
+    "name": "empty interests",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/interests",
+        "value": []
+      }
+    ],
+    "errorPath": "/catalogues/interests",
+    "errorCode": "array"
+  },
+  {
+    "name": "empty genders",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/genders",
+        "value": []
+      }
+    ],
+    "errorPath": "/catalogues/genders",
+    "errorCode": "array"
+  },
+  {
+    "name": "empty years",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/years",
+        "value": []
+      }
+    ],
+    "errorPath": "/catalogues/years",
+    "errorCode": "array"
+  },
+  {
+    "name": "empty campuses",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/universities/0/campuses",
+        "value": []
+      }
+    ],
+    "errorPath": "/catalogues/universities/0/campuses",
+    "errorCode": "array"
+  },
+  {
+    "name": "duplicate university",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/universities/1/id",
+        "value": "uct"
+      }
+    ],
+    "errorPath": "/catalogues/universities/1/id",
+    "errorCode": "duplicate"
+  },
+  {
+    "name": "duplicate campus across universities",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/universities/1/campuses/0/id",
+        "value": "uct-upper"
+      }
+    ],
+    "errorPath": "/catalogues/universities/1/campuses/0/id",
+    "errorCode": "duplicate"
+  },
+  {
+    "name": "duplicate interest catalogue ID",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/interests/1/id",
+        "value": "coding"
+      }
+    ],
+    "errorPath": "/catalogues/interests/1/id",
+    "errorCode": "duplicate"
+  },
+  {
+    "name": "blank label",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/degrees/0/label",
+        "value": "   "
+      }
+    ],
+    "errorPath": "/catalogues/degrees/0/label",
+    "errorCode": "required"
+  },
+  {
+    "name": "unknown catalogue field",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "add",
+        "path": "/version",
+        "value": 1
+      }
+    ],
+    "errorPath": "/catalogues/version",
+    "errorCode": "unknown_field"
+  },
+  {
+    "name": "invalid choice object",
+    "target": "catalogues",
+    "patch": [
+      {
+        "op": "replace",
+        "path": "/genders/0",
+        "value": "woman"
+      }
+    ],
+    "errorPath": "/catalogues/genders/0",
+    "errorCode": "type"
+  }
+]
