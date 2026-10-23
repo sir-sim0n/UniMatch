@@ -29,3 +29,5 @@ The demo_messages suite covers unconnected/pending sends, input validation, part
 Interest circles, membership and local posts/replies. Attachments, realtime delivery, push notifications, real moderation and cross-device sync are outside this release.
 
 Local verification: all 14 CTest groups passed; publication check accepted 18 files. Browser tests confirmed connection-to-chat navigation, sending, recipient unread count, account switching, replies and refresh persistence. Blocking hid the conversation; unblocking restored read-only history without a send form. A 390px mobile viewport had no horizontal overflow. No browser console errors were recorded.
+
+Live verification: GitHub Actions run 40019736601 passed both build and deploy for d04d09066a32cfd53ea686fba1a3f2a4e3df3d4e. The public site restored existing demo profiles and successfully completed a Naledi/Sipho connection, message, recipient unread count and reply. No console errors were recorded. Two explicitly labelled fictional test messages remain in this browser as a demonstration. Release tagged v1.4.0.
