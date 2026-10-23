@@ -2,7 +2,7 @@
 
 Orbit is a portfolio demonstration of university student discovery using fictional adult profiles. The project uses a portable C++17 core, Emscripten and Embind, and plain HTML, CSS, and JavaScript.
 
-**Current release: Orbit 1.2.0 — Demo accounts.**
+**Current release: Orbit 1.3.0 — Demo connections.**
 
 Your campus. Your Interests. Your Connections
 
@@ -101,3 +101,7 @@ The real-account plan is deferred. Follow the [active demo-first roadmap](docs/d
 ## Demo accounts
 
 Use **Demo accounts** in the navigation to switch between your original demo and three fictional NWU students. Each account keeps its own profile, preferences and bookmarks. Reset affects only the selected account. These are local simulations, without passwords or cross-device sharing. [Roadmap and data behaviour](docs/demo-roadmap.md).
+
+## Demo connections
+
+Use **Connections** to send a request between switchable accounts, then switch accounts to accept or decline. Blocking removes the relationship; reports are local simulations, not messages to moderators. The 45 sample discovery profiles remain separate examples. [Rules and storage contract](docs/demo-connections.md).

@@ -5,7 +5,7 @@ Decision: 2026-10-23. Real-account infrastructure is deferred to control launch 
 ## Phases
 
 1. Demo account system: original account plus ready-made fictional personas, separate profiles/preferences/bookmarks, switching, persistence and account-scoped reset.
-2. Local shared connections, blocking and reports; remove legacy dating-oriented gender/age discovery controls as part of the campus-connection flow.
+2. Local shared connections, blocking and reports — implemented in v1.3.0; see [connection behaviour](demo-connections.md). Legacy dating-oriented discovery controls removed.
 3. Locally simulated conversations with stable sender/recipient identities and unread state.
 4. Interest circles, membership, posts, replies and simulated moderation.
 5. Events, RSVP capacity, cancellations and reminders within the demo.
@@ -28,7 +28,7 @@ Reset demo affects only the selected account. The original account becomes blank
 
 DemoAccounts is the local persona repository; stable actor IDs are personal, naledi, sipho and ayesha. visitor:local is internal to each isolated C++ core and must never be used as the sender ID in shared social data. Add a versioned shared social repository in Phase 2 for relationships and later messages/circles/events; scope every operation by stable actor ID. Do not add separate copies of shared conversations into individual account records.
 
-The 45 discovery profiles are still a static fictional catalogue. Switched personas do not yet appear in each other's discovery results. Connections, messaging, reports, circles and events are not implemented by this release. Future social phases must define actor/profile mapping and how account resets affect shared records before enabling them.
+The 45 discovery profiles are still a static fictional catalogue. Switched personas do not yet appear in each other's discovery results. At the v1.2.0 checkpoint, connections, messaging, reports, circles and events were not implemented. v1.3.0 adds the [connection/report layer](demo-connections.md). Future social phases must define actor/profile mapping and how account resets affect shared records before enabling them.
 
 The UI uses a data adapter so future backend work can replace persistence and operations. Client-side demo permissions are simulation only and cannot protect real personal data. No password entry, email delivery, remote database or paid service is introduced. Separate browsers/devices do not share state. GitHub Pages continues hosting the fictional demo.
 

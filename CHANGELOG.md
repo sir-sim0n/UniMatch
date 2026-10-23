@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.0 — Demo connections — 2026-10-23
+
+- Added mutual requests, accept/decline/cancel/remove, directional blocking and local reports between switchable demo accounts.
+- Added a shared, versioned social repository with validation, stale-tab protection, failed-write rollback and explicit all-account social reset.
+- Removed gender/age discovery controls and public age/gender display for the campus-only direction.
+- Profile resets preserve shared social records. Reports are not transmitted; messaging remains a later phase.
+- Added transition, conflict and recovery tests, and versioned all changed browser dependencies.
+
 ## 1.2.0 — Demo accounts — 2026-10-23
 
 - Adopted the demo-first roadmap; real-account hosting is deferred.

@@ -1,9 +1,9 @@
-// Browser presentation only. All application decisions come from the C++ API.
+// Profile/catalogue decisions use the C++ API; demo social rules use the local repository adapter.
 const main = document.querySelector('#main');
 const nav = document.querySelector('#navigation');
 const announcement = document.querySelector('#announcement');
 const resetDialog = document.querySelector('#reset-dialog');
-let accounts, client, persistence, catalogues, state, screen = 'welcome', detailOrigin = 'discover';
+let socialUI, accounts, client, persistence, catalogues, state, screen = 'welcome', detailOrigin = 'discover';
 let activeProfileId;
 
 function el(tag, text, className) {
@@ -50,14 +50,15 @@ function heading(title, description) {
   header.append(copy); return header;
 }
 function navigate(next, focus = true) {
-  screen = next; main.replaceChildren(); renderNavigation();
+  socialUI?.leave(); screen = next; main.replaceChildren(); renderNavigation();
   if (next === 'welcome') welcome();
   else if (next === 'accounts') accountScreen();
+  else if (next === 'connections') socialUI.render(main);
   else if (next === 'profile') profileForm();
   else if (next === 'discover') discover();
   else if (next === 'saved') saved();
   else if (next === 'detail') detail();
-  document.title = `Orbit · ${ {welcome:'Find common ground',accounts:'Demo accounts',profile:'Your demo profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
+  document.title = `Orbit · ${ {welcome:'Find common ground',accounts:'Demo accounts',connections:'Connections',profile:'Your demo profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
   if (focus) { main.focus(); window.scrollTo(0, 0); }
 }
 function renderNavigation() {
@@ -66,7 +67,7 @@ function renderNavigation() {
   const badge = document.querySelector('#active-account');
   badge.textContent = accounts?.active ? `Using: ${accounts.active.account.label} · Local simulation` : '';
   if (!state?.visitor) return;
-  for (const [destination, name] of [['discover','Discover'],['saved',`Saved (${state.savedIds.length})`],['profile','My profile']]) {
+  for (const [destination, name] of [['discover','Discover'],['connections','Connections'],['saved',`Saved (${state.savedIds.length})`],['profile','My profile']]) {
     const item = button(name, () => navigate(destination), 'text-button');
     if (screen === destination || (screen === 'detail' && detailOrigin === destination)) item.setAttribute('aria-current','page');
     nav.append(item);
@@ -89,7 +90,7 @@ function welcome() {
 }
 function accountScreen() {
   main.append(heading('Choose your demo account.', 'Switch between fictional students on this device. No passwords, real accounts, or messages to real people.'));
-  main.append(el('p','Each account has its own profile, preferences and bookmarks. Connections and conversations will arrive in the next phases. Switching leaves unsaved form edits behind; use Save profile first.','notice'));
+  main.append(el('p','Each account has its own profile, preferences and bookmarks. Use Connections to send requests and switch accounts to respond. Messaging comes in the next phase. Switching leaves unsaved form edits behind; use Save profile first.','notice'));
   const grid=el('div',undefined,'account-grid');
   for (const account of accountsList) {
     const panel=el('article',undefined,'panel');
@@ -112,6 +113,7 @@ let accountsList=[];
 async function activateAccount(id) {
   const entry=await accounts.activate(id);
   client=entry.client;persistence=entry.persistence;catalogues=client.call('getCatalogues');readState();
+  if(state.visitor){client.call('updatePreferences',{preferences:{...state.preferences,minAge:18,maxAge:100,genderIds:[]}});readState();}
 }
 function field(form, name, title, type='text', value='', hint='') {
   const wrap=el('label',undefined,'field'); const input=el(type==='textarea'?'textarea':'input');
@@ -161,34 +163,25 @@ function profileForm() {
   uni.input.addEventListener('change',()=>{setOptions(campus.input,university(uni.input.value)?.campuses??[],'','Choose…');campus.input.disabled=!uni.input.value;});
   const degree=select(form,'degreeId','Degree / field of study *',catalogues.degrees,p.degreeId);
   const year=select(form,'yearId','Year of study',catalogues.years,p.yearId,'Not specified');
-  const gender=select(form,'genderId','Gender *',catalogues.genders,p.genderId);
-  const visibility=choices('showGender','Gender visibility',[{id:'show',label:'Display my gender on my demo profile'}],p.showGender?['show']:[]);
   const bio=field(form,'bio','Bio *','textarea',p.bio,'1–300 Unicode code points. Keep contact details and real personal information out.');bio.wrap.classList.add('full');
   const interests=choices('interestIds','Your interests *',catalogues.interests,p.interestIds??[],'Choose 1–5. Shared interests help order the fictional profiles you see.');interests.classList.add('full');
-  grid.append(name.wrap,age.wrap,uni.wrap,campus.wrap,degree.wrap,year.wrap,gender.wrap,visibility,bio.wrap,interests);
+  grid.append(name.wrap,age.wrap,uni.wrap,campus.wrap,degree.wrap,year.wrap,bio.wrap,interests);
   const actions=el('div',undefined,'form-actions');actions.append(button('Cancel',()=>navigate(state.visitor?'discover':'welcome'),'secondary'));
   const submit=el('button',state.visitor?'Save profile':'Create profile & discover  ↗');submit.type='submit';actions.append(submit);form.append(grid,actions);
   form.addEventListener('submit',event=>{event.preventDefault();const v=formValues(form);try{
-    client.call('updateProfile',{profile:{displayName:v.text('displayName'),age:v.number('age'),universityId:v.text('universityId'),campusId:v.text('campusId')??'',degreeId:v.text('degreeId'),yearId:v.optional('yearId'),genderId:v.text('genderId'),showGender:v.list('showGender').length>0,bio:v.text('bio'),interestIds:v.list('interestIds')}});
+    client.call('updateProfile',{profile:{displayName:v.text('displayName'),age:v.number('age'),universityId:v.text('universityId'),campusId:v.text('campusId')??'',degreeId:v.text('degreeId'),yearId:v.optional('yearId'),genderId:p.genderId??catalogues.genders[0].id,showGender:false,bio:v.text('bio'),interestIds:v.list('interestIds')}});
     saveState();navigate('discover');say('Demo profile updated. Discovery is ready.');
   }catch(error){errors(form,box,error);}});
   shell.append(form);main.append(shell);
 }
 function preferenceForm(onApplied) {
   const p=state.preferences;const form=el('form',undefined,'panel filters');form.id='preferences';form.noValidate=true;form.append(el('h2','Your preferences'));const box=errorBox(form);
-  const ages=el('div',undefined,'age-grid');const min=field(form,'minAge','Minimum age','number',p.minAge),max=field(form,'maxAge','Maximum age','number',p.maxAge);
-  for(const item of [min,max]){item.input.min='18';item.input.max='100';item.input.step='1';ages.append(item.wrap);}form.append(ages);
-  const genders=choices('genderIds','Discover genders',catalogues.genders,p.genderIds);
-  const any=choices('anyGender','',[{id:'any',label:'Any gender'}],p.genderIds.length?[]:['any']);
-  const anyInput=any.querySelector('input');const genderInputs=[...genders.querySelectorAll('input')];
-  anyInput.addEventListener('change',()=>{if(anyInput.checked)genderInputs.forEach(i=>i.checked=false);else if(!genderInputs.some(i=>i.checked))anyInput.checked=true;});
-  genderInputs.forEach(i=>i.addEventListener('change',()=>{anyInput.checked=!genderInputs.some(item=>item.checked);}));form.append(any,genders);
   const uni=select(form,'universityId','University',catalogues.universities,p.universityId,'Any university');
   const campus=select(form,'campusId','Campus',university(p.universityId)?.campuses??[],p.campusId,'Any campus');campus.input.disabled=!p.universityId;
   uni.input.addEventListener('change',()=>{setOptions(campus.input,university(uni.input.value)?.campuses??[],'','Any campus');campus.input.disabled=!uni.input.value;});
   const degree=select(form,'degreeId','Field of study',catalogues.degrees,p.degreeId,'Any field');form.append(uni.wrap,campus.wrap,degree.wrap);
-  const submit=el('button','Apply preferences');submit.type='submit';form.append(submit,el('p','All filters apply together. Gender preferences also include profiles with hidden gender.','hint'));
-  form.addEventListener('submit',event=>{event.preventDefault();const v=formValues(form);try{client.call('updatePreferences',{preferences:{minAge:v.number('minAge'),maxAge:v.number('maxAge'),genderIds:v.list('genderIds'),universityId:v.optional('universityId'),campusId:v.optional('campusId'),degreeId:v.optional('degreeId')}});saveState();box.replaceChildren();form.querySelectorAll('[aria-invalid]').forEach(i=>i.removeAttribute('aria-invalid'));onApplied();}catch(error){errors(form,box,error);}});
+  const submit=el('button','Apply preferences');submit.type='submit';form.append(submit,el('p','Filter by university, campus and field of study. Shared interests order the results.','hint'));
+  form.addEventListener('submit',event=>{event.preventDefault();const v=formValues(form);try{client.call('updatePreferences',{preferences:{minAge:18,maxAge:100,genderIds:[],universityId:v.optional('universityId'),campusId:v.optional('campusId'),degreeId:v.optional('degreeId')}});saveState();box.replaceChildren();form.querySelectorAll('[aria-invalid]').forEach(i=>i.removeAttribute('aria-invalid'));onApplied();}catch(error){errors(form,box,error);}});
   return form;
 }
 function tagList(p) {
@@ -202,25 +195,26 @@ function saveButton(p) {
   },'secondary');node.setAttribute('aria-label',`${p.saved?'Unsave':'Save'} ${p.displayName}`);node.setAttribute('aria-pressed',String(p.saved));return node;
 }
 function card(p) {
-  const article=el('article',undefined,'profile-card');const person=el('div',undefined,'person');const copy=el('div');copy.append(el('h3',`${p.displayName}, ${p.age}`));
-  if(p.genderId)copy.append(el('p',label(catalogues.genders,p.genderId)));person.append(el('div',initials(p.displayName),'avatar'),copy);
+  const article=el('article',undefined,'profile-card');const person=el('div',undefined,'person');const copy=el('div');copy.append(el('h3',p.displayName));
+  person.append(el('div',initials(p.displayName),'avatar'),copy);
   article.append(person,el('p',`${label(catalogues.universities,p.universityId)} · ${campusLabel(p)}\n${label(catalogues.degrees,p.degreeId)}`,'academic'),el('p',p.bio,'bio preview'),tagList(p),el('p',p.explanation,'explanation'));
   const actions=el('div',undefined,'actions');const view=button('View Profile  ↗',()=>{detailOrigin=screen;activeProfileId=p.id;navigate('detail');},'text-button');view.setAttribute('aria-label',`View Profile: ${p.displayName}`);actions.append(view,saveButton(p));article.append(actions);return article;
 }
 function empty(title,message,action) {const section=el('div',undefined,'empty');section.append(el('h2',title),el('p',message,'muted'));if(action)section.append(action);return section;}
 function discover() {
-  main.append(heading('Find your common ground.','Fictional people, ordered by the interests you share.'));
+  main.append(heading('Find your common ground.','Fictional sample profiles, ordered by shared interests.'));
+  main.append(button('Connect with demo accounts',()=>navigate('connections'),'secondary'));
   const layout=el('div',undefined,'browse-layout');const results=el('section');results.setAttribute('aria-label','Discovery results');
   function render(){const profiles=client.call('discover');results.replaceChildren(el('p',`${profiles.length} fictional profiles · Most shared interests first`,'results-summary'));
     results.prepend(el('h2','Discovery results','sr-only'));
-    if(!profiles.length)results.append(empty('A little more room to explore?','No profiles fit these preferences. Try a wider age range, another campus, or Any university.'));
+    if(!profiles.length)results.append(empty('A little more room to explore?','No profiles fit these preferences. Try another campus or Any university.'));
     else{const cards=el('div',undefined,'cards');profiles.forEach(p=>cards.append(card(p)));results.append(cards);}say(`${profiles.length} fictional profiles found.`);
   }
   layout.append(preferenceForm(render),results);main.append(layout);render();
 }
 function saved(){main.append(heading('Keep a little common ground.','Your bookmarks stay here when you change discovery preferences. Nobody is notified.'));const results=el('section');results.id='saved-results';results.tabIndex=-1;results.setAttribute('aria-label','Saved profiles');main.append(results);renderSavedResults();}
 function renderSavedResults(){const results=document.querySelector('#saved-results');results.replaceChildren();const profiles=client.call('savedProfiles');if(!profiles.length){results.append(empty('Your saved circle starts here.','Bookmark a fictional profile in Discover and find it here later.',button('Explore profiles',()=>navigate('discover'))));return;}results.append(el('p',`${profiles.length} saved profiles · In the order you saved them`,'results-summary'));const cards=el('div',undefined,'cards');profiles.forEach(p=>cards.append(card(p)));results.append(cards);}
-function detail(){const p=client.call('viewProfile',{id:activeProfileId});main.append(button(detailOrigin==='saved'?'← Back to saved':'← Back to discovery',()=>navigate(detailOrigin),'text-button'));const panel=el('article',undefined,'panel detail');const person=el('div',undefined,'person');const copy=el('div');copy.append(el('p','FICTIONAL PROFILE','eyebrow'),el('h1',`${p.displayName}, ${p.age}`));if(p.genderId)copy.append(el('p',label(catalogues.genders,p.genderId)));person.append(el('div',initials(p.displayName),'avatar large'),copy);panel.append(person,el('p',p.bio,'bio'));const details=el('dl');for(const [title,value] of [['University',label(catalogues.universities,p.universityId)],['Campus',campusLabel(p)],['Field of study',label(catalogues.degrees,p.degreeId)],['Year of study',p.yearId?label(catalogues.years,p.yearId):'Not specified']]){const pair=el('div');pair.append(el('dt',title),el('dd',value));details.append(pair);}panel.append(details,el('h2','A few favourite things'),tagList(p),el('p',p.explanation,'explanation'),saveButton(p));main.append(panel);}
+function detail(){const p=client.call('viewProfile',{id:activeProfileId});main.append(button(detailOrigin==='saved'?'← Back to saved':'← Back to discovery',()=>navigate(detailOrigin),'text-button'));const panel=el('article',undefined,'panel detail');const person=el('div',undefined,'person');const copy=el('div');copy.append(el('p','FICTIONAL PROFILE','eyebrow'),el('h1',p.displayName));person.append(el('div',initials(p.displayName),'avatar large'),copy);panel.append(person,el('p',p.bio,'bio'));const details=el('dl');for(const [title,value] of [['University',label(catalogues.universities,p.universityId)],['Campus',campusLabel(p)],['Field of study',label(catalogues.degrees,p.degreeId)],['Year of study',p.yearId?label(catalogues.years,p.yearId):'Not specified']]){const pair=el('div');pair.append(el('dt',title),el('dd',value));details.append(pair);}panel.append(details,el('h2','A few favourite things'),tagList(p),el('p',p.explanation,'explanation'),saveButton(p));main.append(panel);}
 
 document.querySelector('.brand').addEventListener('click',event=>{event.preventDefault();if(client && screen!=='recovery')navigate(state.visitor?'discover':'welcome');});
 document.querySelector('#cancel-reset').addEventListener('click',()=>resetDialog.close());
@@ -250,8 +244,10 @@ async function start() {
   loading.append(el('p','ONE MOMENT','eyebrow'),el('h1','Finding our common ground…'),el('p','Loading the fictional profiles.'));
   main.append(loading);
   try {
-    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs'), import('./demo-accounts.mjs?v=1.2.0')]);
+    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.3.0'), import('./demo-accounts.mjs?v=1.3.0')]);
     accountsList=ACCOUNTS; accounts=new DemoAccounts({loadClient,report:storageStatus});
+    const { createSocialUI } = await import('./social-ui.mjs?v=1.3.0');
+    socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say});
     await activateAccount(accounts.initialId());
     if (persistence.mode === 'recovery') recovery();
     else navigate(state.visitor ? 'discover' : 'welcome', false);
@@ -263,6 +259,7 @@ async function start() {
 }
 window.addEventListener('storage', event => {
   accounts?.checkExternalChange(event.key);
+  if(screen==='connections' && (!event.key || event.key===socialUI?.key)){say('Shared social data changed in another tab. Reload saved connections to see it.');}
 });
 window.addEventListener('pageshow', event => { if (event.persisted) persistence?.checkExternalChange(); });
 window.addEventListener('pagehide', event => { if (!event.persisted) { accounts?.dispose(); client = undefined; } });

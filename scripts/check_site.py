@@ -4,7 +4,7 @@ import sys
 
 site = Path(sys.argv[1]).resolve()
 expected = {
-    'index.html', '.nojekyll', 'assets/demo-accounts.mjs', 'assets/app.js', 'assets/api-client.mjs',
+    'index.html', '.nojekyll', 'assets/demo-accounts.mjs', 'assets/demo-social.mjs', 'assets/social-ui.mjs', 'assets/app.js', 'assets/api-client.mjs',
     'assets/persistence.mjs', 'assets/styles.css', 'assets/favicon.svg',
     'assets/orbit-mark.svg', 'assets/orbit-logo.svg', 'assets/orbit-logo-stacked.svg', 'assets/unimatch.mjs', 'assets/unimatch.wasm',
     'data/catalogues.json', 'data/profiles.json',

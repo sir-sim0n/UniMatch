@@ -1,4 +1,4 @@
-import { Persistence, STORAGE_KEY } from './persistence.mjs?v=1.2.0';
+import { Persistence, STORAGE_KEY } from './persistence.mjs?v=1.3.0';
 
 export const ACTIVE_KEY = 'orbit.demo.active.v1';
 export const ACCOUNTS = Object.freeze([
@@ -57,6 +57,20 @@ export class DemoAccounts {
       this.report(entry.status);
       return entry;
     } finally { this.busy = false; }
+  }
+  async profiles() {
+    const list=[];
+    for(const account of ACCOUNTS){
+      let entry=this.entries.get(account.id),temporary=false;
+      if(!entry){
+        const client=await this.loadClient();entry={account,client};temporary=true;
+        try{const p=new Persistence(client,{storage:this.storage,key:account.key});const result=p.restore();if(result==='invalid'||result==='memory'){client.dispose();continue;}if(result==='empty')this.seed(entry);}
+        catch(error){client.dispose();throw error;}
+      }
+      try{if(entry.persistence?.mode==='recovery')continue;const profile=entry.client.call('getState').visitor;if(profile)list.push({id:account.id,...profile,actorId:account.id});}
+      finally{if(temporary)entry.client.dispose();}
+    }
+    return list;
   }
   resetActive() {
     const entry = this.active;
