@@ -1,14 +1,16 @@
+import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.5.0';
 // Demo-only shared state. Not authentication or a security boundary.
 export const SOCIAL_KEY = 'orbit.demo.social.v1';
 export const ACTORS = ['personal', 'naledi', 'sipho', 'ayesha'];
 export const REASONS = ['Spam', 'Harassment', 'Impersonation', 'Other'];
-const empty = () => ({ version: 2, requests: [], blocks: [], reports: [], messages: [] });
+const empty = () => ({ version: 3, requests: [], blocks: [], reports: [], messages: [], circles:seedCircles(), posts:[] });
 const pair = (a,b) => [a,b].sort().join(':');
 const validActor = a => ACTORS.includes(a);
 function members(a,b) { if (!validActor(a) || !validActor(b) || a===b) throw Error('Choose two different demo accounts.'); }
 function validate(d) {
   if(d?.version===1)d={...d,version:2,messages:[]};
-  if (!d || d.version!==2 || !Array.isArray(d.requests) || !Array.isArray(d.blocks) || !Array.isArray(d.reports)) throw Error('Invalid social data.');
+  if(d?.version===2)d={...d,version:3,circles:seedCircles(),posts:[]};
+  if (!d || d.version!==3 || !Array.isArray(d.requests) || !Array.isArray(d.blocks) || !Array.isArray(d.reports)) throw Error('Invalid social data.');
   const pairs=new Set(), blocks=new Set(), reports=new Set();
   for(const q of d.requests){members(q.from,q.to);const key=pair(q.from,q.to);if(pairs.has(key)||!['pending','accepted','declined','cancelled','removed'].includes(q.status)||!Number.isFinite(q.at)||q.at<0)throw Error('Invalid request.');pairs.add(key);}
   for(const b of d.blocks){members(b.from,b.to);const key=b.from+':'+b.to;if(blocks.has(key))throw Error('Duplicate block.');blocks.add(key);}
@@ -17,29 +19,33 @@ function validate(d) {
   if(!Array.isArray(d.messages))throw Error('Invalid messages.');
   let last=0;
   for(const m of d.messages){members(m.from,m.to);if(!Number.isSafeInteger(m.id)||m.id<=last||typeof m.text!=='string'||!m.text.trim()||[...m.text].length>2000||typeof m.read!=='boolean'||!Number.isFinite(m.at)||m.at<0)throw Error('Invalid message.');last=m.id;}
+  validateCircles(d,ACTORS);
   return d;
 }
 export class DemoSocial {
   constructor({ storage=()=>globalThis.localStorage, now=()=>Date.now(), lock=task=>globalThis.navigator?.locks ? navigator.locks.request(SOCIAL_KEY,task) : task() }={}) {
     this.storage=storage;this.now=now;this.lock=lock;this.data=empty();this.expected=null;this.error='';this.ready=false;this.reload();
   }
-  reload(){try{const text=this.storage().getItem(SOCIAL_KEY);const data=text===null?empty():validate(JSON.parse(text));this.data=data;this.expected=text;this.ready=true;this.error='';return true;}catch{this.ready=false;this.error='Demo connection data could not be read. It has been left untouched. Reload saved data or explicitly reset the shared social demo.';return false;}}
+  reload(){try{const text=this.storage().getItem(SOCIAL_KEY);const data=text===null?empty():validate(JSON.parse(text));this.data=data;this.expected=text;this.ready=true;this.error='';return true;}catch{this.ready=false;this.error='Demo social data could not be read. It has been left untouched. Reload saved data or explicitly reset the shared social demo.';return false;}}
   blocked(a,b){return this.data.blocks.some(x=>pair(x.from,x.to)===pair(a,b));}
   relation(a,b){members(a,b);if(this.blocked(a,b))return 'unavailable';const q=this.data.requests.find(x=>pair(x.from,x.to)===pair(a,b));if(!q)return 'none';return q.status==='pending'?(q.from===a?'outgoing':'incoming'):q.status;}
   view(actor){if(!validActor(actor))throw Error('Unknown demo account.');return structuredClone({requests:this.data.requests.filter(q=>(q.from===actor||q.to===actor)&&!this.blocked(q.from,q.to)),blocks:this.data.blocks.filter(b=>b.from===actor),reports:this.data.reports.filter(x=>x.from===actor)});}
   conversation(actor,target){members(actor,target);if(!this.ready)throw Error(this.error);if(this.blocked(actor,target))return [];return structuredClone(this.data.messages.filter(m=>pair(m.from,m.to)===pair(actor,target)));}
   unread(actor,target){return this.relation(actor,target)==='accepted'?this.conversation(actor,target).filter(m=>m.to===actor&&!m.read).length:0;}
+  circles(actor){if(!validActor(actor))throw Error('Unknown demo account.');if(!this.ready)throw Error(this.error);return circleView(this.data,actor);}
   async change(actor,op,target,extra={}) {
-    members(actor,target);
+    const circleOp=typeof op==='string'&&op.startsWith('circle-');
+    if(circleOp){if(!validActor(actor))throw Error('Unknown demo account.');}else members(actor,target);
     return this.lock(async()=>{
       if(!this.ready)throw Error(this.error);
       let store;
-      try{store=this.storage();if(store.getItem(SOCIAL_KEY)!==this.expected){this.ready=false;this.error='Another tab changed demo connections. Reload saved data before continuing.';throw Error(this.error);}}catch(e){throw Error(e.message||'Storage is unavailable.');}
+      try{store=this.storage();if(store.getItem(SOCIAL_KEY)!==this.expected){this.ready=false;this.error='Another tab changed demo social data. Reload saved data before continuing.';throw Error(this.error);}}catch(e){throw Error(e.message||'Storage is unavailable.');}
       const d=structuredClone(this.data),time=this.now();
       const same=q=>pair(q.from,q.to)===pair(actor,target);
       let q=d.requests.find(same);
       const blocked=d.blocks.some(same);
-      if(op==='send'||op==='read'){
+      if(circleOp){changeCircle(d,actor,op,target,extra,time);}
+      else if(op==='send'||op==='read'){
         if(blocked||!q||q.status!=='accepted')throw Error('An active connection is required to message this account.');
         if(op==='send'){
           if(typeof extra.text!=='string'||!extra.text.trim()||[...extra.text].length>2000)throw Error('Write a message of 1 to 2,000 characters.');
@@ -69,7 +75,7 @@ export class DemoSocial {
         d.reports.push({id,from:actor,to:target,reason:extra.reason,details:extra.details.trim(),at:time});
       }else throw Error('Unknown social operation.');
       validate(d);const text=JSON.stringify(d);
-      try{store.setItem(SOCIAL_KEY,text);}catch{throw Error('Could not save demo connections. No change was applied. Free browser storage and try again.');}
+      try{store.setItem(SOCIAL_KEY,text);}catch{throw Error('Could not save demo social data. No change was applied. Free browser storage and try again.');}
       this.data=d;this.expected=text;return true;
     });
   }

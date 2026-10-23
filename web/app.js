@@ -3,7 +3,7 @@ const main = document.querySelector('#main');
 const nav = document.querySelector('#navigation');
 const announcement = document.querySelector('#announcement');
 const resetDialog = document.querySelector('#reset-dialog');
-let socialUI, messagesUI, socialRepository, accounts, client, persistence, catalogues, state, screen = 'welcome', detailOrigin = 'discover';
+let socialUI, messagesUI, circlesUI, socialRepository, accounts, client, persistence, catalogues, state, screen = 'welcome', detailOrigin = 'discover';
 let activeProfileId;
 
 function el(tag, text, className) {
@@ -50,16 +50,17 @@ function heading(title, description) {
   header.append(copy); return header;
 }
 function navigate(next, focus = true) {
-  socialUI?.leave(); messagesUI?.leave(); screen = next; main.replaceChildren(); renderNavigation();
+  socialUI?.leave(); messagesUI?.leave(); circlesUI?.leave(); screen = next; main.replaceChildren(); renderNavigation();
   if (next === 'welcome') welcome();
   else if (next === 'accounts') accountScreen();
   else if (next === 'connections') socialUI.render(main);
   else if (next === 'messages') messagesUI.render(main);
+  else if (next === 'circles') circlesUI.render(main);
   else if (next === 'profile') profileForm();
   else if (next === 'discover') discover();
   else if (next === 'saved') saved();
   else if (next === 'detail') detail();
-  document.title = `Orbit · ${ {welcome:'Find common ground',accounts:'Demo accounts',connections:'Connections',messages:'Messages',profile:'Your demo profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
+  document.title = `Orbit · ${ {welcome:'Find common ground',accounts:'Demo accounts',connections:'Connections',messages:'Messages',circles:'Circles',profile:'Your demo profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
   if (focus) { main.focus(); window.scrollTo(0, 0); }
 }
 function renderNavigation() {
@@ -68,7 +69,7 @@ function renderNavigation() {
   const badge = document.querySelector('#active-account');
   badge.textContent = accounts?.active ? `Using: ${accounts.active.account.label} · Local simulation` : '';
   if (!state?.visitor) return;
-  for (const [destination, name] of [['discover','Discover'],['connections','Connections'],['messages','Messages'],['saved',`Saved (${state.savedIds.length})`],['profile','My profile']]) {
+  for (const [destination, name] of [['discover','Discover'],['connections','Connections'],['messages','Messages'],['circles','Circles'],['saved',`Saved (${state.savedIds.length})`],['profile','My profile']]) {
     const item = button(name, () => navigate(destination), 'text-button');
     if (screen === destination || (screen === 'detail' && detailOrigin === destination)) item.setAttribute('aria-current','page');
     nav.append(item);
@@ -245,12 +246,14 @@ async function start() {
   loading.append(el('p','ONE MOMENT','eyebrow'),el('h1','Finding our common ground…'),el('p','Loading the fictional profiles.'));
   main.append(loading);
   try {
-    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.4.0'), import('./demo-accounts.mjs?v=1.4.0')]);
+    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.5.0'), import('./demo-accounts.mjs?v=1.5.0')]);
     accountsList=ACCOUNTS; accounts=new DemoAccounts({loadClient,report:storageStatus});
-    const { createSocialUI } = await import('./social-ui.mjs?v=1.4.0');
-    const { DemoSocial } = await import('./demo-social.mjs?v=1.4.0');
-    const { createMessagesUI } = await import('./messages-ui.mjs?v=1.4.0');
+    const { createSocialUI } = await import('./social-ui.mjs?v=1.5.0');
+    const { DemoSocial } = await import('./demo-social.mjs?v=1.5.0');
+    const { createMessagesUI } = await import('./messages-ui.mjs?v=1.5.0');
+    const { createCirclesUI } = await import('./circles-ui.mjs?v=1.5.0');
     socialRepository=new DemoSocial();
+    circlesUI=createCirclesUI({accounts,repository:socialRepository,announce:say});
     messagesUI=createMessagesUI({accounts,repository:socialRepository,announce:say});
     socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say,repository:socialRepository,openMessages:target=>{messagesUI.select(target);navigate('messages');}});
     await activateAccount(accounts.initialId());
@@ -264,7 +267,7 @@ async function start() {
 }
 window.addEventListener('storage', event => {
   accounts?.checkExternalChange(event.key);
-  if(['connections','messages'].includes(screen) && (!event.key || event.key===socialUI?.key)){say('Shared social data changed in another tab. Reload saved connections or messages to see it.');}
+  if(['connections','messages','circles'].includes(screen) && (!event.key || event.key===socialUI?.key)){say('Shared social data changed in another tab. Reload the saved social data on this screen to see it.');}
 });
 window.addEventListener('pageshow', event => { if (event.persisted) persistence?.checkExternalChange(); });
 window.addEventListener('pagehide', event => { if (!event.persisted) { accounts?.dispose(); client = undefined; } });

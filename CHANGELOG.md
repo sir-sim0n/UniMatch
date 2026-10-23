@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.5.0 — Interest circles — 2026-10-23
+
+- Added three starter circles and circle creation, joining and leaving.
+- Added member-only posts and replies, with organiser hide/restore controls.
+- Applied block visibility and posting checks; preserved content when members leave.
+- Migrated earlier shared social data to payload version 3 without dropping connections, reports or messages.
+- Added circle lifecycle, moderation, permission, migration, conflict and failed-save tests.
+
+
 ## 1.4.0 — Demo messaging — 2026-10-23
 
 - Added local conversations between accepted connections, unread counts and simulated read status.

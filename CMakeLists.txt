@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(Orbit VERSION 1.4.0 LANGUAGES CXX)
+project(Orbit VERSION 1.5.0 LANGUAGES CXX)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     message(FATAL_ERROR "Use a separate build directory: -B build/wasm")
@@ -80,6 +80,10 @@ add_custom_target(website ALL
         "${CMAKE_SOURCE_DIR}/web/social-ui.mjs" "${UNIMATCH_SITE_DIR}/assets/social-ui.mjs"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
         "${CMAKE_SOURCE_DIR}/web/messages-ui.mjs" "${UNIMATCH_SITE_DIR}/assets/messages-ui.mjs"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/web/circles-core.mjs" "${UNIMATCH_SITE_DIR}/assets/circles-core.mjs"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/web/circles-ui.mjs" "${UNIMATCH_SITE_DIR}/assets/circles-ui.mjs"
     COMMAND "${CMAKE_COMMAND}" -E touch "${UNIMATCH_SITE_DIR}/.nojekyll"
     COMMAND "${CMAKE_COMMAND}" -E make_directory "${UNIMATCH_SITE_DIR}/data"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
@@ -116,6 +120,8 @@ if(BUILD_TESTING)
         "${CMAKE_SOURCE_DIR}/tests/demo_social.mjs" "${CMAKE_SOURCE_DIR}/web/demo-social.mjs")
     add_test(NAME demo_messages COMMAND "${UNIMATCH_NODE}"
         "${CMAKE_SOURCE_DIR}/tests/demo_messages.mjs" "${CMAKE_SOURCE_DIR}/web/demo-social.mjs")
+    add_test(NAME demo_circles COMMAND "${UNIMATCH_NODE}"
+        "${CMAKE_SOURCE_DIR}/tests/demo_circles.mjs" "${CMAKE_SOURCE_DIR}/web/demo-social.mjs")
     add_executable(data_tests tests/data_tests.cpp)
     target_link_libraries(data_tests PRIVATE unimatch_core)
     target_link_options(data_tests PRIVATE -sENVIRONMENT=node

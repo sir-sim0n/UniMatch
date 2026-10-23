@@ -7,7 +7,7 @@ Decision: 2026-10-23. Real-account infrastructure is deferred to control launch 
 1. Demo account system: original account plus ready-made fictional personas, separate profiles/preferences/bookmarks, switching, persistence and account-scoped reset.
 2. Local shared connections, blocking and reports — implemented in v1.3.0; see [connection behaviour](demo-connections.md). Legacy dating-oriented discovery controls removed.
 3. Locally simulated conversations with stable sender/recipient identities and unread state — implemented in v1.4.0; see [messaging behaviour](demo-messaging.md).
-4. Interest circles, membership, posts, replies and simulated moderation.
+4. Interest circles, membership, posts, replies and simulated moderation — implemented in v1.5.0; see [circle behaviour](demo-circles.md).
 5. Events, RSVP capacity, cancellations and reminders within the demo.
 6. End-to-end demo testing, accessibility and student feedback.
 7. Optional real-account backend: revisit docs/v2, security, provider accounts and budget before any real-user rollout.
