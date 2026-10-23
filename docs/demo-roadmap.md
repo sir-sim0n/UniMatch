@@ -35,3 +35,5 @@ The UI uses a data adapter so future backend work can replace persistence and op
 ## Verification
 
 The new demo_accounts test uses the real WebAssembly engine to check account isolation, legacy restoration, per-account bookmarks, refresh, seed resets, failed-save memory retention, corrupt-account recovery, invalid IDs and cross-tab conflict handling. It runs alongside all existing tests. All 12 release test groups passed locally, and the publication check accepted 15 files. Desktop and 390px mobile account selection were visually checked. Browser testing confirmed separate Naledi/Sipho bookmarks, remembered selection after refresh, and selected-account reset. No browser errors or warnings were reported. Online deployment is checked at delivery.
+
+Release asset URLs carry a version for the page entrypoint, stylesheet, account module and persistence dependency to prevent old cached scripts from mixing with the new storage adapter. Increment these versions when these files change.
