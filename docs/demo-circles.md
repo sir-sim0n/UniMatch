@@ -33,3 +33,5 @@ The demo_circles suite covers creation, duplicate names, member-only posting/rea
 Events and RSVPs. Circle editing/deletion, organiser transfer, member bans, attachments, nested replies and real moderation are outside this release.
 
 Local verification: all 15 CTest groups passed and the publication checker accepted 20 files. Browser testing confirmed joining, posting, switching personas, replying, organiser hide, member visibility, restore and refresh persistence. Custom circle creation worked. A 390px mobile layout had no horizontal overflow. No browser console errors were recorded.
+
+Live verification: GitHub Actions run 40021581222 passed build and deployment for 7498eff3cbcb681e5a48bce48d7cbf48ac2b7a9f. The public site loaded the starter circles, accepted an explicitly labelled fictional test post, and preserved the existing Naledi/Sipho messages after saving the migrated payload. The test post remains in this browser as a demonstration. No browser console errors were recorded. Release tagged v1.5.0.
