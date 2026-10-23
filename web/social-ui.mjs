@@ -1,11 +1,12 @@
-import { DemoSocial, SOCIAL_KEY, REASONS } from './demo-social.mjs?v=1.3.0';
+import { DemoSocial, SOCIAL_KEY, REASONS } from './demo-social.mjs?v=1.4.0';
 
 const node=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
-export function createSocialUI({accounts, getCatalogues, announce}) {
-  const repository=new DemoSocial();
+export function createSocialUI({accounts, getCatalogues, announce, repository, openMessages}) {
+
   let generation=0;
   function leave(){generation++;}
   async function render(host){
+    repository.reload();
     const stamp=++generation,actor=accounts.active.account.id;
     host.replaceChildren(node('h1','Your campus connections.'),node('p','Send an invitation, then switch demo accounts to accept it. Everything stays in this browser. No real people are contacted.','muted'));
     const status=node('p','','error');status.setAttribute('role','alert');host.append(status);
@@ -13,7 +14,7 @@ export function createSocialUI({accounts, getCatalogues, announce}) {
     const button=(label,action,cls='secondary')=>{const b=node('button',label,cls);b.type='button';b.onclick=action;return b;};
     controls.append(button('Reload saved connections',()=>{repository.reload();render(host);}),button('Reset shared social demo',()=>{
       const dialog=node('dialog');dialog.setAttribute('aria-label','Reset shared social demo');
-      dialog.append(node('h2','Reset connections for every demo account?'),node('p','This removes all local requests, connections, blocks and reports. Profiles and bookmarks remain unchanged.'));
+      dialog.append(node('h2','Reset connections for every demo account?'),node('p','This removes all local requests, connections, blocks, reports and messages. Profiles and bookmarks remain unchanged.'));
       dialog.append(button('Keep social demo',()=>dialog.close()),button('Reset social data',async()=>{try{await repository.resetAll(true);dialog.close();render(host);announce('Shared social demo reset.');}catch(e){status.textContent=e.message;dialog.close();}}));
       dialog.onclose=()=>dialog.remove();host.append(dialog);dialog.showModal();
     }));
@@ -56,7 +57,7 @@ export function createSocialUI({accounts, getCatalogues, announce}) {
       const action=(label,op)=>{const b=button(label,()=>mutate(op,target));b.setAttribute('aria-label',`${label}: ${p.displayName}`);actions.append(b);};
       if(rel==='incoming'){action('Accept','accept');action('Decline','decline');}
       else if(rel==='outgoing')action('Cancel request','cancel');
-      else if(rel==='accepted')action('Remove connection','remove');
+      else if(rel==='accepted'){actions.append(button(`Message ${p.displayName}`,()=>openMessages(target)));action('Remove connection','remove');}
       else action('Connect','request');
       action('Block','block');actions.append(button(`Report ${p.displayName}`,()=>report(target)));card.append(actions);grid.append(card);
     }

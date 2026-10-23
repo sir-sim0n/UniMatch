@@ -2,17 +2,21 @@
 export const SOCIAL_KEY = 'orbit.demo.social.v1';
 export const ACTORS = ['personal', 'naledi', 'sipho', 'ayesha'];
 export const REASONS = ['Spam', 'Harassment', 'Impersonation', 'Other'];
-const empty = () => ({ version: 1, requests: [], blocks: [], reports: [] });
+const empty = () => ({ version: 2, requests: [], blocks: [], reports: [], messages: [] });
 const pair = (a,b) => [a,b].sort().join(':');
 const validActor = a => ACTORS.includes(a);
 function members(a,b) { if (!validActor(a) || !validActor(b) || a===b) throw Error('Choose two different demo accounts.'); }
 function validate(d) {
-  if (!d || d.version!==1 || !Array.isArray(d.requests) || !Array.isArray(d.blocks) || !Array.isArray(d.reports)) throw Error('Invalid social data.');
+  if(d?.version===1)d={...d,version:2,messages:[]};
+  if (!d || d.version!==2 || !Array.isArray(d.requests) || !Array.isArray(d.blocks) || !Array.isArray(d.reports)) throw Error('Invalid social data.');
   const pairs=new Set(), blocks=new Set(), reports=new Set();
   for(const q of d.requests){members(q.from,q.to);const key=pair(q.from,q.to);if(pairs.has(key)||!['pending','accepted','declined','cancelled','removed'].includes(q.status)||!Number.isFinite(q.at)||q.at<0)throw Error('Invalid request.');pairs.add(key);}
   for(const b of d.blocks){members(b.from,b.to);const key=b.from+':'+b.to;if(blocks.has(key))throw Error('Duplicate block.');blocks.add(key);}
   for(const q of d.requests)if(['pending','accepted'].includes(q.status)&&d.blocks.some(b=>pair(b.from,b.to)===pair(q.from,q.to)))throw Error('Blocked connection.');
   for(const x of d.reports){members(x.from,x.to);if(typeof x.id!=='string'||!x.id||reports.has(x.id)||!REASONS.includes(x.reason)||typeof x.details!=='string'||[...x.details].length>1000||!Number.isFinite(x.at)||x.at<0)throw Error('Invalid report.');reports.add(x.id);}
+  if(!Array.isArray(d.messages))throw Error('Invalid messages.');
+  let last=0;
+  for(const m of d.messages){members(m.from,m.to);if(!Number.isSafeInteger(m.id)||m.id<=last||typeof m.text!=='string'||!m.text.trim()||[...m.text].length>2000||typeof m.read!=='boolean'||!Number.isFinite(m.at)||m.at<0)throw Error('Invalid message.');last=m.id;}
   return d;
 }
 export class DemoSocial {
@@ -23,6 +27,8 @@ export class DemoSocial {
   blocked(a,b){return this.data.blocks.some(x=>pair(x.from,x.to)===pair(a,b));}
   relation(a,b){members(a,b);if(this.blocked(a,b))return 'unavailable';const q=this.data.requests.find(x=>pair(x.from,x.to)===pair(a,b));if(!q)return 'none';return q.status==='pending'?(q.from===a?'outgoing':'incoming'):q.status;}
   view(actor){if(!validActor(actor))throw Error('Unknown demo account.');return structuredClone({requests:this.data.requests.filter(q=>(q.from===actor||q.to===actor)&&!this.blocked(q.from,q.to)),blocks:this.data.blocks.filter(b=>b.from===actor),reports:this.data.reports.filter(x=>x.from===actor)});}
+  conversation(actor,target){members(actor,target);if(!this.ready)throw Error(this.error);if(this.blocked(actor,target))return [];return structuredClone(this.data.messages.filter(m=>pair(m.from,m.to)===pair(actor,target)));}
+  unread(actor,target){return this.relation(actor,target)==='accepted'?this.conversation(actor,target).filter(m=>m.to===actor&&!m.read).length:0;}
   async change(actor,op,target,extra={}) {
     members(actor,target);
     return this.lock(async()=>{
@@ -33,7 +39,13 @@ export class DemoSocial {
       const same=q=>pair(q.from,q.to)===pair(actor,target);
       let q=d.requests.find(same);
       const blocked=d.blocks.some(same);
-      if(op==='request'){
+      if(op==='send'||op==='read'){
+        if(blocked||!q||q.status!=='accepted')throw Error('An active connection is required to message this account.');
+        if(op==='send'){
+          if(typeof extra.text!=='string'||!extra.text.trim()||[...extra.text].length>2000)throw Error('Write a message of 1 to 2,000 characters.');
+          d.messages.push({id:(d.messages.at(-1)?.id??0)+1,from:actor,to:target,text:extra.text.trim(),at:time,read:false});
+        }else for(const m of d.messages)if(m.from===target&&m.to===actor)m.read=true;
+      }else if(op==='request'){
         if(blocked)throw Error('This account is unavailable.');
         if(q&&['pending','accepted'].includes(q.status))throw Error('A request or connection already exists.');
         if(q?.status==='declined'&&time-q.at<7*86400000)throw Error('A declined request has a seven-day demo cooldown.');

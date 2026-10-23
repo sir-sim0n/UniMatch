@@ -2,7 +2,7 @@
 
 Orbit is a portfolio demonstration of university student discovery using fictional adult profiles. The project uses a portable C++17 core, Emscripten and Embind, and plain HTML, CSS, and JavaScript.
 
-**Current release: Orbit 1.3.0 — Demo connections.**
+**Current release: Orbit 1.4.0 — Demo messaging.**
 
 Your campus. Your Interests. Your Connections
 
@@ -25,7 +25,7 @@ ctest --preset wasm-debug
 
 Activate the tools once per new terminal. Configure downloads the exact pinned nlohmann/json source on the first run, so that first run needs Internet access. Later builds reuse it in `build/wasm/_deps/`.
 
-Expected result: CTest reports eleven passing test groups. The website and production JSON files are assembled in `build/wasm/site/`. Generated files stay inside `build/`; do not edit or commit them.
+Expected result: CTest reports 14 passing test groups. The website and production JSON files are assembled in `build/wasm/site/`. Generated files stay inside `build/`; do not edit or commit them.
 
 ## Open the local site
 
@@ -105,3 +105,5 @@ Use **Demo accounts** in the navigation to switch between your original demo and
 ## Demo connections
 
 Use **Connections** to send a request between switchable accounts, then switch accounts to accept or decline. Blocking removes the relationship; reports are local simulations, not messages to moderators. The 45 sample discovery profiles remain separate examples. [Rules and storage contract](docs/demo-connections.md).
+
+Demo messaging: connect two switchable personas, open Messages, send fictional text, then switch accounts to reply. See [messaging behaviour and verification](docs/demo-messaging.md).

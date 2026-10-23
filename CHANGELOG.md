@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.0 — Demo messaging — 2026-10-23
+
+- Added local conversations between accepted connections, unread counts and simulated read status.
+- Added Messages navigation and direct conversation buttons on connected profiles.
+- Recheck connection/block state before sending or marking read; failed saves preserve drafts.
+- Preserve read-only history after disconnecting; hide blocked conversations.
+- Migrate legacy social records without losing connections, blocks or reports. Shared social reset includes messages; profile reset preserves them.
+- Added message lifecycle, isolation, migration, conflict and failed-write tests.
+
+
 ## 1.3.0 — Demo connections — 2026-10-23
 
 - Added mutual requests, accept/decline/cancel/remove, directional blocking and local reports between switchable demo accounts.
