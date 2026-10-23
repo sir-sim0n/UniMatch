@@ -93,3 +93,7 @@ python scripts/check_site.py build/release/site
 ```
 
 The release site is assembled in `build/release/site`. Historical stage notes retain the test counts recorded at each checkpoint; the current release suite contains 11 test groups.
+
+## Real-account platform planning
+
+The live demo remains v1.1.0. [Phase 1 foundation](docs/v2/phase-1-foundation.md), [v2 architecture and costs](docs/v2/architecture.md), and [Phase 2 implementation backlog](docs/v2/phase-2-backlog.md) define the next platform. The first release is campus connections only, without dating. No real accounts are enabled by these documents.

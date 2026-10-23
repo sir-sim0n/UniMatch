@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — v2 planning — 2026-10-23
+
+- Completed Phase 1 product scope, privacy defaults, architecture, conceptual data model, cost proposal, environment/migration plan and Phase 2 acceptance backlog.
+- Confirmed campus connections only; dating and gender/age matching excluded from v2.
+- Selected Supabase + Cloudflare Pages + custom SMTP as the planned real-account architecture. No resources provisioned or paid services purchased.
+- Existing Orbit v1.1.0 demo and release tags remain unchanged.
+
 ## 1.1.0 — Orbit / Sea Glass — 2026-10-23
 
 - Renamed the displayed product to Orbit with the slogan “Your campus. Your Interests. Your Connections”.
