@@ -33,3 +33,5 @@ The demo_social Node suite tests real repository behaviour: self/unknown actors,
 Messaging uses these actor IDs and accepted relationships. It must recheck blocks and connection state on send and restore. There is no chat UI, read receipt, realtime delivery or unread-message counter in v1.3.0.
 
 Local release verification: all 13 CTest groups and the 17-file publication check passed. Browser checks confirmed blank-profile startup, account switching, request receipt, acceptance surviving reload, bidirectional blocking, non-restoring unblock, local report confirmation and account-scoped report visibility. The 390px phone layout was checked visually. Live deployment verification follows publication.
+
+Published verification (2026-10-23): GitHub Actions run 39994865109 completed successfully for e5da14581a5f61d5a33b6598f1fa36c85dfc50ee. The public GitHub Pages site loaded the updated demo account navigation and Connections screen with existing profiles restored and no browser console errors. Release tagged v1.3.0.
