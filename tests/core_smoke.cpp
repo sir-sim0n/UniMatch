@@ -7,7 +7,7 @@
 int main() {
     try {
         const auto info = nlohmann::json::parse(unimatch::application_info_json());
-        if (info.at("apiVersion") != 1 || info.at("application") != "UniMatch" ||
+        if (info.at("apiVersion") != 1 || info.at("application") != "Orbit" ||
             !info.at("demoOnly").get<bool>() || !info.at("stage").is_number_integer() ||
             info.at("message").get<std::string>().empty()) {
             throw std::runtime_error("The bootstrap API contract is invalid.");

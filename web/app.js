@@ -56,7 +56,7 @@ function navigate(next, focus = true) {
   else if (next === 'discover') discover();
   else if (next === 'saved') saved();
   else if (next === 'detail') detail();
-  document.title = `UniMatch · ${ {welcome:'Find common ground',profile:'Your demo profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
+  document.title = `Orbit · ${ {welcome:'Find common ground',profile:'Your demo profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
   if (focus) { main.focus(); window.scrollTo(0, 0); }
 }
 function renderNavigation() {
@@ -71,15 +71,14 @@ function renderNavigation() {
 function welcome() {
   const section = el('section', undefined, 'welcome'); const intro = el('div');
   const title = el('h1'); title.append(document.createTextNode('Shared interests.'), el('br'), el('span','New possibilities.'));
-  intro.append(el('p','A LITTLE COMMON GROUND','eyebrow'),title,
+  intro.append(el('p','WELCOME TO YOUR ORBIT','eyebrow'),title,
     el('p','Explore a fictional campus circle, starting with the things you enjoy.','lede'),
     el('p','Create a demo profile, choose who you’d like to discover, and explore shared interests. All discoverable profiles are fictional adults. Please use fictional details too.','notice'),
     button('Create Demo Profile  ↗',()=>navigate('profile')),
     el('p','Saving is a bookmark, not a mutual match. No accounts, messages, or notifications to other people.','notice'));
-  const art=el('div',undefined,'welcome-art'); const waves=el('img',undefined,'hero-waves');waves.src='./assets/waves.svg';waves.alt='';art.append(waves); const sample=el('div',undefined,'sample');
-  sample.append(el('div','u.','avatar large'),el('p','A PLACE TO START','eyebrow'),el('h2','Find your common ground'),el('p','A favourite hobby. A familiar campus. Something to talk about.','muted'));
-  const tags=el('div',undefined,'tags'); ['Curiosity','Campus life','Shared interests'].forEach(t=>tags.append(el('span',t,'tag shared')));
-  sample.append(tags,el('p','Explore the demo at your own pace.','tagline')); art.append(sample,el('p','Fictional people. Real C++ logic.','art-footnote'));
+  const art=el('div',undefined,'welcome-art');
+  const logo=el('img',undefined,'hero-logo');logo.src='./assets/orbit-logo-stacked.svg';logo.alt='Orbit — Your campus. Your Interests. Your Connections';logo.width=800;logo.height=580;
+  art.append(logo,el('p','A little common ground. A whole new orbit.','art-footnote'));
   section.append(intro,art); main.append(section);
 }
 function field(form, name, title, type='text', value='', hint='') {
@@ -204,7 +203,7 @@ document.querySelector('#confirm-reset').addEventListener('click', () => {
 
 function recovery() {
   screen = 'recovery'; nav.replaceChildren(); main.replaceChildren();
-  document.title = 'UniMatch · Restore your demo';
+  document.title = 'Orbit · Restore your demo';
   const panel = el('section', undefined, 'panel form-shell');
   panel.append(el('h1', 'Let’s start safely.'), el('p', 'Your saved demo was not accepted. You can remove it and start fresh, or try the demo without changing what is stored.'));
   const actions = el('div', undefined, 'actions');

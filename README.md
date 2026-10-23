@@ -1,8 +1,12 @@
-# UniMatch
+# Orbit
 
-UniMatch is a portfolio demonstration of university student discovery using fictional adult profiles. The project uses a portable C++17 core, Emscripten and Embind, and plain HTML, CSS, and JavaScript.
+Orbit is a portfolio demonstration of university student discovery using fictional adult profiles. The project uses a portable C++17 core, Emscripten and Embind, and plain HTML, CSS, and JavaScript.
 
-**Current checkpoint: Stage 7, automated release and GitHub Pages deployment.**
+**Current release: Orbit 1.1.0 — Sea Glass.**
+
+Your campus. Your Interests. Your Connections
+
+Recreated vector branding and a light Sea Glass theme. See [the changelog](CHANGELOG.md) and [brand/release notes](docs/orbit-brand.md). The original UniMatch release is preserved as `v1.0.0` (internal build 0.7.0).
 
 [Live Demo](https://sir-sim0n.github.io/UniMatch/) · [Build and deployment status](https://github.com/sir-sim0n/UniMatch/actions/workflows/pages.yml)
 

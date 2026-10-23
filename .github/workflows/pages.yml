@@ -1,4 +1,4 @@
-name: Test, build, and publish UniMatch
+name: Test, build, and publish Orbit
 
 on:
   push:

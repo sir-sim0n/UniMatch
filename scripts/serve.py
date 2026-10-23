@@ -1,4 +1,4 @@
-"""Serve the generated UniMatch site locally, including correct WASM/module MIME types."""
+"""Serve the generated Orbit site locally, including correct WASM/module MIME types."""
 import argparse
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -28,7 +28,7 @@ def main():
         parser.error('Build the project first: cmake --build --preset wasm-debug')
     handler = partial(SiteHandler, directory=str(site))
     with ThreadingHTTPServer(('127.0.0.1', args.port), handler) as server:
-        print(f'UniMatch: http://127.0.0.1:{args.port}/', flush=True)
+        print(f'Orbit: http://127.0.0.1:{args.port}/', flush=True)
         print('Press Ctrl+C to stop the local server.', flush=True)
         try:
             server.serve_forever()

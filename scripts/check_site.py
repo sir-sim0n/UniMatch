@@ -6,7 +6,7 @@ site = Path(sys.argv[1]).resolve()
 expected = {
     'index.html', '.nojekyll', 'assets/app.js', 'assets/api-client.mjs',
     'assets/persistence.mjs', 'assets/styles.css', 'assets/favicon.svg',
-    'assets/waves.svg', 'assets/unimatch.mjs', 'assets/unimatch.wasm',
+    'assets/orbit-mark.svg', 'assets/orbit-logo.svg', 'assets/orbit-logo-stacked.svg', 'assets/unimatch.mjs', 'assets/unimatch.wasm',
     'data/catalogues.json', 'data/profiles.json',
 }
 actual = {p.relative_to(site).as_posix() for p in site.rglob('*') if p.is_file()}

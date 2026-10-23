@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(UniMatch VERSION 0.7.0 LANGUAGES CXX)
+project(Orbit VERSION 1.1.0 LANGUAGES CXX)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     message(FATAL_ERROR "Use a separate build directory: -B build/wasm")
@@ -66,7 +66,12 @@ add_custom_target(website ALL
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
         "${CMAKE_SOURCE_DIR}/web/favicon.svg" "${UNIMATCH_SITE_DIR}/assets/favicon.svg"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-        "${CMAKE_SOURCE_DIR}/web/waves.svg" "${UNIMATCH_SITE_DIR}/assets/waves.svg"
+        "${CMAKE_SOURCE_DIR}/web/orbit-mark.svg" "${UNIMATCH_SITE_DIR}/assets/orbit-mark.svg"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/web/orbit-logo.svg" "${UNIMATCH_SITE_DIR}/assets/orbit-logo.svg"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/web/orbit-logo-stacked.svg" "${UNIMATCH_SITE_DIR}/assets/orbit-logo-stacked.svg"
+    COMMAND "${CMAKE_COMMAND}" -E rm -f "${UNIMATCH_SITE_DIR}/assets/waves.svg"
     COMMAND "${CMAKE_COMMAND}" -E touch "${UNIMATCH_SITE_DIR}/.nojekyll"
     COMMAND "${CMAKE_COMMAND}" -E make_directory "${UNIMATCH_SITE_DIR}/data"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different

@@ -8,10 +8,10 @@ export class ApiError extends Error {
 export class Client {
   constructor(engine) { this.session = new engine.Session(); }
   call(operation, payload = {}) {
-    if (!this.session) throw new Error('This UniMatch client has been disposed.');
+    if (!this.session) throw new Error('This Orbit client has been disposed.');
     const response = JSON.parse(this.session.request(JSON.stringify({ operation, payload })));
     if (response.apiVersion !== 1 || typeof response.ok !== 'boolean' || !Array.isArray(response.errors)) {
-      throw new Error('Unexpected UniMatch API response.');
+      throw new Error('Unexpected Orbit API response.');
     }
     if (!response.ok) throw new ApiError(response.errors);
     return response.data;

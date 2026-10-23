@@ -7,7 +7,7 @@ const engine = await createUniMatch();
 assert.equal(typeof engine.getApplicationInfo, 'function');
 const first = engine.getApplicationInfo();
 const info = JSON.parse(first);
-assert.equal(info.application, 'UniMatch');
+assert.equal(info.application, 'Orbit');
 assert.equal(info.apiVersion, 1);
 assert.equal(info.demoOnly, true);
 assert.equal(engine.getApplicationInfo(), first, 'The read-only call must be repeatable.');
