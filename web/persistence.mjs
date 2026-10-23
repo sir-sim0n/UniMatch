@@ -3,8 +3,9 @@ export const STORAGE_KEY = 'unimatch.demo.v1';
 // Storage transport only: C++ owns the versioned format and all restoration rules.
 // The provider is lazy because accessing localStorage itself can throw.
 export class Persistence {
-  constructor(client, { storage = () => globalThis.localStorage, report = () => {} } = {}) {
+  constructor(client, { storage = () => globalThis.localStorage, report = () => {}, key = STORAGE_KEY } = {}) {
     this.client = client;
+    this.key = key;
     this.storage = storage;
     this.report = report;
     this.expected = null;
@@ -14,7 +15,7 @@ export class Persistence {
   restore() {
     let text;
     try {
-      text = this.storage().getItem(STORAGE_KEY);
+      text = this.storage().getItem(this.key);
       this.expected = text;
     } catch {
       this.mode = 'memory';
@@ -40,13 +41,13 @@ export class Persistence {
     if (this.mode !== 'ready') return false;
     try {
       const storage = this.storage();
-      if (storage.getItem(STORAGE_KEY) !== this.expected) {
+      if (storage.getItem(this.key) !== this.expected) {
         this.mode = 'conflict';
         this.report('conflict');
         return false;
       }
       const { stateJson } = this.client.call('exportState');
-      storage.setItem(STORAGE_KEY, stateJson);
+      storage.setItem(this.key, stateJson);
       this.expected = stateJson;
       this.report('saved');
       return true;
@@ -66,7 +67,7 @@ export class Persistence {
     this.client.call('reset', { confirmed: true });
     try {
       // Never clear unrelated keys on the same origin.
-      this.storage().removeItem(STORAGE_KEY);
+      this.storage().removeItem(this.key);
       this.expected = null;
       this.mode = 'ready';
       this.report('reset');
@@ -81,7 +82,7 @@ export class Persistence {
   checkExternalChange() {
     if (this.mode !== 'ready') return;
     try {
-      if (this.storage().getItem(STORAGE_KEY) !== this.expected) {
+      if (this.storage().getItem(this.key) !== this.expected) {
         this.mode = 'conflict';
         this.report('conflict');
       }

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0 — Demo accounts — 2026-10-23
+
+- Adopted the demo-first roadmap; real-account hosting is deferred.
+- Added original-account preservation and three ready-made fictional NWU accounts with switching and independent profiles, preferences and bookmarks.
+- Added remembered active selection, scoped resets, storage recovery and isolation tests.
+- No real authentication or cross-device sharing. Social features will follow in later phases.
+
 ## Unreleased — v2 planning — 2026-10-23
 
 - Completed Phase 1 product scope, privacy defaults, architecture, conceptual data model, cost proposal, environment/migration plan and Phase 2 acceptance backlog.

@@ -1,5 +1,7 @@
 # Orbit v2 — Phase 1 foundation
 
+> Deferred on 2026-10-23. The active plan is the [demo-first roadmap](../demo-roadmap.md); retain this document for future production work.
+
 Date: 2026-10-23. Status: planning deliverables complete; implementation not started.
 Live product remains Orbit v1.1.0. This is a specification, not a claim that real accounts exist.
 

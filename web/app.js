@@ -3,7 +3,7 @@ const main = document.querySelector('#main');
 const nav = document.querySelector('#navigation');
 const announcement = document.querySelector('#announcement');
 const resetDialog = document.querySelector('#reset-dialog');
-let client, persistence, catalogues, state, screen = 'welcome', detailOrigin = 'discover';
+let accounts, client, persistence, catalogues, state, screen = 'welcome', detailOrigin = 'discover';
 let activeProfileId;
 
 function el(tag, text, className) {
@@ -52,15 +52,20 @@ function heading(title, description) {
 function navigate(next, focus = true) {
   screen = next; main.replaceChildren(); renderNavigation();
   if (next === 'welcome') welcome();
+  else if (next === 'accounts') accountScreen();
   else if (next === 'profile') profileForm();
   else if (next === 'discover') discover();
   else if (next === 'saved') saved();
   else if (next === 'detail') detail();
-  document.title = `Orbit · ${ {welcome:'Find common ground',profile:'Your demo profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
+  document.title = `Orbit · ${ {welcome:'Find common ground',accounts:'Demo accounts',profile:'Your demo profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
   if (focus) { main.focus(); window.scrollTo(0, 0); }
 }
 function renderNavigation() {
-  nav.replaceChildren(); if (!state?.visitor) return;
+  nav.replaceChildren();
+  nav.append(button('Demo accounts', () => navigate('accounts'), 'text-button'));
+  const badge = document.querySelector('#active-account');
+  badge.textContent = accounts?.active ? `Using: ${accounts.active.account.label} · Local simulation` : '';
+  if (!state?.visitor) return;
   for (const [destination, name] of [['discover','Discover'],['saved',`Saved (${state.savedIds.length})`],['profile','My profile']]) {
     const item = button(name, () => navigate(destination), 'text-button');
     if (screen === destination || (screen === 'detail' && detailOrigin === destination)) item.setAttribute('aria-current','page');
@@ -76,10 +81,37 @@ function welcome() {
     el('p','Create a demo profile, choose who you’d like to discover, and explore shared interests. All discoverable profiles are fictional adults. Please use fictional details too.','notice'),
     button('Create Demo Profile  ↗',()=>navigate('profile')),
     el('p','Saving is a bookmark, not a mutual match. No accounts, messages, or notifications to other people.','notice'));
+  intro.append(button('Try a ready-made demo account',()=>navigate('accounts'),'secondary'));
   const art=el('div',undefined,'welcome-art');
   const logo=el('img',undefined,'hero-logo');logo.src='./assets/orbit-logo-stacked.svg';logo.alt='Orbit — Your campus. Your Interests. Your Connections';logo.width=800;logo.height=580;
   art.append(logo,el('p','A little common ground. A whole new orbit.','art-footnote'));
   section.append(intro,art); main.append(section);
+}
+function accountScreen() {
+  main.append(heading('Choose your demo account.', 'Switch between fictional students on this device. No passwords, real accounts, or messages to real people.'));
+  main.append(el('p','Each account has its own profile, preferences and bookmarks. Connections and conversations will arrive in the next phases. Switching leaves unsaved form edits behind; use Save profile first.','notice'));
+  const grid=el('div',undefined,'account-grid');
+  for (const account of accountsList) {
+    const panel=el('article',undefined,'panel');
+    panel.append(el('div',initials(account.label),'avatar'),el('h2',account.label),el('p',account.description,'muted'));
+    const action=button(accounts.active.account.id===account.id?'Continue with this account':'Use this account',async()=>{
+      grid.querySelectorAll('button').forEach(b=>b.disabled=true);
+      try {
+        await activateAccount(account.id);
+        if(persistence.mode==='recovery') recovery();
+        else navigate(state.visitor?'discover':'welcome');
+        say(`Using ${account.label}.`);
+      } catch(error) { grid.querySelectorAll('button').forEach(b=>b.disabled=false); problem.textContent=error.message; }
+    });
+    action.setAttribute('aria-label',`Use ${account.label}`);panel.append(action);grid.append(panel);
+  }
+  const problem=el('p',undefined,'error');problem.setAttribute('role','alert');
+  main.append(grid,problem);
+}
+let accountsList=[];
+async function activateAccount(id) {
+  const entry=await accounts.activate(id);
+  client=entry.client;persistence=entry.persistence;catalogues=client.call('getCatalogues');readState();
 }
 function field(form, name, title, type='text', value='', hint='') {
   const wrap=el('label',undefined,'field'); const input=el(type==='textarea'?'textarea':'input');
@@ -195,14 +227,14 @@ document.querySelector('#cancel-reset').addEventListener('click',()=>resetDialog
 
 document.querySelector('#confirm-reset').addEventListener('click', () => {
   try {
-    const removed = persistence.reset();
-    resetDialog.close(); readState(); navigate('welcome');
-    say(removed ? 'Demo reset and saved data removed.' : 'This page has been reset. Saved data could not be removed.');
+    const removed = accounts.resetActive();
+    resetDialog.close(); readState(); navigate(state.visitor?'discover':'welcome');
+    say(removed ? 'Selected demo account reset. Other accounts are unchanged.' : 'This page has been reset. Saved data could not be removed.');
   } catch (error) { say(error.message); }
 });
 
 function recovery() {
-  screen = 'recovery'; nav.replaceChildren(); main.replaceChildren();
+  screen = 'recovery'; renderNavigation(); nav.replaceChildren(button('Demo accounts',()=>navigate('accounts'),'text-button')); main.replaceChildren();
   document.title = 'Orbit · Restore your demo';
   const panel = el('section', undefined, 'panel form-shell');
   panel.append(el('h1', 'Let’s start safely.'), el('p', 'Your saved demo was not accepted. You can remove it and start fresh, or try the demo without changing what is stored.'));
@@ -218,23 +250,22 @@ async function start() {
   loading.append(el('p','ONE MOMENT','eyebrow'),el('h1','Finding our common ground…'),el('p','Loading the fictional profiles.'));
   main.append(loading);
   try {
-    const [{ loadClient }, { Persistence }] = await Promise.all([import('./api-client.mjs'), import('./persistence.mjs')]);
-    client = await loadClient(); catalogues = client.call('getCatalogues');
-    persistence = new Persistence(client, { report: storageStatus });
-    const restored = persistence.restore(); readState();
-    if (restored === 'invalid') recovery();
+    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs'), import('./demo-accounts.mjs')]);
+    accountsList=ACCOUNTS; accounts=new DemoAccounts({loadClient,report:storageStatus});
+    await activateAccount(accounts.initialId());
+    if (persistence.mode === 'recovery') recovery();
     else navigate(state.visitor ? 'discover' : 'welcome', false);
   } catch (error) {
-    client?.dispose(); client = undefined; persistence = undefined;
+    accounts?.dispose(); client = undefined; persistence = undefined;
     loading.replaceChildren(el('h1','The demo could not load.'),el('p','Check your connection and try again. If the problem continues, refresh the page.'),button('Try again',start));
     console.error(error);
   }
 }
 window.addEventListener('storage', event => {
-  if (event.key === 'unimatch.demo.v1' || event.key === null) persistence?.checkExternalChange();
+  accounts?.checkExternalChange(event.key);
 });
 window.addEventListener('pageshow', event => { if (event.persisted) persistence?.checkExternalChange(); });
-window.addEventListener('pagehide', event => { if (!event.persisted) { client?.dispose(); client = undefined; } });
+window.addEventListener('pagehide', event => { if (!event.persisted) { accounts?.dispose(); client = undefined; } });
 start();
 
 

@@ -2,7 +2,7 @@
 
 Orbit is a portfolio demonstration of university student discovery using fictional adult profiles. The project uses a portable C++17 core, Emscripten and Embind, and plain HTML, CSS, and JavaScript.
 
-**Current release: Orbit 1.1.0 — Sea Glass.**
+**Current release: Orbit 1.2.0 — Demo accounts.**
 
 Your campus. Your Interests. Your Connections
 
@@ -96,4 +96,8 @@ The release site is assembled in `build/release/site`. Historical stage notes re
 
 ## Real-account platform planning
 
-The live demo remains v1.1.0. [Phase 1 foundation](docs/v2/phase-1-foundation.md), [v2 architecture and costs](docs/v2/architecture.md), and [Phase 2 implementation backlog](docs/v2/phase-2-backlog.md) define the next platform. The first release is campus connections only, without dating. No real accounts are enabled by these documents.
+The real-account plan is deferred. Follow the [active demo-first roadmap](docs/demo-roadmap.md). [Phase 1 foundation](docs/v2/phase-1-foundation.md), [v2 architecture and costs](docs/v2/architecture.md), and [Phase 2 implementation backlog](docs/v2/phase-2-backlog.md) define the next platform. The first release is campus connections only, without dating. No real accounts are enabled by these documents.
+
+## Demo accounts
+
+Use **Demo accounts** in the navigation to switch between your original demo and three fictional NWU students. Each account keeps its own profile, preferences and bookmarks. Reset affects only the selected account. These are local simulations, without passwords or cross-device sharing. [Roadmap and data behaviour](docs/demo-roadmap.md).

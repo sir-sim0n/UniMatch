@@ -6,7 +6,7 @@ Site: https://sir-sim0n.github.io/UniMatch/
 
 ## Publish an update
 
-Commit application changes and push to `main`. The **Test, build, and publish Orbit** workflow builds with pinned tools, runs all 11 CTest groups, checks the exact website file list, and uploads only `build/release/site`. Deployment depends on a successful build. Pull requests test without publishing. The workflow can also be run manually from Actions.
+Commit application changes and push to `main`. The **Test, build, and publish Orbit** workflow builds with pinned tools, runs all 12 CTest groups, checks the exact website file list, and uploads only `build/release/site`. Deployment depends on a successful build. Pull requests test without publishing. The workflow can also be run manually from Actions.
 
 Repository Settings > Pages must use **GitHub Actions** as the source. The deployment environment is `github-pages`; its URL is reported by the deployment job. HTTPS is enforced for the default GitHub Pages domain.
 
@@ -14,7 +14,7 @@ The workflow uses Emscripten 4.0.15, Python 3.12.2, CMake 3.31.6, and Ninja pack
 
 ## Published files
 
-Only index.html, .nojekyll, the ten application assets (including the generated JavaScript module and WebAssembly binary), and two production JSON data files are deployed. The 14-file publication checker rejects missing, empty, unexpected, or symlinked files. Source documents, test fixtures, build tools, and local reference material are not part of the website artifact.
+Only index.html, .nojekyll, the eleven application assets (including the generated JavaScript module and WebAssembly binary), and two production JSON data files are deployed. The 15-file publication checker rejects missing, empty, unexpected, or symlinked files. Source documents, test fixtures, build tools, and local reference material are not part of the website artifact.
 
 Relative asset and data URLs support the `/UniMatch/` project path. Keep its capitalization in shared links.
 
