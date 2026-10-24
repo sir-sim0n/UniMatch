@@ -9,3 +9,5 @@ Optional campus/topic filters now sit behind a native details disclosure. Active
 This release changes presentation only: no shared data schema migration, new authentication, follow rules or event functionality. Existing posts, comments, follows, messages and circles remain intact. Browser asset URLs and build metadata advance to 1.6.1. Validation results follow below.
 
 Local verification: all 16 CTest groups passed and the publication checker accepted 23 files. Desktop reading layout and icons were visually checked. Filters expanded, retained active selections, and correctly narrowed the feed. At a 390px viewport the complete menu opened and closed after navigation; guest upvote prompts remained functional. DOM measurements confirmed cards stayed inside their margins with no horizontal overflow. Browser console errors: none.
+
+Live verification: GitHub Actions run 40099484243 passed build and deployment for 9ddbc2f0c627ebd5d126cec7ee4423f998344b93. Public filters opened and closed correctly, the mobile Explore Orbit menu retained its destinations and collapsed after navigation, and no browser console errors were recorded. Release tagged v1.6.1.
