@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(Orbit VERSION 1.6.1 LANGUAGES CXX)
+project(Orbit VERSION 1.7.0 LANGUAGES CXX)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     message(FATAL_ERROR "Use a separate build directory: -B build/wasm")
@@ -96,6 +96,8 @@ add_custom_target(website ALL
         "${CMAKE_SOURCE_DIR}/data/catalogues.json" "${UNIMATCH_SITE_DIR}/data/catalogues.json"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
         "${CMAKE_SOURCE_DIR}/data/profiles.json" "${UNIMATCH_SITE_DIR}/data/profiles.json"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/web/engagement-core.mjs" "${UNIMATCH_SITE_DIR}/assets/engagement-core.mjs"
     DEPENDS unimatch
     VERBATIM
 )
@@ -130,6 +132,7 @@ if(BUILD_TESTING)
         "${CMAKE_SOURCE_DIR}/tests/demo_circles.mjs" "${CMAKE_SOURCE_DIR}/web/demo-social.mjs")
     add_test(NAME public_feed COMMAND "${UNIMATCH_NODE}"
         "${CMAKE_SOURCE_DIR}/tests/public_feed.mjs" "${CMAKE_SOURCE_DIR}/web/demo-social.mjs")
+    add_test(NAME engagement COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/engagement.mjs")
     add_executable(data_tests tests/data_tests.cpp)
     target_link_libraries(data_tests PRIVATE unimatch_core)
     target_link_options(data_tests PRIVATE -sENVIRONMENT=node

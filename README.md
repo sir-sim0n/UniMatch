@@ -2,7 +2,9 @@
 
 Orbit is a portfolio demonstration of university student discovery using fictional adult profiles. The project uses a portable C++17 core, Emscripten and Embind, and plain HTML, CSS, and JavaScript.
 
-**Current release: Orbit 1.6.1 — Refined public campus feed.**
+**Current release: Orbit 1.7.0 — Campus engagement demo.**
+
+Notifications and @mentions, reposts and quotes, Hot/Top sorting, collapsible comments, hashtags and Trending, flair, profile pins and karma are available in the local demo. See [engagement behaviour and limits](docs/engagement.md).
 
 Your campus. Your Interests. Your Connections
 
@@ -25,7 +27,7 @@ ctest --preset wasm-debug
 
 Activate the tools once per new terminal. Configure downloads the exact pinned nlohmann/json source on the first run, so that first run needs Internet access. Later builds reuse it in `build/wasm/_deps/`.
 
-Expected result: CTest reports 16 passing test groups. The website and production JSON files are assembled in `build/wasm/site/`. Generated files stay inside `build/`; do not edit or commit them.
+Expected result: CTest reports 17 passing test groups. The website and production JSON files are assembled in `build/wasm/site/`. Generated files stay inside `build/`; do not edit or commit them.
 
 ## Open the local site
 

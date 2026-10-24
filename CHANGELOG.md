@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.7.0 — Campus engagement demo (2026-10-24)
+- Added account-specific notifications and stable @mentions.
+- Added attributed reposts and quote posts.
+- Added Hot/Top with time ranges and collapsible comment branches.
+- Added hashtags, filtering and seven-day Trending.
+- Added optional post flair, own-profile pinning and vote-derived karma.
+- Migrated shared demo data to schema 5; preserved guest browsing and existing menu options.
+- See docs/engagement.md for exact behaviour, limits and verification.
+
+
 ## 1.6.1 — Feed design refinement — 2026-10-24
 
 - Refined typography, post spacing, metadata, composer and community cards.

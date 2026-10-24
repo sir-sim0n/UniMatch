@@ -41,3 +41,7 @@ Release asset URLs carry a version for the page entrypoint, stylesheet, account 
 ## Public-first redesign — v1.6.0 (2026-10-24)
 
 Before events, the user requested a slower design iteration around a public discussion feed and people-first follows. Home now opens to guest browsing; account selection is required only to participate. Existing menus, mutual connections, private messaging and circles remain available. Public profile posts are independent of circle membership. See [the redesign contract](public-feed.md). Events remain the next feature phase, not part of this redesign.
+
+
+## Campus engagement — v1.7.0
+The five requested additions are implemented together: notifications/mentions; reposts/quotes; Hot/Top and collapsed comments; hashtags/Trending; flair/profile pins/karma. See engagement.md. Events remain paused.
