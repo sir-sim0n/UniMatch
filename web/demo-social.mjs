@@ -1,5 +1,5 @@
-import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.6.0';
-import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.6.0';
+import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.6.1';
+import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.6.1';
 // Demo-only shared state. Not authentication or a security boundary.
 export const SOCIAL_KEY = 'orbit.demo.social.v1';
 export const ACTORS = ['personal', 'naledi', 'sipho', 'ayesha'];

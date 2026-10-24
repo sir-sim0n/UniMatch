@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.6.1 — Feed design refinement — 2026-10-24
+
+- Refined typography, post spacing, metadata, composer and community cards.
+- Replaced mixed text symbols with consistent local vector icons.
+- Made optional campus/topic filters collapsible and mobile filters full-width.
+- Added an accessible mobile menu that retains every existing destination and closes after navigation.
+- Preserved guest permissions, social data and feed behaviour; events remain paused.
+
+
 ## 1.6.0 — Public campus feed — 2026-10-24
 
 - Replaced the profile-first landing with a guest-readable discussion feed and Sea Glass sidebar layout inspired by the supplied reference.

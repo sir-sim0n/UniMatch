@@ -1,7 +1,9 @@
+import {icon} from './ui-icons.mjs?v=1.6.1';
 // Profile/catalogue decisions use the C++ API; demo social rules use the local repository adapter.
 const main = document.querySelector('#main');
 const nav = document.querySelector('#navigation');
 const announcement = document.querySelector('#announcement');
+const menuToggle=document.querySelector('#menu-toggle');menuToggle.prepend(icon('menu'));menuToggle.onclick=()=>{const open=document.querySelector('.sidebar').classList.toggle('mobile-nav-open');menuToggle.setAttribute('aria-expanded',String(open));};
 const resetDialog = document.querySelector('#reset-dialog');
 let feedUI, guestClient, guest=true, socialUI, messagesUI, circlesUI, socialRepository, accounts, client, persistence, catalogues, state, screen = 'welcome', detailOrigin = 'discover';
 let activeProfileId;
@@ -57,6 +59,7 @@ function requireAccount(){
 function navigate(next, focus = true) {
   if(['connections','messages','saved','profile','detail'].includes(next)&&!requireAccount())return;
   if(next==='welcome')next='home';
+  document.querySelector('.sidebar').classList.remove('mobile-nav-open');document.querySelector('#menu-toggle').setAttribute('aria-expanded','false');
   socialUI?.leave(); messagesUI?.leave(); circlesUI?.leave(); feedUI?.leave(); screen = next; main.replaceChildren(); renderNavigation();
   if (next === 'home') feedUI.render(main);
   else if(next==='public-profile')feedUI.render(main);
@@ -72,13 +75,14 @@ function navigate(next, focus = true) {
   document.title = `Orbit · ${ {home:'Campus feed','public-profile':'Public posts','new-profile':'Create profile',welcome:'Find common ground',accounts:'Demo accounts',connections:'Connections',messages:'Messages',circles:'Circles',profile:'Your demo profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
   if (focus) { main.focus(); window.scrollTo(0, 0); }
 }
+function navIcon(destination){return icon(destination);}
 function renderNavigation() {
   nav.replaceChildren(el('p','YOUR ORBIT','eyebrow'));
   const signed=!guest&&!!state?.visitor;
   document.querySelector('#active-account').textContent=signed?`Using ${accounts.active.account.label} · Demo account`:'Browsing as a guest · Everyone belongs here';
   document.querySelector('#storage-status').hidden=!signed;
   for(const [destination,name,icon] of [['home','Home','⌂'],['discover','Discover','◎'],['connections','Connections','♧'],['messages','Messages','◷'],['circles','Circles','◉'],['saved','Saved','♧'],['profile','My profile','◯'],['accounts','Demo accounts','⇄']]){
-    const item=button('',()=>{if(destination==='home')feedUI.home();navigate(destination);},'text-button');const symbol=el('span',icon,'nav-symbol');symbol.setAttribute('aria-hidden','true');item.append(symbol,document.createTextNode(name));if(screen===destination)item.setAttribute('aria-current','page');nav.append(item);
+    const item=button('',()=>{if(destination==='home')feedUI.home();navigate(destination);},'text-button');const symbol=navIcon(destination);item.append(symbol,document.createTextNode(name));if(screen===destination)item.setAttribute('aria-current','page');nav.append(item);
   }
   nav.append(button('Reset demo',()=>{if(requireAccount())resetDialog.showModal();},'text-button'));
   if(signed)nav.append(button('Browse as guest',()=>{guest=true;feedUI.home();navigate('home');},'secondary'));
@@ -260,13 +264,13 @@ async function start() {
   loading.append(el('p','ONE MOMENT','eyebrow'),el('h1','Finding our common ground…'),el('p','Loading the fictional profiles.'));
   main.append(loading);
   try {
-    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.6.0'), import('./demo-accounts.mjs?v=1.6.0')]);
+    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.6.1'), import('./demo-accounts.mjs?v=1.6.1')]);
     accountsList=ACCOUNTS; accounts=new DemoAccounts({loadClient,report:storageStatus});
-    const { createSocialUI } = await import('./social-ui.mjs?v=1.6.0');
-    const { DemoSocial } = await import('./demo-social.mjs?v=1.6.0');
-    const { createMessagesUI } = await import('./messages-ui.mjs?v=1.6.0');
-    const { createCirclesUI } = await import('./circles-ui.mjs?v=1.6.0');
-    const { createFeedUI } = await import('./feed-ui.mjs?v=1.6.0');
+    const { createSocialUI } = await import('./social-ui.mjs?v=1.6.1');
+    const { DemoSocial } = await import('./demo-social.mjs?v=1.6.1');
+    const { createMessagesUI } = await import('./messages-ui.mjs?v=1.6.1');
+    const { createCirclesUI } = await import('./circles-ui.mjs?v=1.6.1');
+    const { createFeedUI } = await import('./feed-ui.mjs?v=1.6.1');
     socialRepository=new DemoSocial();
     feedUI=createFeedUI({accounts,repository:socialRepository,getActor:()=>!guest&&state?.visitor?accounts.active.account.id:null,getCatalogues:()=>catalogues,requireAccount,announce:say});
     circlesUI=createCirclesUI({accounts,repository:socialRepository,announce:say});

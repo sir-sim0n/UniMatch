@@ -14,7 +14,7 @@ The workflow uses Emscripten 4.0.15, Python 3.12.2, CMake 3.31.6, and Ninja pack
 
 ## Published files
 
-Only index.html, .nojekyll, the eighteen application assets (including the generated JavaScript module and WebAssembly binary), and two production JSON data files are deployed. The 22-file publication checker rejects missing, empty, unexpected, or symlinked files. Source documents, test fixtures, build tools, and local reference material are not part of the website artifact.
+Only index.html, .nojekyll, the nineteen application assets (including the generated JavaScript module and WebAssembly binary), and two production JSON data files are deployed. The 23-file publication checker rejects missing, empty, unexpected, or symlinked files. Source documents, test fixtures, build tools, and local reference material are not part of the website artifact.
 
 Relative asset and data URLs support the `/UniMatch/` project path. Keep its capitalization in shared links.
 

@@ -2,7 +2,7 @@
 
 Orbit is a portfolio demonstration of university student discovery using fictional adult profiles. The project uses a portable C++17 core, Emscripten and Embind, and plain HTML, CSS, and JavaScript.
 
-**Current release: Orbit 1.6.0 — Public campus feed.**
+**Current release: Orbit 1.6.1 — Refined public campus feed.**
 
 Your campus. Your Interests. Your Connections
 

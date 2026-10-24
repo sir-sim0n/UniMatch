@@ -1,4 +1,4 @@
-import { DemoSocial, SOCIAL_KEY, REASONS } from './demo-social.mjs?v=1.6.0';
+import { DemoSocial, SOCIAL_KEY, REASONS } from './demo-social.mjs?v=1.6.1';
 
 const node=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 export function createSocialUI({accounts, getCatalogues, announce, repository, openMessages}) {
