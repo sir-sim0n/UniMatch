@@ -30,3 +30,5 @@ Verification on 2026-10-24:
 - Fixed navigation/title after opening an inbox conversation and kept deep comment descendants inside their parent disclosure.
 
 Events remain paused. Live deployment verification follows publication.
+
+Live verification: source commit 60aa3f9eaf0999b9316093cc95aa474acf2c2960; GitHub Actions run 40124081556 completed build and deployment successfully. Live guest feed, Hot/Top controls, Top time range and notification account gate checked; no console errors. Screenshot: orbit-engagement-live.png in the task workspace. Release tag v1.7.0 includes this verification record.
