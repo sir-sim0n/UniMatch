@@ -1,4 +1,4 @@
-import { DemoSocial, SOCIAL_KEY, REASONS } from './demo-social.mjs?v=1.5.0';
+import { DemoSocial, SOCIAL_KEY, REASONS } from './demo-social.mjs?v=1.6.0';
 
 const node=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 export function createSocialUI({accounts, getCatalogues, announce, repository, openMessages}) {
@@ -14,7 +14,7 @@ export function createSocialUI({accounts, getCatalogues, announce, repository, o
     const button=(label,action,cls='secondary')=>{const b=node('button',label,cls);b.type='button';b.onclick=action;return b;};
     controls.append(button('Reload saved connections',()=>{repository.reload();render(host);}),button('Reset shared social demo',()=>{
       const dialog=node('dialog');dialog.setAttribute('aria-label','Reset shared social demo');
-      dialog.append(node('h2','Reset connections for every demo account?'),node('p','This removes all local requests, connections, blocks, reports, messages, circles and posts. Profiles and bookmarks remain unchanged.'));
+      dialog.append(node('h2','Reset connections for every demo account?'),node('p','This removes all local requests, connections, blocks, reports, messages, circles, public posts, comments, follows and votes. Profiles and bookmarks remain unchanged.'));
       dialog.append(button('Keep social demo',()=>dialog.close()),button('Reset social data',async()=>{try{await repository.resetAll(true);dialog.close();render(host);announce('Shared social demo reset.');}catch(e){status.textContent=e.message;dialog.close();}}));
       dialog.onclose=()=>dialog.remove();host.append(dialog);dialog.showModal();
     }));

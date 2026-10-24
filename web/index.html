@@ -2,26 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Explore common ground with fictional adult student profiles. A Orbit portfolio demo.">
+  <meta name="description" content="Your campus, your conversation. Browse public student discussions, follow people and find your community. Orbit fictional demo.">
   <title>Orbit · Find common ground</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./assets/styles.css?v=1.5.0">
-  <script type="module" src="./assets/app.js?v=1.5.0"></script>
+  <link rel="stylesheet" href="./assets/styles.css?v=1.6.0">
+  <script type="module" src="./assets/app.js?v=1.6.0"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="./" aria-label="Orbit home"><img class="brand-symbol" src="./assets/orbit-mark.svg" alt="" width="64" height="64"><span class="brand-copy"><span class="brand-name">orbit.</span><span class="brand-subtitle">Your campus. Your Interests. Your Connections</span></span></a>
-    <nav id="navigation" aria-label="Main navigation"></nav><span class="demo-badge">FICTIONAL DEMO</span>
+    <span class="demo-badge">FICTIONAL DEMO</span>
   </header>
   <div class="session-note">Use fictional details only. Demo accounts are simulated on this device. Saved changes do not sync across devices.</div>
+  <div class="app-shell"><aside class="sidebar"><nav id="navigation" aria-label="Main navigation"></nav></aside><div class="app-content">
   <div id="active-account" class="account-banner" role="status"></div>
   <section id="storage-status" class="storage-status" aria-label="Browser saving" aria-live="polite"></section>
   <main id="main" tabindex="-1"><p role="status">Loading the fictional demo…</p></main>
+  </div></div>
   <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
   <footer><span>Orbit · Your campus. Your Interests. Your Connections</span><span>Fictional adults · No institutional endorsement</span></footer>
   <dialog id="reset-dialog" aria-labelledby="reset-title">
-    <h2 id="reset-title">Start fresh?</h2><p>This resets only the selected demo account. Ready-made accounts return to their starter profile; your original demo becomes blank. Shared connections, blocks, reports, messages, circles and posts remain unchanged. Reset those separately in Connections. Other profiles and sites remain untouched.</p>
+    <h2 id="reset-title">Start fresh?</h2><p>This resets only the selected demo account. Ready-made accounts return to their starter profile; your original demo becomes blank. Shared connections, blocks, reports, messages, circles, public posts, comments and follows remain unchanged. Reset those separately in Connections. Other profiles and sites remain untouched.</p>
     <div class="actions"><button id="cancel-reset" class="secondary">Keep my demo</button><button id="confirm-reset">Reset demo</button></div>
   </dialog>
   <noscript><p class="error">Enable JavaScript to use this WebAssembly demo.</p></noscript>

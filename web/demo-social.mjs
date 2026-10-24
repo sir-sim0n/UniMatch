@@ -1,16 +1,18 @@
-import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.5.0';
+import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.6.0';
+import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.6.0';
 // Demo-only shared state. Not authentication or a security boundary.
 export const SOCIAL_KEY = 'orbit.demo.social.v1';
 export const ACTORS = ['personal', 'naledi', 'sipho', 'ayesha'];
 export const REASONS = ['Spam', 'Harassment', 'Impersonation', 'Other'];
-const empty = () => ({ version: 3, requests: [], blocks: [], reports: [], messages: [], circles:seedCircles(), posts:[] });
+const empty = () => ({ version: 4, ...seedFeed(), requests: [], blocks: [], reports: [], messages: [], circles:seedCircles(), posts:[] });
 const pair = (a,b) => [a,b].sort().join(':');
 const validActor = a => ACTORS.includes(a);
 function members(a,b) { if (!validActor(a) || !validActor(b) || a===b) throw Error('Choose two different demo accounts.'); }
 function validate(d) {
   if(d?.version===1)d={...d,version:2,messages:[]};
   if(d?.version===2)d={...d,version:3,circles:seedCircles(),posts:[]};
-  if (!d || d.version!==3 || !Array.isArray(d.requests) || !Array.isArray(d.blocks) || !Array.isArray(d.reports)) throw Error('Invalid social data.');
+  if(d?.version===3)d={...d,version:4,...seedFeed()};
+  if (!d || d.version!==4 || !Array.isArray(d.requests) || !Array.isArray(d.blocks) || !Array.isArray(d.reports)) throw Error('Invalid social data.');
   const pairs=new Set(), blocks=new Set(), reports=new Set();
   for(const q of d.requests){members(q.from,q.to);const key=pair(q.from,q.to);if(pairs.has(key)||!['pending','accepted','declined','cancelled','removed'].includes(q.status)||!Number.isFinite(q.at)||q.at<0)throw Error('Invalid request.');pairs.add(key);}
   for(const b of d.blocks){members(b.from,b.to);const key=b.from+':'+b.to;if(blocks.has(key))throw Error('Duplicate block.');blocks.add(key);}
@@ -19,7 +21,7 @@ function validate(d) {
   if(!Array.isArray(d.messages))throw Error('Invalid messages.');
   let last=0;
   for(const m of d.messages){members(m.from,m.to);if(!Number.isSafeInteger(m.id)||m.id<=last||typeof m.text!=='string'||!m.text.trim()||[...m.text].length>2000||typeof m.read!=='boolean'||!Number.isFinite(m.at)||m.at<0)throw Error('Invalid message.');last=m.id;}
-  validateCircles(d,ACTORS);
+  validateCircles(d,ACTORS);validateFeed(d,ACTORS);
   return d;
 }
 export class DemoSocial {
@@ -32,10 +34,12 @@ export class DemoSocial {
   view(actor){if(!validActor(actor))throw Error('Unknown demo account.');return structuredClone({requests:this.data.requests.filter(q=>(q.from===actor||q.to===actor)&&!this.blocked(q.from,q.to)),blocks:this.data.blocks.filter(b=>b.from===actor),reports:this.data.reports.filter(x=>x.from===actor)});}
   conversation(actor,target){members(actor,target);if(!this.ready)throw Error(this.error);if(this.blocked(actor,target))return [];return structuredClone(this.data.messages.filter(m=>pair(m.from,m.to)===pair(actor,target)));}
   unread(actor,target){return this.relation(actor,target)==='accepted'?this.conversation(actor,target).filter(m=>m.to===actor&&!m.read).length:0;}
+  feed(actor=null){if(actor!==null&&!validActor(actor))throw Error('Unknown account.');if(!this.ready)throw Error(this.error);return visibleFeed(this.data,actor);}
   circles(actor){if(!validActor(actor))throw Error('Unknown demo account.');if(!this.ready)throw Error(this.error);return circleView(this.data,actor);}
   async change(actor,op,target,extra={}) {
+    const feedOp=typeof op==='string'&&op.startsWith('feed-');
     const circleOp=typeof op==='string'&&op.startsWith('circle-');
-    if(circleOp){if(!validActor(actor))throw Error('Unknown demo account.');}else members(actor,target);
+    if(circleOp||feedOp){if(!validActor(actor))throw Error('Unknown demo account.');}else members(actor,target);
     return this.lock(async()=>{
       if(!this.ready)throw Error(this.error);
       let store;
@@ -44,7 +48,8 @@ export class DemoSocial {
       const same=q=>pair(q.from,q.to)===pair(actor,target);
       let q=d.requests.find(same);
       const blocked=d.blocks.some(same);
-      if(circleOp){changeCircle(d,actor,op,target,extra,time);}
+      if(feedOp){changeFeed(d,actor,op,target,extra,time);}
+      else if(circleOp){changeCircle(d,actor,op,target,extra,time);}
       else if(op==='send'||op==='read'){
         if(blocked||!q||q.status!=='accepted')throw Error('An active connection is required to message this account.');
         if(op==='send'){

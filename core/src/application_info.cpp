@@ -7,7 +7,7 @@ std::string application_info_json() {
     const nlohmann::json info = {
         {"apiVersion", 1},
         {"application", "Orbit"},
-        {"version", "1.5.0"},
+        {"version", "1.6.0"},
         {"stage", 7},
         {"demoOnly", true},
         {"message", "Orbit's C++ core is ready."}

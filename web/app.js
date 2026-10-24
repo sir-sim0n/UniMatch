@@ -3,7 +3,7 @@ const main = document.querySelector('#main');
 const nav = document.querySelector('#navigation');
 const announcement = document.querySelector('#announcement');
 const resetDialog = document.querySelector('#reset-dialog');
-let socialUI, messagesUI, circlesUI, socialRepository, accounts, client, persistence, catalogues, state, screen = 'welcome', detailOrigin = 'discover';
+let feedUI, guestClient, guest=true, socialUI, messagesUI, circlesUI, socialRepository, accounts, client, persistence, catalogues, state, screen = 'welcome', detailOrigin = 'discover';
 let activeProfileId;
 
 function el(tag, text, className) {
@@ -49,32 +49,45 @@ function heading(title, description) {
   copy.append(el('p', 'YOUR FICTIONAL CAMPUS CIRCLE', 'eyebrow'), el('h1', title), el('p', description, 'muted'));
   header.append(copy); return header;
 }
+function requireAccount(){
+  if(!guest&&state?.visitor)return true;
+  const dialog=el('dialog');dialog.setAttribute('aria-label','Join the conversation');dialog.append(el('h2','Make yourself part of the conversation.'),el('p','You can keep browsing freely. Choose a demo account to post, follow, upvote, save, share or comment. Real sign-up is not available in this demo.'));
+  dialog.append(button('Choose a demo account',()=>{dialog.close();navigate('accounts');}),button('Keep browsing',()=>dialog.close(),'secondary'));dialog.onclose=()=>dialog.remove();document.body.append(dialog);dialog.showModal();return false;
+}
 function navigate(next, focus = true) {
-  socialUI?.leave(); messagesUI?.leave(); circlesUI?.leave(); screen = next; main.replaceChildren(); renderNavigation();
-  if (next === 'welcome') welcome();
+  if(['connections','messages','saved','profile','detail'].includes(next)&&!requireAccount())return;
+  if(next==='welcome')next='home';
+  socialUI?.leave(); messagesUI?.leave(); circlesUI?.leave(); feedUI?.leave(); screen = next; main.replaceChildren(); renderNavigation();
+  if (next === 'home') feedUI.render(main);
+  else if(next==='public-profile')feedUI.render(main);
+  else if(next==='new-profile')profileForm();
   else if (next === 'accounts') accountScreen();
   else if (next === 'connections') socialUI.render(main);
   else if (next === 'messages') messagesUI.render(main);
-  else if (next === 'circles') circlesUI.render(main);
+  else if (next === 'circles') {if(guest||!state?.visitor)publicCircles();else circlesUI.render(main);}
   else if (next === 'profile') profileForm();
-  else if (next === 'discover') discover();
+  else if (next === 'discover') {feedUI.render(main,'directory').then(()=>{if(screen==='discover'&&!guest&&state?.visitor)main.append(button('Explore the 45 sample profiles',()=>{main.replaceChildren();discover();},'secondary'));});}
   else if (next === 'saved') saved();
   else if (next === 'detail') detail();
-  document.title = `Orbit · ${ {welcome:'Find common ground',accounts:'Demo accounts',connections:'Connections',messages:'Messages',circles:'Circles',profile:'Your demo profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
+  document.title = `Orbit · ${ {home:'Campus feed','public-profile':'Public posts','new-profile':'Create profile',welcome:'Find common ground',accounts:'Demo accounts',connections:'Connections',messages:'Messages',circles:'Circles',profile:'Your demo profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
   if (focus) { main.focus(); window.scrollTo(0, 0); }
 }
 function renderNavigation() {
-  nav.replaceChildren();
-  nav.append(button('Demo accounts', () => navigate('accounts'), 'text-button'));
-  const badge = document.querySelector('#active-account');
-  badge.textContent = accounts?.active ? `Using: ${accounts.active.account.label} · Local simulation` : '';
-  if (!state?.visitor) return;
-  for (const [destination, name] of [['discover','Discover'],['connections','Connections'],['messages','Messages'],['circles','Circles'],['saved',`Saved (${state.savedIds.length})`],['profile','My profile']]) {
-    const item = button(name, () => navigate(destination), 'text-button');
-    if (screen === destination || (screen === 'detail' && detailOrigin === destination)) item.setAttribute('aria-current','page');
-    nav.append(item);
+  nav.replaceChildren(el('p','YOUR ORBIT','eyebrow'));
+  const signed=!guest&&!!state?.visitor;
+  document.querySelector('#active-account').textContent=signed?`Using ${accounts.active.account.label} · Demo account`:'Browsing as a guest · Everyone belongs here';
+  document.querySelector('#storage-status').hidden=!signed;
+  for(const [destination,name,icon] of [['home','Home','⌂'],['discover','Discover','◎'],['connections','Connections','♧'],['messages','Messages','◷'],['circles','Circles','◉'],['saved','Saved','♧'],['profile','My profile','◯'],['accounts','Demo accounts','⇄']]){
+    const item=button('',()=>{if(destination==='home')feedUI.home();navigate(destination);},'text-button');const symbol=el('span',icon,'nav-symbol');symbol.setAttribute('aria-hidden','true');item.append(symbol,document.createTextNode(name));if(screen===destination)item.setAttribute('aria-current','page');nav.append(item);
   }
-  nav.append(button('Reset demo', () => resetDialog.showModal(), 'text-button'));
+  nav.append(button('Reset demo',()=>{if(requireAccount())resetDialog.showModal();},'text-button'));
+  if(signed)nav.append(button('Browse as guest',()=>{guest=true;feedUI.home();navigate('home');},'secondary'));
+  else nav.append(button('Join the conversation',()=>navigate('accounts')));
+}
+function publicCircles(){
+  main.append(heading('Find your circle.','Browse communities freely. Choose an account to join and see member conversations.'));
+  if(!socialRepository.reload()){main.append(el('p',socialRepository.error,'error'));return;}
+  const grid=el('div',undefined,'account-grid');for(const c of socialRepository.data.circles){const card=el('article',undefined,'panel');card.append(el('h2',c.title),el('p',c.description),el('p',`${c.members.length} demo members`,'hint'),button('Join circle',()=>requireAccount()));grid.append(card);}main.append(grid);
 }
 function welcome() {
   const section = el('section', undefined, 'welcome'); const intro = el('div');
@@ -97,12 +110,12 @@ function accountScreen() {
   for (const account of accountsList) {
     const panel=el('article',undefined,'panel');
     panel.append(el('div',initials(account.label),'avatar'),el('h2',account.label),el('p',account.description,'muted'));
-    const action=button(accounts.active.account.id===account.id?'Continue with this account':'Use this account',async()=>{
+    const action=button(accounts.active?.account.id===account.id?'Continue with this account':'Use this account',async()=>{
       grid.querySelectorAll('button').forEach(b=>b.disabled=true);
       try {
         await activateAccount(account.id);
         if(persistence.mode==='recovery') recovery();
-        else navigate(state.visitor?'discover':'welcome');
+        else navigate(state.visitor?'home':'new-profile');
         say(`Using ${account.label}.`);
       } catch(error) { grid.querySelectorAll('button').forEach(b=>b.disabled=false); problem.textContent=error.message; }
     });
@@ -113,7 +126,7 @@ function accountScreen() {
 }
 let accountsList=[];
 async function activateAccount(id) {
-  const entry=await accounts.activate(id);
+  const entry=await accounts.activate(id);guest=false;
   client=entry.client;persistence=entry.persistence;catalogues=client.call('getCatalogues');readState();
   if(state.visitor){client.call('updatePreferences',{preferences:{...state.preferences,minAge:18,maxAge:100,genderIds:[]}});readState();}
 }
@@ -154,6 +167,7 @@ function formValues(form) {
   const data=new FormData(form);return {text:name=>data.get(name),number:name=>data.get(name)===''?null:Number(data.get(name)),list:name=>data.getAll(name),optional:name=>data.get(name)||null};
 }
 function profileForm() {
+  if(state.visitor)main.append(button('View my public posts',()=>{feedUI.profile(accounts.active.account.id);navigate('public-profile');},'secondary'));
   const p=state.visitor??{};const shell=el('section',undefined,'form-shell');
   shell.append(heading(state.visitor?'Make it yours.':'A little about demo you.','Use a made-up name and bio. Required fields are marked *.'));
   const form=el('form',undefined,'panel');form.id='profile';form.noValidate=true;const box=errorBox(form);const grid=el('div',undefined,'form-grid');
@@ -172,7 +186,7 @@ function profileForm() {
   const submit=el('button',state.visitor?'Save profile':'Create profile & discover  ↗');submit.type='submit';actions.append(submit);form.append(grid,actions);
   form.addEventListener('submit',event=>{event.preventDefault();const v=formValues(form);try{
     client.call('updateProfile',{profile:{displayName:v.text('displayName'),age:v.number('age'),universityId:v.text('universityId'),campusId:v.text('campusId')??'',degreeId:v.text('degreeId'),yearId:v.optional('yearId'),genderId:p.genderId??catalogues.genders[0].id,showGender:false,bio:v.text('bio'),interestIds:v.list('interestIds')}});
-    saveState();navigate('discover');say('Demo profile updated. Discovery is ready.');
+    saveState();guest=false;feedUI.home();navigate('home');say('Demo profile updated. Discovery is ready.');
   }catch(error){errors(form,box,error);}});
   shell.append(form);main.append(shell);
 }
@@ -214,17 +228,17 @@ function discover() {
   }
   layout.append(preferenceForm(render),results);main.append(layout);render();
 }
-function saved(){main.append(heading('Keep a little common ground.','Your bookmarks stay here when you change discovery preferences. Nobody is notified.'));const results=el('section');results.id='saved-results';results.tabIndex=-1;results.setAttribute('aria-label','Saved profiles');main.append(results);renderSavedResults();}
+function saved(){main.append(button('Saved posts',()=>{feedUI.saved();navigate('public-profile');},'secondary'));main.append(heading('Keep a little common ground.','Your bookmarks stay here when you change discovery preferences. Nobody is notified.'));const results=el('section');results.id='saved-results';results.tabIndex=-1;results.setAttribute('aria-label','Saved profiles');main.append(results);renderSavedResults();}
 function renderSavedResults(){const results=document.querySelector('#saved-results');results.replaceChildren();const profiles=client.call('savedProfiles');if(!profiles.length){results.append(empty('Your saved circle starts here.','Bookmark a fictional profile in Discover and find it here later.',button('Explore profiles',()=>navigate('discover'))));return;}results.append(el('p',`${profiles.length} saved profiles · In the order you saved them`,'results-summary'));const cards=el('div',undefined,'cards');profiles.forEach(p=>cards.append(card(p)));results.append(cards);}
 function detail(){const p=client.call('viewProfile',{id:activeProfileId});main.append(button(detailOrigin==='saved'?'← Back to saved':'← Back to discovery',()=>navigate(detailOrigin),'text-button'));const panel=el('article',undefined,'panel detail');const person=el('div',undefined,'person');const copy=el('div');copy.append(el('p','FICTIONAL PROFILE','eyebrow'),el('h1',p.displayName));person.append(el('div',initials(p.displayName),'avatar large'),copy);panel.append(person,el('p',p.bio,'bio'));const details=el('dl');for(const [title,value] of [['University',label(catalogues.universities,p.universityId)],['Campus',campusLabel(p)],['Field of study',label(catalogues.degrees,p.degreeId)],['Year of study',p.yearId?label(catalogues.years,p.yearId):'Not specified']]){const pair=el('div');pair.append(el('dt',title),el('dd',value));details.append(pair);}panel.append(details,el('h2','A few favourite things'),tagList(p),el('p',p.explanation,'explanation'),saveButton(p));main.append(panel);}
 
-document.querySelector('.brand').addEventListener('click',event=>{event.preventDefault();if(client && screen!=='recovery')navigate(state.visitor?'discover':'welcome');});
+document.querySelector('.brand').addEventListener('click',event=>{event.preventDefault();if(client && screen!=='recovery'){feedUI.home();navigate('home');}});
 document.querySelector('#cancel-reset').addEventListener('click',()=>resetDialog.close());
 
 document.querySelector('#confirm-reset').addEventListener('click', () => {
   try {
     const removed = accounts.resetActive();
-    resetDialog.close(); readState(); navigate(state.visitor?'discover':'welcome');
+    resetDialog.close(); readState();feedUI.home();navigate('home');
     say(removed ? 'Selected demo account reset. Other accounts are unchanged.' : 'This page has been reset. Saved data could not be removed.');
   } catch (error) { say(error.message); }
 });
@@ -246,19 +260,21 @@ async function start() {
   loading.append(el('p','ONE MOMENT','eyebrow'),el('h1','Finding our common ground…'),el('p','Loading the fictional profiles.'));
   main.append(loading);
   try {
-    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.5.0'), import('./demo-accounts.mjs?v=1.5.0')]);
+    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.6.0'), import('./demo-accounts.mjs?v=1.6.0')]);
     accountsList=ACCOUNTS; accounts=new DemoAccounts({loadClient,report:storageStatus});
-    const { createSocialUI } = await import('./social-ui.mjs?v=1.5.0');
-    const { DemoSocial } = await import('./demo-social.mjs?v=1.5.0');
-    const { createMessagesUI } = await import('./messages-ui.mjs?v=1.5.0');
-    const { createCirclesUI } = await import('./circles-ui.mjs?v=1.5.0');
+    const { createSocialUI } = await import('./social-ui.mjs?v=1.6.0');
+    const { DemoSocial } = await import('./demo-social.mjs?v=1.6.0');
+    const { createMessagesUI } = await import('./messages-ui.mjs?v=1.6.0');
+    const { createCirclesUI } = await import('./circles-ui.mjs?v=1.6.0');
+    const { createFeedUI } = await import('./feed-ui.mjs?v=1.6.0');
     socialRepository=new DemoSocial();
+    feedUI=createFeedUI({accounts,repository:socialRepository,getActor:()=>!guest&&state?.visitor?accounts.active.account.id:null,getCatalogues:()=>catalogues,requireAccount,announce:say});
     circlesUI=createCirclesUI({accounts,repository:socialRepository,announce:say});
     messagesUI=createMessagesUI({accounts,repository:socialRepository,announce:say});
     socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say,repository:socialRepository,openMessages:target=>{messagesUI.select(target);navigate('messages');}});
-    await activateAccount(accounts.initialId());
-    if (persistence.mode === 'recovery') recovery();
-    else navigate(state.visitor ? 'discover' : 'welcome', false);
+    guestClient=await loadClient();client=guestClient;catalogues=client.call('getCatalogues');readState();
+    const linked=/^#post=(\d+)$/.exec(location.hash);if(linked)feedUI.deepLink(Number(linked[1]));
+    navigate('home',false);
   } catch (error) {
     accounts?.dispose(); client = undefined; persistence = undefined;
     loading.replaceChildren(el('h1','The demo could not load.'),el('p','Check your connection and try again. If the problem continues, refresh the page.'),button('Try again',start));
@@ -267,10 +283,10 @@ async function start() {
 }
 window.addEventListener('storage', event => {
   accounts?.checkExternalChange(event.key);
-  if(['connections','messages','circles'].includes(screen) && (!event.key || event.key===socialUI?.key)){say('Shared social data changed in another tab. Reload the saved social data on this screen to see it.');}
+  if(['home','public-profile','connections','messages','circles'].includes(screen) && (!event.key || event.key===socialUI?.key)){say('Shared social data changed in another tab. Reload the saved social data on this screen to see it.');}
 });
 window.addEventListener('pageshow', event => { if (event.persisted) persistence?.checkExternalChange(); });
-window.addEventListener('pagehide', event => { if (!event.persisted) { accounts?.dispose(); client = undefined; } });
+window.addEventListener('pagehide', event => { if (!event.persisted) { accounts?.dispose();guestClient?.dispose(); client = undefined; } });
 start();
 
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.6.0 — Public campus feed — 2026-10-24
+
+- Replaced the profile-first landing with a guest-readable discussion feed and Sea Glass sidebar layout inspired by the supplied reference.
+- Preserved all existing menu options and added Home, For you / Following / Latest, public profiles, optional topics and university/campus filters.
+- Added independent one-way follows, public profile posts, nested comments, upvote toggles, saved posts and gated copy-link sharing.
+- Require an explicitly selected demo account for participation; no automatic sign-in on page load. Browse as guest returns to read-only browsing.
+- Preserved connections, private demo messages, circle membership and legacy profile bookmarks; migrated shared storage to version 4.
+- Added guest permission, feed lifecycle, block, thread, failure and migration tests.
+
+
 ## 1.5.0 — Interest circles — 2026-10-23
 
 - Added three starter circles and circle creation, joining and leaving.
