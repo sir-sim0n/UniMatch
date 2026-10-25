@@ -2,7 +2,7 @@
 
 Orbit is a portfolio demonstration of university student discovery using fictional adult profiles. The project uses a portable C++17 core, Emscripten and Embind, and plain HTML, CSS, and JavaScript.
 
-**Current release: Orbit 1.8.0 — Search, authorship and profiles.**
+**Current release: Orbit 1.8.1 — Search, authorship and profiles.**
 
 Unified search, post/comment editing and deletion, profile activity tabs, recommendations and follow lists are now available. See [behaviour and limits](docs/discovery-and-profiles.md).
 

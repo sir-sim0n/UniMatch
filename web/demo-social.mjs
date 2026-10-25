@@ -1,7 +1,7 @@
-import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.8.0';
-import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.8.0';
-import {seedEngagement,validateEngagement,readablePost,notificationsFor,recordActivity,changeEngagement} from './engagement-core.mjs?v=1.8.0';
-import {validateDiscovery,changeContent} from './discovery-core.mjs?v=1.8.0';
+import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.8.1';
+import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.8.1';
+import {seedEngagement,validateEngagement,readablePost,notificationsFor,recordActivity,changeEngagement} from './engagement-core.mjs?v=1.8.1';
+import {validateDiscovery,changeContent} from './discovery-core.mjs?v=1.8.1';
 // Demo-only shared state. Not authentication or a security boundary.
 export const SOCIAL_KEY = 'orbit.demo.social.v1';
 export const ACTORS = ['personal', 'naledi', 'sipho', 'ayesha'];

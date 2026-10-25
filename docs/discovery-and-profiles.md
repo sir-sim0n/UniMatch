@@ -34,3 +34,8 @@ My profile opens the owner's public profile with Edit profile and Posts / Replie
 
 ## Live release verification
 Verified on 2026-10-25 at https://sir-sim0n.github.io/UniMatch/. Source commit: 4ca23b9a9bbc11a4e4bcd036551935d635b95259. GitHub Actions run 40192901223 completed build and deployment successfully. Live checks confirmed the consolidated menu without separate Connections or Saved entries, Mahikeng filtering returning Naledi, and the public profile with posts, Follow, Message, Connect, Block and Report. Browser warning/error logs were empty. Local checks above cover private Saved and accepted-connection messaging. Release: v1.8.0.
+
+
+## Account-focused My profile (v1.8.1)
+The owner’s profile omits the global search form, discovery shortcuts, Who to follow, Trending, general feed sorting and campus/topic filters. Its single-column layout retains account details, editing, flair, follower/following lists, publishing and personal activity tabs including private Saved. Search and Discover remain separate main-menu destinations. Other students’ public profiles retain their existing browsing controls.
+Verification: release build and 25-file publication check passed; local browser confirmed My profile has no search field or discovery panels and Saved remains accessible.

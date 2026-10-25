@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.8.1 — Account-focused My profile (2026-10-25)
+- Removed global search, discovery shortcuts, recommendations, Trending and campus-feed filters from the owner’s profile.
+- Kept profile editing, flair, follower lists, publishing and Posts / Replies / Upvoted / Reposts / Saved activity.
+- Search and Discover remain available through the main navigation.
+
 ## 1.8.0 — Discover, search and profiles (2026-10-25)
 - Merged Connections into Discover, with campus/interest search and profile-level social actions.
 - Moved Saved into My profile; preserved existing private bookmarks.
