@@ -29,7 +29,7 @@ ctest --preset wasm-debug
 
 Activate the tools once per new terminal. Configure downloads the exact pinned nlohmann/json source on the first run, so that first run needs Internet access. Later builds reuse it in `build/wasm/_deps/`.
 
-Expected result: CTest reports 18 passing test groups. The website and production JSON files are assembled in `build/wasm/site/`. Generated files stay inside `build/`; do not edit or commit them.
+Expected result: CTest reports 19 passing test groups. The website and production JSON files are assembled in `build/wasm/site/`. Generated files stay inside `build/`; do not edit or commit them.
 
 ## Open the local site
 
