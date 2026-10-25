@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(Orbit VERSION 1.8.1 LANGUAGES CXX)
+project(Orbit VERSION 1.8.2 LANGUAGES CXX)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     message(FATAL_ERROR "Use a separate build directory: -B build/wasm")
@@ -54,6 +54,8 @@ target_link_options(unimatch PRIVATE
 add_custom_target(website ALL
     COMMAND "${CMAKE_COMMAND}" -E make_directory "${UNIMATCH_SITE_DIR}/assets"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/web/theme.js" "${UNIMATCH_SITE_DIR}/assets/theme.js"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
         "${CMAKE_SOURCE_DIR}/web/index.html" "${UNIMATCH_SITE_DIR}/index.html"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
         "${CMAKE_SOURCE_DIR}/web/styles.css" "${UNIMATCH_SITE_DIR}/assets/styles.css"
@@ -107,6 +109,7 @@ add_custom_target(website ALL
 include(CTest)
 if(BUILD_TESTING)
     find_program(UNIMATCH_NODE node REQUIRED)
+    add_test(NAME theme COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/theme.cjs")
     add_executable(core_smoke tests/core_smoke.cpp)
     target_link_libraries(core_smoke PRIVATE unimatch_core)
     target_link_options(core_smoke PRIVATE -sENVIRONMENT=node)

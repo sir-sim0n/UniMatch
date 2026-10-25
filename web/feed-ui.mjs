@@ -1,8 +1,8 @@
-import {icon} from './ui-icons.mjs?v=1.8.1';
-import {FLAIRS,hashtags,karma,sortFeed,trending} from './engagement-core.mjs?v=1.8.1';
-import {profileItems,searchAll,suggestions,filterPeople} from './discovery-core.mjs?v=1.8.1';
-import {REASONS} from './demo-social.mjs?v=1.8.1';
-import {TOPICS} from './feed-core.mjs?v=1.8.1';
+import {icon} from './ui-icons.mjs?v=1.8.2';
+import {FLAIRS,hashtags,karma,sortFeed,trending} from './engagement-core.mjs?v=1.8.2';
+import {profileItems,searchAll,suggestions,filterPeople} from './discovery-core.mjs?v=1.8.2';
+import {REASONS} from './demo-social.mjs?v=1.8.2';
+import {TOPICS} from './feed-core.mjs?v=1.8.2';
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(text,action,cls='secondary')=>{const b=el('button',text,cls);b.type='button';b.onclick=action;return b;};
 export function createFeedUI({accounts,repository,getActor,getCatalogues,requireAccount,announce,onActivity=()=>{}}){
@@ -73,6 +73,15 @@ export function createFeedUI({accounts,repository,getActor,getCatalogues,require
   aside.append(el('p','Browse freely. Choose a demo account to join the conversation. No real accounts or cross-device sharing yet.','hint'));
   if(author){const header=el('section',undefined,'panel public-profile');if(!ownProfile)header.append(button('← Discover students',()=>onActivity('discover'),'text-button'),button('← Campus feed',()=>{home();render(host);},'text-button'));header.append(el('div',name(author).slice(0,2),'avatar'),el('h1',name(author)),el('p',school(author),'muted'),el('p',`@${author} · ${karma(author,data)} karma`,'hint'),el('p',person(author)?.bio??''));if(userFlair(author))header.append(el('span',userFlair(author),'tag flair'));const links=el('div',undefined,'actions');for(const direction of ['Followers','Following']){const count=data.graph.filter(f=>direction==='Followers'?f.to===author:f.actor===author).length;links.append(button(`${count} ${direction}`,()=>peopleList(author,direction),'text-button'));}header.append(links);if(author!==actor)header.append(profileActions(author));else{header.append(button('Edit profile',()=>onActivity('edit-profile'),'secondary'));const select=el('select');select.setAttribute('aria-label','Profile flair');const none=el('option','No profile flair');none.value='';select.append(none);for(const f of FLAIRS){const o=el('option',f);o.value=f;select.append(o);}select.value=userFlair(author)??'';header.append(select,button('Save profile flair',()=>run('feed-profile-flair',null,{flair:select.value||null}),'secondary'));}column.append(header);const profileTabs=el('div',undefined,'feed-tabs');for(const label of ['Posts','Replies','Upvoted','Reposts',...(author===actor?['Saved']:[])]){const b=button(label,()=>{profileTab=label;opened=null;render(host);},profileTab===label?'active-tab':'secondary');b.setAttribute('aria-pressed',String(profileTab===label));profileTabs.append(b);}column.append(profileTabs);}
   else column.append(el('h1',savedOnly?'Your saved posts.':'Your campus, your conversation.','feed-title'));
+  if(ownProfile){
+   const appearance=el('section',undefined,'panel appearance-settings'),label=el('label','Appearance'),select=el('select'),status=el('p','','hint');
+   label.htmlFor='appearance-preference';select.id='appearance-preference';
+   for(const [value,text] of [['system','System — follow device settings'],['light','Light'],['dark','Dark']]){const option=el('option',text);option.value=value;select.append(option);}
+   select.value=window.OrbitTheme.preference;status.setAttribute('role','status');
+   select.onchange=()=>{const saved=window.OrbitTheme.set(select.value);status.textContent=saved?'Appearance saved for this browser.':'Appearance changed for this visit, but browser storage is unavailable.';};
+   appearance.append(el('h2','Appearance'),label,select,el('p','Choose a theme for this browser, including guest browsing and other demo accounts. System updates automatically when your device changes appearance.','hint'),status);column.insertBefore(appearance,column.children[1]);
+  }
+
   if(!savedOnly&&(!author||author===actor&&profileTab==='Posts')){
    const composer=el('section',undefined,'panel feed-composer');composer.append(el('h2','What’s on your mind?'));
    if(!actor)composer.append(button('Ask a question, share a thought…',()=>requireAccount(),'composer-prompt'),el('p','Everyone can read. Choose a demo account to post.','hint'));

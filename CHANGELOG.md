@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.8.2 — Light, dark and system appearance (2026-10-25)
+- Added Appearance under My profile with System, Light and Dark choices.
+- Default System follows live device appearance changes; explicit choices persist across visits and browser tabs.
+- Added a Sea Glass dark palette throughout the app.
+- Preference is browser-wide and reports unavailable persistence without blocking use.
+
 ## 1.8.1 — Account-focused My profile (2026-10-25)
 - Removed global search, discovery shortcuts, recommendations, Trending and campus-feed filters from the owner’s profile.
 - Kept profile editing, flair, follower lists, publishing and Posts / Replies / Upvoted / Reposts / Saved activity.
