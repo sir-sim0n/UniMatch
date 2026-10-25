@@ -39,3 +39,4 @@ Verified on 2026-10-25 at https://sir-sim0n.github.io/UniMatch/. Source commit: 
 ## Account-focused My profile (v1.8.1)
 The owner’s profile omits the global search form, discovery shortcuts, Who to follow, Trending, general feed sorting and campus/topic filters. Its single-column layout retains account details, editing, flair, follower/following lists, publishing and personal activity tabs including private Saved. Search and Discover remain separate main-menu destinations. Other students’ public profiles retain their existing browsing controls.
 Verification: release build and 25-file publication check passed; local browser confirmed My profile has no search field or discovery panels and Saved remains accessible.
+Release verification on 2026-10-25: all 18 CTest groups passed. GitHub Actions run 40196583387 built and deployed source b021ffc867f9e127ad30d96e39d3e8b7bda645be successfully; the live page loads v1.8.1 assets.
