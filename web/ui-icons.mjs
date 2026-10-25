@@ -1,4 +1,5 @@
 const paths={
+ search:'M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14M15 15l6 6',
  notifications:'M6 9a6 6 0 0 1 12 0v6l2 3H4l2-3V9M10 21h4',
  home:'M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9',
  discover:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M16 8l-3 5-5 3 3-5 5-3',

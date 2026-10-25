@@ -1,4 +1,4 @@
-import {icon} from './ui-icons.mjs?v=1.7.0';
+import {icon} from './ui-icons.mjs?v=1.8.0';
 // Profile/catalogue decisions use the C++ API; demo social rules use the local repository adapter.
 const main = document.querySelector('#main');
 const nav = document.querySelector('#navigation');
@@ -57,11 +57,12 @@ function requireAccount(){
   dialog.append(button('Choose a demo account',()=>{dialog.close();navigate('accounts');}),button('Keep browsing',()=>dialog.close(),'secondary'));dialog.onclose=()=>dialog.remove();document.body.append(dialog);dialog.showModal();return false;
 }
 function navigate(next, focus = true) {
-  if(['notifications','connections','messages','saved','profile','detail'].includes(next)&&!requireAccount())return;
+  if(['notifications','connections','messages','saved','profile','edit-profile','detail'].includes(next)&&!requireAccount())return;
   if(next==='welcome')next='home';
   document.querySelector('.sidebar').classList.remove('mobile-nav-open');document.querySelector('#menu-toggle').setAttribute('aria-expanded','false');
   socialUI?.leave(); messagesUI?.leave(); circlesUI?.leave(); feedUI?.leave(); screen = next; main.replaceChildren(); renderNavigation();
   if (next === 'home') feedUI.render(main);
+  else if(next==='search')feedUI.render(main,'search');
   else if(next==='public-profile')feedUI.render(main);
   else if(next==='new-profile')profileForm();
   else if (next === 'accounts') accountScreen();
@@ -69,11 +70,12 @@ function navigate(next, focus = true) {
   else if(next==='notifications')feedUI.render(main,'notifications');
   else if (next === 'messages') messagesUI.render(main);
   else if (next === 'circles') {if(guest||!state?.visitor)publicCircles();else circlesUI.render(main);}
-  else if (next === 'profile') profileForm();
+  else if (next === 'profile') {feedUI.profile(accounts.active.account.id);feedUI.render(main);}
+  else if(next==='edit-profile')profileForm();
   else if (next === 'discover') {feedUI.render(main,'directory').then(()=>{if(screen==='discover'&&!guest&&state?.visitor)main.append(button('Explore the 45 sample profiles',()=>{main.replaceChildren();discover();},'secondary'));});}
   else if (next === 'saved') saved();
   else if (next === 'detail') detail();
-  document.title = `Orbit · ${ {home:'Campus feed','public-profile':'Public posts','new-profile':'Create profile',welcome:'Find common ground',accounts:'Demo accounts',connections:'Connections',notifications:'Notifications',messages:'Messages',circles:'Circles',profile:'Your demo profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
+  document.title = `Orbit · ${ {search:'Search',home:'Campus feed','public-profile':'Public posts','new-profile':'Create profile',welcome:'Find common ground',accounts:'Demo accounts',connections:'Discover · Connections',notifications:'Notifications',messages:'Messages',circles:'Circles','edit-profile':'Edit profile',profile:'My profile',discover:'Discover',saved:'Saved profiles',detail:'Profile details'}[next] }`;
   if (focus) { main.focus(); window.scrollTo(0, 0); }
 }
 function navIcon(destination){return icon(destination);}
@@ -82,8 +84,8 @@ function renderNavigation() {
   const signed=!guest&&!!state?.visitor;
   document.querySelector('#active-account').textContent=signed?`Using ${accounts.active.account.label} · Demo account`:'Browsing as a guest · Everyone belongs here';
   document.querySelector('#storage-status').hidden=!signed;
-  for(const [destination,name,icon] of [['home','Home','⌂'],['discover','Discover','◎'],['connections','Connections','♧'],['messages','Messages','◷'],['notifications','Notifications','♧'],['circles','Circles','◉'],['saved','Saved','♧'],['profile','My profile','◯'],['accounts','Demo accounts','⇄']]){
-    const item=button('',()=>{if(destination==='home')feedUI.home();navigate(destination);},'text-button');const symbol=navIcon(destination);item.append(symbol,document.createTextNode(name));if(destination==='notifications'&&signed&&socialRepository.ready){const count=socialRepository.notifications(accounts.active.account.id).filter(n=>!n.read).length;if(count)item.append(el('span',String(count),'notification-count'));}if(screen===destination)item.setAttribute('aria-current','page');nav.append(item);
+  for(const [destination,name,icon] of [['home','Home','⌂'],['search','Search','⌕'],['discover','Discover','◎'],['messages','Messages','◷'],['notifications','Notifications','♧'],['circles','Circles','◉'],['profile','My profile','◯'],['accounts','Demo accounts','⇄']]){
+    const item=button('',()=>{if(destination==='home')feedUI.home();navigate(destination);},'text-button');const symbol=navIcon(destination);item.append(symbol,document.createTextNode(name));if(destination==='notifications'&&signed&&socialRepository.ready){const count=socialRepository.notifications(accounts.active.account.id).filter(n=>!n.read).length;if(count)item.append(el('span',String(count),'notification-count'));}if((['connections','discover','public-profile'].includes(screen)?'discover':['saved','edit-profile'].includes(screen)?'profile':screen)===destination)item.setAttribute('aria-current','page');nav.append(item);
   }
   nav.append(button('Reset demo',()=>{if(requireAccount())resetDialog.showModal();},'text-button'));
   if(signed)nav.append(button('Browse as guest',()=>{guest=true;feedUI.home();navigate('home');},'secondary'));
@@ -118,7 +120,7 @@ function accountScreen() {
     const action=button(accounts.active?.account.id===account.id?'Continue with this account':'Use this account',async()=>{
       grid.querySelectorAll('button').forEach(b=>b.disabled=true);
       try {
-        await activateAccount(account.id);
+        await activateAccount(account.id);feedUI.home();
         if(persistence.mode==='recovery') recovery();
         else navigate(state.visitor?'home':'new-profile');
         say(`Using ${account.label}.`);
@@ -187,7 +189,7 @@ function profileForm() {
   const bio=field(form,'bio','Bio *','textarea',p.bio,'1–300 Unicode code points. Keep contact details and real personal information out.');bio.wrap.classList.add('full');
   const interests=choices('interestIds','Your interests *',catalogues.interests,p.interestIds??[],'Choose 1–5. Shared interests help order the fictional profiles you see.');interests.classList.add('full');
   grid.append(name.wrap,age.wrap,uni.wrap,campus.wrap,degree.wrap,year.wrap,bio.wrap,interests);
-  const actions=el('div',undefined,'form-actions');actions.append(button('Cancel',()=>navigate(state.visitor?'discover':'welcome'),'secondary'));
+  const actions=el('div',undefined,'form-actions');actions.append(button('Cancel',()=>navigate(state.visitor?'profile':'welcome'),'secondary'));
   const submit=el('button',state.visitor?'Save profile':'Create profile & discover  ↗');submit.type='submit';actions.append(submit);form.append(grid,actions);
   form.addEventListener('submit',event=>{event.preventDefault();const v=formValues(form);try{
     client.call('updateProfile',{profile:{displayName:v.text('displayName'),age:v.number('age'),universityId:v.text('universityId'),campusId:v.text('campusId')??'',degreeId:v.text('degreeId'),yearId:v.optional('yearId'),genderId:p.genderId??catalogues.genders[0].id,showGender:false,bio:v.text('bio'),interestIds:v.list('interestIds')}});
@@ -233,7 +235,7 @@ function discover() {
   }
   layout.append(preferenceForm(render),results);main.append(layout);render();
 }
-function saved(){main.append(button('Saved posts',()=>{feedUI.saved();navigate('public-profile');},'secondary'));main.append(heading('Keep a little common ground.','Your bookmarks stay here when you change discovery preferences. Nobody is notified.'));const results=el('section');results.id='saved-results';results.tabIndex=-1;results.setAttribute('aria-label','Saved profiles');main.append(results);renderSavedResults();}
+function saved(){main.append(button('← My profile',()=>navigate('profile'),'text-button'));main.append(heading('Keep a little common ground.','Your bookmarks stay here when you change discovery preferences. Nobody is notified.'));const results=el('section');results.id='saved-results';results.tabIndex=-1;results.setAttribute('aria-label','Saved profiles');main.append(results);renderSavedResults();}
 function renderSavedResults(){const results=document.querySelector('#saved-results');results.replaceChildren();const profiles=client.call('savedProfiles');if(!profiles.length){results.append(empty('Your saved circle starts here.','Bookmark a fictional profile in Discover and find it here later.',button('Explore profiles',()=>navigate('discover'))));return;}results.append(el('p',`${profiles.length} saved profiles · In the order you saved them`,'results-summary'));const cards=el('div',undefined,'cards');profiles.forEach(p=>cards.append(card(p)));results.append(cards);}
 function detail(){const p=client.call('viewProfile',{id:activeProfileId});main.append(button(detailOrigin==='saved'?'← Back to saved':'← Back to discovery',()=>navigate(detailOrigin),'text-button'));const panel=el('article',undefined,'panel detail');const person=el('div',undefined,'person');const copy=el('div');copy.append(el('p','FICTIONAL PROFILE','eyebrow'),el('h1',p.displayName));person.append(el('div',initials(p.displayName),'avatar large'),copy);panel.append(person,el('p',p.bio,'bio'));const details=el('dl');for(const [title,value] of [['University',label(catalogues.universities,p.universityId)],['Campus',campusLabel(p)],['Field of study',label(catalogues.degrees,p.degreeId)],['Year of study',p.yearId?label(catalogues.years,p.yearId):'Not specified']]){const pair=el('div');pair.append(el('dt',title),el('dd',value));details.append(pair);}panel.append(details,el('h2','A few favourite things'),tagList(p),el('p',p.explanation,'explanation'),saveButton(p));main.append(panel);}
 
@@ -265,18 +267,18 @@ async function start() {
   loading.append(el('p','ONE MOMENT','eyebrow'),el('h1','Finding our common ground…'),el('p','Loading the fictional profiles.'));
   main.append(loading);
   try {
-    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.7.0'), import('./demo-accounts.mjs?v=1.7.0')]);
+    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.8.0'), import('./demo-accounts.mjs?v=1.8.0')]);
     accountsList=ACCOUNTS; accounts=new DemoAccounts({loadClient,report:storageStatus});
-    const { createSocialUI } = await import('./social-ui.mjs?v=1.7.0');
-    const { DemoSocial } = await import('./demo-social.mjs?v=1.7.0');
-    const { createMessagesUI } = await import('./messages-ui.mjs?v=1.7.0');
-    const { createCirclesUI } = await import('./circles-ui.mjs?v=1.7.0');
-    const { createFeedUI } = await import('./feed-ui.mjs?v=1.7.0');
+    const { createSocialUI } = await import('./social-ui.mjs?v=1.8.0');
+    const { DemoSocial } = await import('./demo-social.mjs?v=1.8.0');
+    const { createMessagesUI } = await import('./messages-ui.mjs?v=1.8.0');
+    const { createCirclesUI } = await import('./circles-ui.mjs?v=1.8.0');
+    const { createFeedUI } = await import('./feed-ui.mjs?v=1.8.0');
     socialRepository=new DemoSocial();
-    feedUI=createFeedUI({accounts,repository:socialRepository,getActor:()=>!guest&&state?.visitor?accounts.active.account.id:null,getCatalogues:()=>catalogues,requireAccount,announce:say,onActivity:destination=>{renderNavigation();if(destination)navigate(destination);}});
+    feedUI=createFeedUI({accounts,repository:socialRepository,getActor:()=>!guest&&state?.visitor?accounts.active.account.id:null,getCatalogues:()=>catalogues,requireAccount,announce:say,onActivity:(destination,circle)=>{renderNavigation();if(circle&&!guest){if(destination==='messages')messagesUI.select(circle);else if(destination==='circles')circlesUI.select(circle);}if(destination)navigate(destination);}});
     circlesUI=createCirclesUI({accounts,repository:socialRepository,announce:say});
     messagesUI=createMessagesUI({accounts,repository:socialRepository,announce:say});
-    socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say,repository:socialRepository,openMessages:target=>{messagesUI.select(target);navigate('messages');}});
+    socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say,repository:socialRepository,openDiscover:()=>navigate('discover'),openProfile:target=>{feedUI.profile(target);navigate('public-profile');},openMessages:target=>{messagesUI.select(target);navigate('messages');}});
     guestClient=await loadClient();client=guestClient;catalogues=client.call('getCatalogues');readState();
     const linked=/^#post=(\d+)$/.exec(location.hash);if(linked)feedUI.deepLink(Number(linked[1]));
     navigate('home',false);

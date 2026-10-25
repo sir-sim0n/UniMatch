@@ -1,11 +1,12 @@
-import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.7.0';
-import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.7.0';
-import {seedEngagement,validateEngagement,readablePost,notificationsFor,recordActivity,changeEngagement} from './engagement-core.mjs?v=1.7.0';
+import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.8.0';
+import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.8.0';
+import {seedEngagement,validateEngagement,readablePost,notificationsFor,recordActivity,changeEngagement} from './engagement-core.mjs?v=1.8.0';
+import {validateDiscovery,changeContent} from './discovery-core.mjs?v=1.8.0';
 // Demo-only shared state. Not authentication or a security boundary.
 export const SOCIAL_KEY = 'orbit.demo.social.v1';
 export const ACTORS = ['personal', 'naledi', 'sipho', 'ayesha'];
 export const REASONS = ['Spam', 'Harassment', 'Impersonation', 'Other'];
-const empty = () => ({ version: 5, ...seedEngagement(), ...seedFeed(), requests: [], blocks: [], reports: [], messages: [], circles:seedCircles(), posts:[] });
+const empty = () => ({ version: 6, profileFlairs:[], ...seedEngagement(), ...seedFeed(), requests: [], blocks: [], reports: [], messages: [], circles:seedCircles(), posts:[] });
 const pair = (a,b) => [a,b].sort().join(':');
 const validActor = a => ACTORS.includes(a);
 function members(a,b) { if (!validActor(a) || !validActor(b) || a===b) throw Error('Choose two different demo accounts.'); }
@@ -14,7 +15,8 @@ function validate(d) {
   if(d?.version===2)d={...d,version:3,circles:seedCircles(),posts:[]};
   if(d?.version===3)d={...d,version:4,...seedFeed()};
   if(d?.version===4)d={...d,version:5,...seedEngagement()};
-  if (!d || d.version!==5 || !Array.isArray(d.requests) || !Array.isArray(d.blocks) || !Array.isArray(d.reports)) throw Error('Invalid social data.');
+  if(d?.version===5)d={...d,version:6,profileFlairs:[]};
+  if (!d || d.version!==6 || !Array.isArray(d.requests) || !Array.isArray(d.blocks) || !Array.isArray(d.reports)) throw Error('Invalid social data.');
   const pairs=new Set(), blocks=new Set(), reports=new Set();
   for(const q of d.requests){members(q.from,q.to);const key=pair(q.from,q.to);if(pairs.has(key)||!['pending','accepted','declined','cancelled','removed'].includes(q.status)||!Number.isFinite(q.at)||q.at<0)throw Error('Invalid request.');pairs.add(key);}
   for(const b of d.blocks){members(b.from,b.to);const key=b.from+':'+b.to;if(blocks.has(key))throw Error('Duplicate block.');blocks.add(key);}
@@ -23,7 +25,7 @@ function validate(d) {
   if(!Array.isArray(d.messages))throw Error('Invalid messages.');
   let last=0;
   for(const m of d.messages){members(m.from,m.to);if(!Number.isSafeInteger(m.id)||m.id<=last||typeof m.text!=='string'||!m.text.trim()||[...m.text].length>2000||typeof m.read!=='boolean'||!Number.isFinite(m.at)||m.at<0)throw Error('Invalid message.');last=m.id;}
-  validateCircles(d,ACTORS);validateFeed(d,ACTORS);validateEngagement(d);
+  validateCircles(d,ACTORS);validateFeed(d,ACTORS);validateEngagement(d);validateDiscovery(d);
   return d;
 }
 export class DemoSocial {
@@ -36,7 +38,7 @@ export class DemoSocial {
   view(actor){if(!validActor(actor))throw Error('Unknown demo account.');return structuredClone({requests:this.data.requests.filter(q=>(q.from===actor||q.to===actor)&&!this.blocked(q.from,q.to)),blocks:this.data.blocks.filter(b=>b.from===actor),reports:this.data.reports.filter(x=>x.from===actor)});}
   conversation(actor,target){members(actor,target);if(!this.ready)throw Error(this.error);if(this.blocked(actor,target))return [];return structuredClone(this.data.messages.filter(m=>pair(m.from,m.to)===pair(actor,target)));}
   unread(actor,target){return this.relation(actor,target)==='accepted'?this.conversation(actor,target).filter(m=>m.to===actor&&!m.read).length:0;}
-  feed(actor=null){if(actor!==null&&!validActor(actor))throw Error('Unknown account.');if(!this.ready)throw Error(this.error);const result=visibleFeed(this.data,actor);result.posts=result.posts.filter(p=>readablePost(this.data,actor,p.id));const ids=new Set(result.posts.map(p=>p.id));result.replies=result.replies.filter(r=>ids.has(r.post));result.pins=structuredClone(this.data.pins);return result;}
+  feed(actor=null){if(actor!==null&&!validActor(actor))throw Error('Unknown account.');if(!this.ready)throw Error(this.error);const result=visibleFeed(this.data,actor);result.posts=result.posts.filter(p=>readablePost(this.data,actor,p.id));const ids=new Set(result.posts.map(p=>p.id));result.replies=result.replies.filter(r=>ids.has(r.post));result.pins=structuredClone(this.data.pins);result.graph=structuredClone(this.data.follows.filter(f=>!this.blocked(actor,f.actor)&&!this.blocked(actor,f.to)));result.circles=structuredClone(this.data.circles.filter(c=>!this.blocked(actor,c.owner)));result.profileFlairs=structuredClone(this.data.profileFlairs);return result;}
   notifications(actor){if(!validActor(actor))throw Error('Choose a demo account.');if(!this.ready)throw Error(this.error);return notificationsFor(this.data,actor);}
   circles(actor){if(!validActor(actor))throw Error('Unknown demo account.');if(!this.ready)throw Error(this.error);return circleView(this.data,actor);}
   async change(actor,op,target,extra={}) {
@@ -51,7 +53,7 @@ export class DemoSocial {
       const same=q=>pair(q.from,q.to)===pair(actor,target);
       let q=d.requests.find(same);
       const blocked=d.blocks.some(same);
-      if(feedOp){if(!changeEngagement(d,actor,op,target,extra,time)){if(Number.isInteger(target)&&!readablePost(d,actor,target))throw Error('Post unavailable.');changeFeed(d,actor,op,target,extra,time);if(op==='feed-publish'){d.feedPosts.at(-1).flair=extra.flair??null;}}}
+      if(feedOp){if(!changeContent(d,actor,op,target,extra,time)&&!changeEngagement(d,actor,op,target,extra,time)){if(Number.isInteger(target)&&!readablePost(d,actor,target))throw Error('Post unavailable.');changeFeed(d,actor,op,target,extra,time);if(op==='feed-publish'){d.feedPosts.at(-1).flair=extra.flair??null;}}}
       else if(circleOp){changeCircle(d,actor,op,target,extra,time);}
       else if(op==='send'||op==='read'){
         if(blocked||!q||q.status!=='accepted')throw Error('An active connection is required to message this account.');

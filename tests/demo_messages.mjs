@@ -16,6 +16,6 @@ await a.change('sipho','unblock','naledi');assert.equal(a.conversation('naledi',
 await a.change('naledi','request','sipho');await a.change('sipho','accept','naledi');await a.change('naledi','send','sipho',{text:'Reconnected'});assert.equal(a.conversation('naledi','sipho').length,3);
 await a.change('naledi','remove','sipho');await assert.rejects(()=>a.change('sipho','send','naledi',{text:'Removed'}));
 storage.setItem(SOCIAL_KEY,JSON.stringify({version:1,requests:[],blocks:[],reports:[]}));a=make();assert.equal(a.ready,true);assert.deepEqual(a.data.messages,[]);
-await a.change('naledi','request','sipho');assert.equal(JSON.parse(storage.getItem(SOCIAL_KEY)).version,5);
+await a.change('naledi','request','sipho');assert.equal(JSON.parse(storage.getItem(SOCIAL_KEY)).version,6);
 const damaged=JSON.parse(storage.getItem(SOCIAL_KEY));damaged.messages=[{id:1,from:'naledi',to:'sipho',text:'',read:false,at:1}];storage.setItem(SOCIAL_KEY,JSON.stringify(damaged));assert.equal(make().ready,false);await a.resetAll(true);assert.deepEqual(a.data.messages,[]);
 console.log('Message permissions, unread/read state, isolation, persistence, rollback, stale blocked writes, reconnection and migration passed.');

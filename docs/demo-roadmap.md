@@ -45,3 +45,6 @@ Before events, the user requested a slower design iteration around a public disc
 
 ## Campus engagement — v1.7.0
 The five requested additions are implemented together: notifications/mentions; reposts/quotes; Hot/Top and collapsed comments; hashtags/Trending; flair/profile pins/karma. See engagement.md. Events remain paused.
+
+## Search, authorship and profiles — v1.8.0
+Implements the five requested next steps. See discovery-and-profiles.md. Events remain paused.

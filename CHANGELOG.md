@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.8.0 — Discover, search and profiles (2026-10-25)
+- Merged Connections into Discover, with campus/interest search and profile-level social actions.
+- Moved Saved into My profile; preserved existing private bookmarks.
+- Added unified public search for posts, people, circles and hashtags.
+- Added author edit/delete controls, edited labels and deletion tombstones preserving repost attribution and conversations.
+- Added Posts / Replies / Upvoted / Reposts profile tabs and profile flair.
+- Added explainable Who to follow recommendations and public follower/following lists with quick-follow cards.
+- Migrated shared demo state to schema 6. See docs/discovery-and-profiles.md.
+
+
 ## 1.7.0 — Campus engagement demo (2026-10-24)
 - Added account-specific notifications and stable @mentions.
 - Added attributed reposts and quote posts.

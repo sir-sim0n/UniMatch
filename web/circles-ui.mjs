@@ -1,10 +1,10 @@
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(text,action)=>{const b=el('button',text,'secondary');b.type='button';b.onclick=action;return b;};
 export function createCirclesUI({accounts,repository,announce}){
- let generation=0,selected=null,owner=null;
+ let generation=0,selected=null,owner=null,pending=null;
  const leave=()=>{generation++;};
  async function render(host){
-  const stamp=++generation,actor=accounts.active.account.id;if(owner!==actor){selected=null;owner=actor;}
+  const stamp=++generation,actor=accounts.active.account.id;if(owner!==actor){selected=null;owner=actor;}if(pending){selected=pending;pending=null;}
   repository.reload();host.replaceChildren(el('h1','Find your circle.'),el('p','Shared interests. Campus conversations. Join a fictional circle or start your own. All activity stays in this browser.','notice'));
   host.append(button('Reload saved circles',()=>render(host)));
   const error=el('p','','error');error.setAttribute('role','alert');host.append(error);if(!repository.ready){error.textContent=repository.error;return;}
@@ -27,5 +27,5 @@ export function createCirclesUI({accounts,repository,announce}){
   const postNode=(x,reply=false)=>{const article=el('article',undefined,reply?'circle-reply':'circle-post');article.append(el('h3',`${name(x.author)}${x.hidden?' · Hidden by organiser':''}`),el('p',x.text,'post-text'),el('small',new Date(x.at).toLocaleString()));if(c.organiser)article.append(button(`${x.hidden?'Restore':'Hide'} ${reply?'reply':'post'} ${x.id}`,()=>mutate(x.hidden?'circle-restore':'circle-hide',c.id,{post:x.id})));return article;};
   for(const x of roots){const article=postNode(x);for(const reply of c.posts.filter(r=>r.parent===x.id))article.append(postNode(reply,true));if(!x.hidden){const details=el('details');details.append(el('summary',`Reply to post ${x.id}`),compose(x.id,`Reply to post ${x.id} (up to 2,000 characters)`));article.append(details);}section.append(article);}
  }
- return {render,leave};
+ return {render,leave,select:id=>{pending=id;}};
 }

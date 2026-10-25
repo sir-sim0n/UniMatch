@@ -1,18 +1,18 @@
-import { DemoSocial, SOCIAL_KEY, REASONS } from './demo-social.mjs?v=1.7.0';
+import { DemoSocial, SOCIAL_KEY, REASONS } from './demo-social.mjs?v=1.8.0';
 
 const node=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
-export function createSocialUI({accounts, getCatalogues, announce, repository, openMessages}) {
+export function createSocialUI({accounts, getCatalogues, announce, repository, openMessages, openDiscover, openProfile}) {
 
   let generation=0;
   function leave(){generation++;}
   async function render(host){
     repository.reload();
     const stamp=++generation,actor=accounts.active.account.id;
-    host.replaceChildren(node('h1','Your campus connections.'),node('p','Send an invitation, then switch demo accounts to accept it. Everything stays in this browser. No real people are contacted.','muted'));
+    host.replaceChildren(node('h1','Discover · Your connections.'),node('p','Manage requests and connections, or return to Discover to explore student profiles. Everything stays in this browser. No real people are contacted.','muted'));
     const status=node('p','','error');status.setAttribute('role','alert');host.append(status);
     const controls=node('div',undefined,'actions');host.append(controls);
     const button=(label,action,cls='secondary')=>{const b=node('button',label,cls);b.type='button';b.onclick=action;return b;};
-    controls.append(button('Reload saved connections',()=>{repository.reload();render(host);}),button('Reset shared social demo',()=>{
+    controls.append(button('← Discover students',openDiscover),button('Reload saved connections',()=>{repository.reload();render(host);}),button('Reset shared social demo',()=>{
       const dialog=node('dialog');dialog.setAttribute('aria-label','Reset shared social demo');
       dialog.append(node('h2','Reset connections for every demo account?'),node('p','This removes all local requests, connections, blocks, reports, messages, circles, public posts, comments, follows and votes. Profiles and bookmarks remain unchanged.'));
       dialog.append(button('Keep social demo',()=>dialog.close()),button('Reset social data',async()=>{try{await repository.resetAll(true);dialog.close();render(host);announce('Shared social demo reset.');}catch(e){status.textContent=e.message;dialog.close();}}));
@@ -53,7 +53,7 @@ export function createSocialUI({accounts, getCatalogues, announce, repository, o
       card.append(node('h2',p.displayName),node('p',`${uni?.label??''} · ${campus}`,'academic'),node('p',p.bio),node('p',p.interestIds.map(id=>cat.interests.find(i=>i.id===id)?.label).filter(Boolean).join(' · '),'muted'));
       const shared=p.interestIds.filter(id=>accounts.active.client.call('getState').visitor?.interestIds.includes(id));
       card.append(node('p',`${shared.length} shared interests · ${rel==='incoming'?'Wants to connect':rel==='outgoing'?'Request sent':rel==='accepted'?'Connected':'Not connected'}`));
-      const actions=node('div',undefined,'actions');
+      const actions=node('div',undefined,'actions');actions.append(button('View profile',()=>openProfile(target)));
       const action=(label,op)=>{const b=button(label,()=>mutate(op,target));b.setAttribute('aria-label',`${label}: ${p.displayName}`);actions.append(b);};
       if(rel==='incoming'){action('Accept','accept');action('Decline','decline');}
       else if(rel==='outgoing')action('Cancel request','cancel');
