@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(Orbit VERSION 1.9.0 LANGUAGES CXX)
+project(Orbit VERSION 1.9.1 LANGUAGES CXX)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     message(FATAL_ERROR "Use a separate build directory: -B build/wasm")

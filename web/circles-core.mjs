@@ -1,4 +1,4 @@
-import {readablePost} from './engagement-core.mjs?v=1.9.0';
+import {readablePost} from './engagement-core.mjs?v=1.9.1';
 // Local demo circle rules; production permissions must be enforced by a backend.
 export const seedCircles=()=>[
  {id:'coding',title:'Campus Coding Circle',description:'Learn together, share small projects and find a study partner.',owner:'naledi',members:['naledi']},

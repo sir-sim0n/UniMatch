@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.9.1 — Create navigation and streamlined posts (2026-10-26)
+- Moved the public post/poll composer to Create in the main menu; removed Home search.
+- Placed Repost beside Save and Share, and Give an award beside Follow.
+- Removed circle crossposting controls from posts; existing attributed crossposts remain readable.
+- Preserved author thread continuation and account-gated participation.
+
 ## 1.9.0 — Depth and community (2026-10-26)
 - Added timed polls with one vote per account, live closing and visible results.
 - Added author-selected best answers (+5 karma) and student-given awards (+2 karma).

@@ -1,4 +1,6 @@
 const paths={
+ create:'M12 4v16M4 12h16',
+ repost:'M4 8h15l-4-4M20 16H5l4 4M20 8v4M4 16v-4',
  popular:'M3 17l6-6 4 4 8-11M15 4h6v6',
  search:'M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14M15 15l6 6',
  notifications:'M6 9a6 6 0 0 1 12 0v6l2 3H4l2-3V9M10 21h4',
