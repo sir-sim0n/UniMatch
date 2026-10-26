@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.9.0 — Depth and community (2026-10-26)
+- Added timed polls with one vote per account, live closing and visible results.
+- Added author-selected best answers (+5 karma) and student-given awards (+2 karma).
+- Added attributed circle crossposts and ordered author post threads.
+- Added circle rules, pins, multiple moderators, private membership requests and per-circle flair.
+- Added a global Popular feed powered by Hot ranking.
+- Migrated shared demo data to schema 7 while retaining existing content. See docs/community.md for rules, permissions and limits.
+
 ## 1.8.2 — Light, dark and system appearance (2026-10-25)
 - Added Appearance under My profile with System, Light and Dark choices.
 - Default System follows live device appearance changes; explicit choices persist across visits and browser tabs.

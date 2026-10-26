@@ -1,4 +1,4 @@
-import { ACTORS } from './demo-social.mjs?v=1.8.2';
+import { ACTORS } from './demo-social.mjs?v=1.9.0';
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(text,action)=>{const b=el('button',text,'secondary');b.type='button';b.onclick=action;return b;};
 export function createMessagesUI({accounts,repository,announce}){

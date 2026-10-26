@@ -1,4 +1,4 @@
-import {hashtags,FLAIRS} from './engagement-core.mjs?v=1.8.2';
+import {hashtags,FLAIRS} from './engagement-core.mjs?v=1.9.0';
 const validText=(x,max)=>typeof x==='string'&&!!x.trim()&&[...x].length<=max;
 export function validateDiscovery(d){
  if(!Array.isArray(d.profileFlairs))throw Error('Invalid profile flair data.');const actors=new Set();
@@ -9,7 +9,8 @@ export function changeContent(d,actor,op,id,extra,time){
  if(op==='feed-profile-flair'){if(extra.flair!==null&&!FLAIRS.includes(extra.flair))throw Error('Choose a profile flair.');d.profileFlairs=d.profileFlairs.filter(x=>x.actor!==actor);if(extra.flair)d.profileFlairs.push({actor,flair:extra.flair});return true;}
  if(!['feed-edit-post','feed-delete-post','feed-edit-comment','feed-delete-comment'].includes(op))return false;
  const postOp=op.endsWith('-post'),item=(postOp?d.feedPosts:d.feedReplies).find(x=>x.id===id);if(!item||item.author!==actor||item.deleted)throw Error('Only the author can change this content.');
- if(op.includes('-delete-')){if(extra.confirmed!==true)throw Error('Confirm deletion first.');item.text='[Deleted]';item.deleted=true;if(postOp){item.title='Deleted post';item.flair=null;item.topic=null;d.pins=d.pins.filter(x=>x.post!==id);d.votes=d.votes.filter(x=>x.post!==id);d.postSaves=d.postSaves.filter(x=>x.post!==id);}return true;}
+ if(op==='feed-delete-comment'&&extra.confirmed===true)d.bestAnswers=d.bestAnswers.filter(a=>a.reply!==id);
+ if(op.includes('-delete-')){if(extra.confirmed!==true)throw Error('Confirm deletion first.');item.text='[Deleted]';item.deleted=true;if(postOp){d.polls=d.polls.filter(p=>p.post!==id);d.pollVotes=d.pollVotes.filter(v=>v.post!==id);d.awards=d.awards.filter(a=>a.post!==id);d.bestAnswers=d.bestAnswers.filter(a=>a.post!==id);item.title='Deleted post';item.flair=null;item.topic=null;d.pins=d.pins.filter(x=>x.post!==id);d.votes=d.votes.filter(x=>x.post!==id);d.postSaves=d.postSaves.filter(x=>x.post!==id);}return true;}
  if(postOp&&item.kind==='repost')throw Error('A plain repost cannot be edited. Delete it or publish a quote.');
  if(!validText(extra.text,postOp?4000:2000)||postOp&&!validText(extra.title,180))throw Error('Add valid text within the displayed limits.');
  if(postOp){if(extra.flair!==null&&!FLAIRS.includes(extra.flair))throw Error('Choose a post flair.');item.title=extra.title.trim();item.flair=extra.flair;}
