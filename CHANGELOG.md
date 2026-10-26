@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.10.0 — Four in a Row in Messages (2026-10-26)
+- Added connection-only challenges, accept/decline/cancel controls and saved turn-based boards.
+- Added horizontal, vertical and diagonal wins, draws, resignation and rematches with alternating starters.
+- Added in-app game notifications, seven-day inactivity expiry and cancellation on block/disconnect.
+- Added keyboard-accessible column controls, distinct player symbols and mobile/dark styling.
+- Migrated shared demo state to schema 8. All gameplay remains local; see docs/four-in-a-row.md.
+
 ## 1.9.1 — Create navigation and streamlined posts (2026-10-26)
 - Moved the public post/poll composer to Create in the main menu; removed Home search.
 - Placed Repost beside Save and Share, and Give an award beside Follow.

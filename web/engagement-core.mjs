@@ -10,7 +10,7 @@ export function validateEngagement(d){
  for(const p of d.feedPosts){if(p.kind!==undefined&&!['post','repost','quote'].includes(p.kind))throw Error('Invalid post kind.');if(p.original!=null&&(!ids.has(p.original)||p.original>=p.id))throw Error('Invalid original post.');if(['repost','quote'].includes(p.kind)&&p.original==null)throw Error('Missing original post.');if(p.flair!=null&&!FLAIRS.includes(p.flair))throw Error('Invalid flair.');}
  if(!Array.isArray(d.notifications)||!Array.isArray(d.pins))throw Error('Invalid engagement data.');
  const keys=new Set();let last=0;
- for(const n of d.notifications){if(!Number.isSafeInteger(n.id)||n.id<=last||!handles.includes(n.from)||!handles.includes(n.to)||n.from===n.to||!['mention','reply','follow','upvote','repost','quote','request','accepted','message'].includes(n.kind)||typeof n.key!=='string'||!n.key||keys.has(n.key)||typeof n.read!=='boolean'||!Number.isFinite(n.at)||n.at<0||(n.post!==null&&!ids.has(n.post)))throw Error('Invalid notification.');last=n.id;keys.add(n.key);}
+ for(const n of d.notifications){if(!Number.isSafeInteger(n.id)||n.id<=last||!handles.includes(n.from)||!handles.includes(n.to)||n.from===n.to||!['mention','reply','follow','upvote','repost','quote','request','accepted','message','game'].includes(n.kind)||typeof n.key!=='string'||!n.key||keys.has(n.key)||typeof n.read!=='boolean'||!Number.isFinite(n.at)||n.at<0||(n.post!==null&&!ids.has(n.post)))throw Error('Invalid notification.');last=n.id;keys.add(n.key);}
  const owners=new Set();for(const pin of d.pins){if(owners.has(pin.actor)||!d.feedPosts.some(p=>p.id===pin.post&&p.author===pin.actor))throw Error('Invalid profile pin.');owners.add(pin.actor);}
 }
 export function readablePost(d,actor,id){const seen=new Set();let p=d.feedPosts.find(p=>p.id===id);if(!p)return false;while(p){if(seen.has(p.id)||actor&&blocked(d,actor,p.author))return false;seen.add(p.id);p=p.original!=null?d.feedPosts.find(x=>x.id===p.original):null;}return true;}
@@ -24,6 +24,7 @@ export function recordActivity(d,before,actor,op,target,extra,time){
  if(op==='feed-vote'&&d.votes.some(v=>v.actor===actor&&v.post===target))add(d.feedPosts.find(p=>p.id===target).author,'upvote',`vote:${target}`,target);
  if(op==='request')add(target,'request',`request:${time}`);
  if(op==='accept')add(target,'accepted',`accepted:${time}`);
+ if(op.startsWith('game-')){const g=op==='game-invite'?d.games.at(-1):d.games.find(g=>g.id===extra.game);if(g)add(target,'game',`game:${g.id}:${op}:${g.moves.length}`);}
  if(op==='send')add(target,'message',`message:${d.messages.at(-1).id}`);
 }
 export function changeEngagement(d,actor,op,target,extra,time){

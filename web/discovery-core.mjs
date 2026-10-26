@@ -1,4 +1,4 @@
-import {hashtags,FLAIRS} from './engagement-core.mjs?v=1.9.1';
+import {hashtags,FLAIRS} from './engagement-core.mjs?v=1.10.0';
 const validText=(x,max)=>typeof x==='string'&&!!x.trim()&&[...x].length<=max;
 export function validateDiscovery(d){
  if(!Array.isArray(d.profileFlairs))throw Error('Invalid profile flair data.');const actors=new Set();

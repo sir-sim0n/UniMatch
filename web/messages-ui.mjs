@@ -1,12 +1,14 @@
-import { ACTORS } from './demo-social.mjs?v=1.9.1';
+import {renderGames} from './games-ui.mjs?v=1.10.0';
+import { ACTORS } from './demo-social.mjs?v=1.10.0';
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(text,action)=>{const b=el('button',text,'secondary');b.type='button';b.onclick=action;return b;};
 export function createMessagesUI({accounts,repository,announce}){
   let generation=0,selected=null,owner=null;
-  function leave(){generation++;}
+  const cleanup=[];const clear=()=>{while(cleanup.length)cleanup.pop()();};
+  function leave(){generation++;clear();}
   function select(id){selected=id;owner=accounts.active.account.id;}
   async function render(host){
-    const stamp=++generation,actor=accounts.active.account.id;
+    clear();const stamp=++generation,actor=accounts.active.account.id;
     if(owner!==actor){selected=null;owner=actor;}
     repository.reload();
     host.replaceChildren(el('h1','Your campus conversations.'),el('p','Local demo messages only. Switch accounts to reply. Nothing is sent to real people or another device.','notice'));
@@ -16,11 +18,11 @@ export function createMessagesUI({accounts,repository,announce}){
     let profiles;try{profiles=await accounts.profiles();}catch{error.textContent='Demo profiles could not be loaded.';return;}
     if(stamp!==generation)return;
     const name=id=>profiles.find(p=>p.actorId===id)?.displayName??accounts.entries.get(id)?.account.label??id;
-    const peers=ACTORS.filter(id=>id!==actor&&!repository.blocked(actor,id)&&(repository.relation(actor,id)==='accepted'||repository.conversation(actor,id).length));
+    const peers=ACTORS.filter(id=>id!==actor&&!repository.blocked(actor,id)&&(repository.relation(actor,id)==='accepted'||repository.conversation(actor,id).length||repository.games(actor,id).length));
     if(!peers.includes(selected))selected=null;
     const list=el('div',undefined,'actions');host.append(list);
     for(const id of peers){const n=repository.unread(actor,id);const b=button(`${name(id)}${n?` · ${n} unread`:''}`,()=>{selected=id;render(host);});b.setAttribute('aria-pressed',String(id===selected));list.append(b);}
-    if(!peers.length){host.append(el('p','No conversations yet. Accept a connection in Connections, then come back to send your first message.','panel'));return;}
+    if(!peers.length){host.append(el('p','No conversations yet. Accept a connection in Discover, then come back to send your first message.','panel'));return;}
     if(!selected){host.append(el('p','Choose a connection to open your conversation.'));return;}
     const target=selected,connected=repository.relation(actor,target)==='accepted';
     if(connected&&repository.unread(actor,target)){
@@ -34,6 +36,7 @@ export function createMessagesUI({accounts,repository,announce}){
     if(!messages.length)panel.append(el('p','Say hello and find some common ground.','muted'));
     for(const m of messages){const item=el('li',undefined,m.from===actor?'message outgoing':'message');item.append(el('strong',m.from===actor?'You':name(m.from)),el('p',m.text),el('small',`${new Date(m.at).toLocaleString()} · ${m.from===actor?(m.read?'Read in demo':'Saved locally'):'Received in demo'}`));history.append(item);}
     panel.append(history);host.append(panel);
+    renderGames({panel,repository,actor,target,name,connected,refresh:()=>stamp===generation?render(host):undefined,announce,cleanup});
     if(!connected){panel.append(el('p','This connection has ended. Conversation history is read-only. Reconnect before sending new messages.','notice'));return;}
     const form=el('form'),label=el('label','Message (up to 2,000 characters)','field'),input=el('textarea');input.maxLength=2000;input.required=true;label.append(input);
     const submit=el('button','Send demo message');submit.type='submit';form.append(label,submit,el('p','Use fictional details only. Unsaved drafts are discarded when you switch accounts or leave this screen.','hint'));panel.append(form);

@@ -1,4 +1,4 @@
-import {icon} from './ui-icons.mjs?v=1.9.1';
+import {icon} from './ui-icons.mjs?v=1.10.0';
 // Profile/catalogue decisions use the C++ API; demo social rules use the local repository adapter.
 const main = document.querySelector('#main');
 const nav = document.querySelector('#navigation');
@@ -269,13 +269,13 @@ async function start() {
   loading.append(el('p','ONE MOMENT','eyebrow'),el('h1','Finding our common ground…'),el('p','Loading the fictional profiles.'));
   main.append(loading);
   try {
-    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.9.1'), import('./demo-accounts.mjs?v=1.9.1')]);
+    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.10.0'), import('./demo-accounts.mjs?v=1.10.0')]);
     accountsList=ACCOUNTS; accounts=new DemoAccounts({loadClient,report:storageStatus});
-    const { createSocialUI } = await import('./social-ui.mjs?v=1.9.1');
-    const { DemoSocial } = await import('./demo-social.mjs?v=1.9.1');
-    const { createMessagesUI } = await import('./messages-ui.mjs?v=1.9.1');
-    const { createCirclesUI } = await import('./circles-ui.mjs?v=1.9.1');
-    const { createFeedUI } = await import('./feed-ui.mjs?v=1.9.1');
+    const { createSocialUI } = await import('./social-ui.mjs?v=1.10.0');
+    const { DemoSocial } = await import('./demo-social.mjs?v=1.10.0');
+    const { createMessagesUI } = await import('./messages-ui.mjs?v=1.10.0');
+    const { createCirclesUI } = await import('./circles-ui.mjs?v=1.10.0');
+    const { createFeedUI } = await import('./feed-ui.mjs?v=1.10.0');
     socialRepository=new DemoSocial();
     feedUI=createFeedUI({accounts,repository:socialRepository,getActor:()=>!guest&&state?.visitor?accounts.active.account.id:null,getCatalogues:()=>catalogues,requireAccount,announce:say,onActivity:(destination,circle)=>{renderNavigation();if(circle&&!guest){if(destination==='messages')messagesUI.select(circle);else if(destination==='circles')circlesUI.select(circle);}if(destination)navigate(destination);}});
     circlesUI=createCirclesUI({accounts,repository:socialRepository,announce:say,openPost:id=>{feedUI.deepLink(id);navigate('home');}});
