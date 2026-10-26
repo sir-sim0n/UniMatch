@@ -1,9 +1,9 @@
-import {pollComposer,postCommunity,bestAnswerUI,awardButton} from './community-ui.mjs?v=1.10.0';
-import {icon} from './ui-icons.mjs?v=1.10.0';
-import {FLAIRS,hashtags,karma,sortFeed,trending} from './engagement-core.mjs?v=1.10.0';
-import {profileItems,searchAll,suggestions,filterPeople} from './discovery-core.mjs?v=1.10.0';
-import {REASONS} from './demo-social.mjs?v=1.10.0';
-import {TOPICS} from './feed-core.mjs?v=1.10.0';
+import {pollComposer,postCommunity,bestAnswerUI,awardButton} from './community-ui.mjs?v=1.11.0';
+import {icon} from './ui-icons.mjs?v=1.11.0';
+import {FLAIRS,hashtags,karma,sortFeed,trending} from './engagement-core.mjs?v=1.11.0';
+import {profileItems,searchAll,suggestions,filterPeople} from './discovery-core.mjs?v=1.11.0';
+import {REASONS} from './demo-social.mjs?v=1.11.0';
+import {TOPICS} from './feed-core.mjs?v=1.11.0';
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(text,action,cls='secondary')=>{const b=el('button',text,cls);b.type='button';b.onclick=action;return b;};
 export function createFeedUI({accounts,repository,getActor,getCatalogues,requireAccount,announce,onActivity=()=>{}}){
@@ -57,7 +57,7 @@ export function createFeedUI({accounts,repository,getActor,getCatalogues,require
    const rows=repository.notifications(actor),unread=rows.filter(n=>!n.read).length;
    host.append(el('p',`${unread} unread`,'hint'),button('Mark all as read',()=>run('feed-notification-read',null)),button('Refresh notifications',()=>{onActivity();render(host,mode);},'secondary'));
    if(!rows.length)host.append(el('p','Nothing yet. Switch to another demo account and mention you in a post or comment.','panel'));
-   const labels={mention:'mentioned you',reply:'replied to your conversation',follow:'followed you',upvote:'upvoted your post',repost:'reposted your post',quote:'quoted your post',request:'sent you a connection request',accepted:'accepted your connection request',game:'updated your Four in a Row match',message:'sent you a message'};
+   const labels={mention:'mentioned you',reply:'replied to your conversation',follow:'followed you',upvote:'upvoted your post',repost:'reposted your post',quote:'quoted your post',request:'sent you a connection request',accepted:'accepted your connection request',game:'updated your game match',message:'sent you a message'};
    for(const n of rows){const row=el('article',undefined,'panel notification'+(n.read?'':' unread'));row.append(el('p',`${name(n.from)} ${labels[n.kind]}.`),el('p',new Date(n.at).toLocaleString('en-ZA'),'hint'));if(!n.read)row.append(button('Mark as read',()=>run('feed-notification-read',n.id),'text-button'));row.append(button(n.post?'Open conversation':['message','game'].includes(n.kind)?'Open Messages':['request','accepted'].includes(n.kind)?'Open Connections':'View profile',()=>run('feed-notification-read',n.id,{},async()=>{if(n.post){deepLink(n.post);onActivity('home');}else if(['message','game'].includes(n.kind)||['request','accepted'].includes(n.kind)){onActivity(['message','game'].includes(n.kind)?'messages':'connections',['message','game'].includes(n.kind)?n.from:null);}else{profile(n.from);onActivity('public-profile');}}),'secondary'));host.append(row);}return;
   }
   const suggested=suggestions(data,visibleProfiles,actor);

@@ -1,3 +1,9 @@
+# v1.11.0 — 2026-10-26
+
+- Added Dots and Boxes challenges in Messages with a 3-by-3 box board, scores, extra turns and saved matches.
+- Shared invitations, notifications, resignation, expiry and rematches; preserved existing Four in a Row games.
+- Added game-rule and persistence regression coverage. See docs/dots-and-boxes.md.
+
 # Changelog
 
 ## 1.10.0 — Four in a Row in Messages (2026-10-26)

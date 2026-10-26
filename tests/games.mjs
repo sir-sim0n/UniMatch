@@ -24,3 +24,20 @@ await r.change('naledi','game-invite','sipho');await r.change('sipho','game-acce
 const legacy=structuredClone(r.data);legacy.version=7;delete legacy.games;store.value=JSON.stringify(legacy);r=make();assert.equal(r.data.version,8);assert.deepEqual(r.data.games,[]);assert.equal(JSON.parse(store.value).version,7);
 const bad=structuredClone(r.data);bad.games=[{id:1,players:['naledi','sipho'],inviter:'naledi',status:'active',at:0,updatedAt:1,moves:moves([0,0,0,0,0,0,0])}];store.value=JSON.stringify(bad);assert.equal(make().ready,false);
 console.log('Four in a Row: wins in all directions, draw, full columns, permissions, challenges, turns, stale/duplicate moves, persistence, rematches, resignation, expiry, blocking, rollback and migration passed.');
+
+// Dots and Boxes shares the lifecycle but scoring keeps the current player's turn.
+const {replayDots}=await import('../web/games-core.mjs');
+const dm=edges=>edges.map(edge=>({edge,at:now}));
+let ds=replayDots(dm([0,3,12,13]));assert.deepEqual(ds.scores,[0,1]);assert.equal(ds.turn,1);assert.equal(ds.boxes[0],2);
+ds=replayDots(dm([0,3,12,1,4,14,13]));assert.deepEqual(ds.scores,[2,0]);assert.equal(ds.turn,0);
+assert.throws(()=>replayDots(dm([0,0])));assert.throws(()=>replayDots(dm([-1])));assert.throws(()=>replayDots(dm([24])));
+ds=replayDots(dm(Array.from({length:24},(_,i)=>i)));assert.equal(ds.scores.reduce((a,b)=>a+b),9);assert.ok(ds.winner);assert.throws(()=>replayDots(dm([...Array.from({length:24},(_,i)=>i),0])));
+store.value=null;r=make();await r.change('naledi','request','sipho');await r.change('sipho','accept','naledi');
+await assert.rejects(()=>r.change('naledi','game-invite','sipho',{kind:'unknown'}));
+await r.change('naledi','game-invite','sipho',{kind:'dots'});await r.change('sipho','game-accept','naledi',{game:1});
+for(let edge=0;edge<24;edge++){const g=r.games('naledi','sipho')[0],s=gameState(g,now),actor=g.players[s.turn],peer=g.players[1-s.turn];await r.change(actor,'game-move',peer,{game:1,edge,expectedMoves:edge});if(edge===0)await assert.rejects(()=>r.change('sipho','game-move','naledi',{game:1,edge:0,expectedMoves:1}));}
+const dg=make().games('naledi','sipho')[0];assert.equal(dg.kind,'dots');assert.equal(gameState(dg,now).status,'won');assert.equal(dg.moves.length,24);
+await assert.rejects(()=>r.change('naledi','game-move','sipho',{game:1,edge:0,expectedMoves:24}));
+await r.change('sipho','game-invite','naledi',{rematch:1});assert.equal(r.data.games[1].kind,'dots');assert.deepEqual(r.data.games[1].players,['sipho','naledi']);
+await r.change('naledi','game-accept','sipho',{game:2});await r.change('naledi','block','sipho');assert.equal(r.data.games[1].status,'cancelled');
+console.log('Dots and Boxes: scoring, extra turns, double boxes, edge validation, full game, persistence, rematch type and blocking passed.');
