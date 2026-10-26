@@ -9,3 +9,5 @@ Games share invitation acceptance, decline/cancel, notifications, seven-day inac
 This release remains a browser-local demo. Switch demo accounts on the same browser to play both sides. No real accounts or cross-device multiplayer are introduced.
 
 Validation covers single and double box completion, extra turns, duplicate/out-of-range edges, all 24 moves, final scoring, persistence, rematch type and blocking, plus the existing Four in a Row and application suites.
+
+Release verification (26 October 2026): all 21 CTest groups and the 30-file publication check passed. Browser testing covered invitation, acceptance, moves by both players, reload persistence, box ownership and the extra turn. Mobile scroll/client width was 375px with no overflow; no console errors. GitHub Actions run 40383513639 built and deployed commit c445bd20dbb2dbf2b00eef26e1b72818cb97138d successfully. The live site loaded v1.11.0 and a Dots and Boxes invitation was accepted in Messages.
