@@ -41,3 +41,5 @@ Schema 7 adds polls, poll votes, best answers and awards, plus circle privacy, r
 Browser verification covered publishing a timed poll, voting under another account, awards, a reply marked best answer and +5 profile karma, author continuation, credited crossposting, circle rules and privacy, pending-request content protection, approval, moderator appointment, pinned posts and circle flair.
 
 Responsive browser check: at phone width, document scroll width and client width both measured 375px. Thread navigation scrolled to the requested part. Public search metadata excludes circle request lists and internal moderation settings.
+
+Live verification on 2026-10-26: source e6f058ab27ddbf2adc200c8d2018bbc866c05c8b passed GitHub Actions run 40296322621 (build and deploy). The live page loaded v1.9.0 assets, exposed Popular, and successfully published a local demo poll with a closing time. Browser console errors: none. Popular retains its view when opening replies.
