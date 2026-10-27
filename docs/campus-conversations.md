@@ -35,3 +35,5 @@ Event verification includes expiry, date validation, venue editing/removal, owne
 The event SQL suite passed in the actual project: public future events, private-circle exclusion, campus filtering, owner-only edits, finite-date constraints, past-event expiry and event removal. Asset URLs use the 1.14.0-r1 cache revision for the completed release.
 
 Browser event check: a fictional dated coding-afternoon post was created on the isolated local demo origin; its date and campus venue appeared on the post and under Upcoming campus events. No test event was posted to the live cloud community.
+
+Live verification: GitHub run 40559817160 completed build and deployment successfully for frontend source a5b3ef6. The published campus.css, cloud-campus.mjs and campus-core.mjs matched the release source; both live feeds and the cloud Upcoming campus events panel loaded without console errors. The full baseline, campus and event SQL suites passed together after the final migration. Cloud event composer controls and time serialization were also checked with the isolated fictional UI fixture.
