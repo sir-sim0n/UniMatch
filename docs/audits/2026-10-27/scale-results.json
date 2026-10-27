@@ -1,0 +1,105 @@
+{
+  "date": "2026-10-27",
+  "release": "1.11.0",
+  "source": "c445bd20dbb2dbf2b00eef26e1b72818cb97138d",
+  "method": "Completed rows captured from benchmark stdout. Three serial samples per operation. Memory-backed storage, no DOM or physical localStorage cost. Functional suite overlapped part of the run; timings are indicative local diagnostics, not controlled browser performance or user capacity. Four fixed demo actors; content growth only.",
+  "rows": [
+    {
+      "posts": 100,
+      "replies": 200,
+      "messages": 200,
+      "votes": 200,
+      "utf8Bytes": 106877,
+      "estimatedUtf16Bytes": 213754,
+      "reload": {
+        "medianMs": 6.7,
+        "maxMs": 14.53
+      },
+      "feed": {
+        "medianMs": 3.6,
+        "maxMs": 6.92
+      },
+      "hot": {
+        "medianMs": 26.56,
+        "maxMs": 41.57
+      },
+      "search": {
+        "medianMs": 2.65,
+        "maxMs": 9.64
+      },
+      "allAuthorKarma": {
+        "medianMs": 1.07,
+        "maxMs": 1.67
+      },
+      "saveMutation": {
+        "medianMs": 9.39,
+        "maxMs": 15.83
+      }
+    },
+    {
+      "posts": 1000,
+      "replies": 2000,
+      "messages": 2000,
+      "votes": 2000,
+      "utf8Bytes": 1068585,
+      "estimatedUtf16Bytes": 2137170,
+      "reload": {
+        "medianMs": 55.45,
+        "maxMs": 56.06
+      },
+      "feed": {
+        "medianMs": 51.36,
+        "maxMs": 52.27
+      },
+      "hot": {
+        "medianMs": 791.48,
+        "maxMs": 2162.79
+      },
+      "search": {
+        "medianMs": 6.29,
+        "maxMs": 8.91
+      },
+      "allAuthorKarma": {
+        "medianMs": 54.19,
+        "maxMs": 60.19
+      },
+      "saveMutation": {
+        "medianMs": 55.31,
+        "maxMs": 61.18
+      }
+    },
+    {
+      "posts": 5000,
+      "replies": 10000,
+      "messages": 10000,
+      "votes": 10000,
+      "utf8Bytes": 5373920,
+      "estimatedUtf16Bytes": 10747840,
+      "reload": {
+        "medianMs": 139.97,
+        "maxMs": 141.31
+      },
+      "feed": {
+        "medianMs": 167.14,
+        "maxMs": 376.83
+      },
+      "hot": {
+        "medianMs": 28230.93,
+        "maxMs": 43040.43
+      },
+      "search": {
+        "medianMs": 112.02,
+        "maxMs": 116.2
+      },
+      "allAuthorKarma": {
+        "medianMs": 2233.43,
+        "maxMs": 2541.46
+      },
+      "saveMutation": {
+        "medianMs": 350.93,
+        "maxMs": 452.18
+      }
+    }
+  ],
+  "stopped": "10000-post run was interrupted after the 5000-post results showed an unacceptable delay; no 10000-post performance result is reported."
+}

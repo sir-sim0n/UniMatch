@@ -1,0 +1,34 @@
+{
+  "baseline": {
+    "medianMs": 1963.16,
+    "maxMs": 2523.15
+  },
+  "indexed": {
+    "medianMs": 6.13,
+    "maxMs": 7.12
+  },
+  "sameOrder": true,
+  "deep": [
+    {
+      "count": 1000,
+      "visited": 1000,
+      "error": null,
+      "durationMs": 81.62
+    },
+    {
+      "count": 5000,
+      "visited": 5000,
+      "error": null,
+      "durationMs": 1269.74
+    },
+    {
+      "count": 10000,
+      "visited": 5223,
+      "error": "Maximum call stack size exceeded",
+      "durationMs": 2412.81
+    }
+  ],
+  "scope": "Standalone proposed Hot implementation, not applied to product. Parity on this synthetic fixture only; timings exclude DOM/localStorage.",
+  "cpu": "Intel(R) Core(TM) i5-8265U CPU @ 1.60GHz",
+  "node": "v24.22.1"
+}

@@ -1,0 +1,37 @@
+{
+  "liveRelease": "1.11.0",
+  "liveGuestFeed": {
+    "posts": 4,
+    "elements": 342,
+    "consoleErrorsOrWarnings": 0
+  },
+  "mobile": {
+    "viewportRequested": 390,
+    "clientWidth": 375,
+    "scrollWidth": 375
+  },
+  "isolatedRenderer": {
+    "actor": "naledi",
+    "profileSource": "three synthetic stubs, bypassing WASM profile loading",
+    "dataset": {
+      "posts": 100,
+      "replies": 200,
+      "votes": 200,
+      "messages": 200
+    },
+    "result": {
+      "posts": 100,
+      "renderThroughTwoAnimationFramesMs": 1935.5,
+      "renderedPosts": 100,
+      "elements": 4846,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    "samples": 1,
+    "largeAttempt": {
+      "posts": 1000,
+      "outcome": "Click and subsequent result read timed out at the browser control layer. Isolated tab was closed; no completed render time or DOM count is claimed."
+    }
+  },
+  "limits": "No LCP, INP, CLS, throttled network, physical phone, distributed traffic or real-user concurrency measurement."
+}

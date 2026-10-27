@@ -1,0 +1,114 @@
+{
+  "method": "Six ordinary GET requests; at most two simultaneous. This is an availability/asset sample, not a concurrent-user load test.",
+  "live": [
+    {
+      "path": "",
+      "status": 200,
+      "ttfbMs": 577.3,
+      "totalMs": 579.27,
+      "wireBodyBytes": 1268,
+      "encoding": "gzip",
+      "cacheControl": "max-age=600",
+      "cache": "HIT",
+      "contentType": "text/html; charset=utf-8"
+    },
+    {
+      "path": "assets/app.js?v=1.11.0",
+      "status": 200,
+      "ttfbMs": 573.51,
+      "totalMs": 575.88,
+      "wireBodyBytes": 8783,
+      "encoding": "gzip",
+      "cacheControl": "max-age=600",
+      "cache": "HIT",
+      "contentType": "application/javascript; charset=utf-8"
+    },
+    {
+      "path": "assets/feed-ui.mjs?v=1.11.0",
+      "status": 200,
+      "ttfbMs": 77.15,
+      "totalMs": 83.93,
+      "wireBodyBytes": 10390,
+      "encoding": "gzip",
+      "cacheControl": "max-age=600",
+      "cache": "HIT",
+      "contentType": "text/javascript; charset=utf-8"
+    },
+    {
+      "path": "assets/unimatch.mjs?v=1.11.0",
+      "status": 200,
+      "ttfbMs": 67.4,
+      "totalMs": 69.45,
+      "wireBodyBytes": 12164,
+      "encoding": "gzip",
+      "cacheControl": "max-age=600",
+      "cache": "HIT",
+      "contentType": "text/javascript; charset=utf-8"
+    },
+    {
+      "path": "assets/unimatch.wasm",
+      "status": 200,
+      "ttfbMs": 65.15,
+      "totalMs": 89.5,
+      "wireBodyBytes": 100025,
+      "encoding": "gzip",
+      "cacheControl": "max-age=600",
+      "cache": "HIT",
+      "contentType": "application/wasm"
+    },
+    {
+      "path": "assets/styles.css?v=1.11.0",
+      "status": 200,
+      "ttfbMs": 69.1,
+      "totalMs": 70.19,
+      "wireBodyBytes": 9158,
+      "encoding": "gzip",
+      "cacheControl": "max-age=600",
+      "cache": "HIT",
+      "contentType": "text/css; charset=utf-8"
+    }
+  ],
+  "localAssetBytes": 577964,
+  "largestFiles": [
+    {
+      "path": "assets\\unimatch.wasm",
+      "bytes": 301712
+    },
+    {
+      "path": "assets\\unimatch.mjs",
+      "bytes": 46670
+    },
+    {
+      "path": "assets\\styles.css",
+      "bytes": 38784
+    },
+    {
+      "path": "assets\\feed-ui.mjs",
+      "bytes": 35843
+    },
+    {
+      "path": "assets\\app.js",
+      "bytes": 29066
+    },
+    {
+      "path": "data\\profiles.json",
+      "bytes": 22876
+    },
+    {
+      "path": "assets\\demo-social.mjs",
+      "bytes": 11037
+    },
+    {
+      "path": "assets\\circles-ui.mjs",
+      "bytes": 9280
+    },
+    {
+      "path": "assets\\circles-core.mjs",
+      "bytes": 8165
+    },
+    {
+      "path": "assets\\engagement-core.mjs",
+      "bytes": 7942
+    }
+  ]
+}
