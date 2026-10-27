@@ -1,4 +1,4 @@
-import {gameState,gameKind,gameTitle} from './games-core.mjs?v=1.14.0';
+import {gameState,gameKind,gameTitle} from './games-core.mjs?v=1.14.0-r1';
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(text,fn)=>{const b=el('button',text,'secondary');b.type='button';b.onclick=fn;return b;};
 export function renderGames({panel,repository,actor,target,name,connected,refresh,announce,cleanup,limit=10}){

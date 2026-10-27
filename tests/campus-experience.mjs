@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {ReadingState,threadRows,rankPreferences,purpose} from '../web/campus-core.mjs';
+import {ReadingState,threadRows,rankPreferences,purpose,applyEvent,upcomingEvents} from '../web/campus-core.mjs';
 import {DemoSocial} from '../web/demo-social.mjs';
 const values=new Map(),storage={getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)};
 const a=new ReadingState('naledi','demo',storage),b=new ReadingState('sipho','demo',storage),post={id:10,topic:'Campus life',flair:'Discussion'};
@@ -12,3 +12,5 @@ const replies=[{id:1,parent:null,upvotes:8},{id:2,parent:1,upvotes:2},{id:3,pare
 const deep=Array.from({length:10000},(_,i)=>({id:i+1,parent:i||null,upvotes:0}));assert.equal(threadRows(deep).length,10000);assert.equal(threadRows(deep).at(-1).depth,9999);
 const social=new DemoSocial({storage:()=>({getItem:()=>values.get('social')??null,setItem:(k,v)=>values.set('social',v)})});await social.change('naledi','circle-settings','coding',{rules:'Be kind',private:false,introduction:'Welcome, campus coders.',cover:'sky'});assert.equal(social.circles('naledi').find(c=>c.id==='coding').introduction,'Welcome, campus coders.');await assert.rejects(social.change('sipho','circle-settings','coding',{rules:'No',private:false,introduction:'Stolen',cover:'garden'}));await assert.rejects(social.change('naledi','circle-settings','coding',{rules:'Be kind',private:false,cover:'bad'}));
 console.log('Campus experience: reading isolation/persistence/failure, unread counts, preference ranking, legacy purposes, accepted/orphan/deep threads and circle ownership passed.');
+
+const event={id:21};applyEvent(event,{eventAt:Date.now()+3600000,eventPlace:'Campus library'});assert.equal(upcomingEvents([event]).length,1);assert.equal(upcomingEvents([event],event.eventAt+1).length,0);assert.equal(upcomingEvents([{...event,deleted:true}]).length,0);assert.throws(()=>applyEvent({}, {eventAt:NaN,eventPlace:'Library'}));applyEvent(event,{eventAt:null,eventPlace:''});assert.equal(upcomingEvents([event]).length,0);

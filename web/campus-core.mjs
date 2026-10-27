@@ -25,3 +25,8 @@ export function threadRows(replies,{sort='Best',accepted=null,score=r=>r.upvotes
  return out;
 }
 export const rankPreferences=(posts,reading)=>posts.map((p,i)=>({p,i})).sort((a,b)=>Number(reading.reduced(a.p))-Number(reading.reduced(b.p))||a.i-b.i).map(x=>x.p);
+
+export function eventInfo(p){const at=p.eventAt??(p.event_at?Date.parse(p.event_at):null);return Number.isFinite(at)?{at,place:p.eventPlace??p.event_place??''}:null;}
+export function validateEvent(p){if(p.eventAt!=null&&(!Number.isSafeInteger(p.eventAt)||p.eventAt<Date.UTC(2000,0,1)||p.eventAt>=Date.UTC(2100,0,1)))throw Error('Choose an event date between 2000 and 2100.');if(p.eventPlace!==undefined&&(typeof p.eventPlace!=='string'||p.eventPlace.length>120))throw Error('Use a campus venue up to 120 characters.');}
+export function applyEvent(p,extra){if(extra.eventAt===undefined&&extra.eventPlace===undefined)return;const next={eventAt:extra.eventAt??null,eventPlace:extra.eventAt==null?'':(extra.eventPlace??'').trim()};validateEvent(next);Object.assign(p,next);}
+export const upcomingEvents=(posts,now=Date.now())=>posts.filter(p=>!p.deleted&&eventInfo(p)?.at>=now).sort((a,b)=>eventInfo(a).at-eventInfo(b).at).slice(0,3);

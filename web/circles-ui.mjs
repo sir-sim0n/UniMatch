@@ -1,4 +1,4 @@
-import {circleCover} from './campus-ui.mjs?v=1.14.0';
+import {circleCover} from './campus-ui.mjs?v=1.14.0-r1';
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(text,action)=>{const b=el('button',text,'secondary');b.type='button';b.onclick=action;return b;};
 export function createCirclesUI({accounts,repository,announce,openPost=()=>{}}){

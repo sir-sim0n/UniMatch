@@ -17,7 +17,7 @@ export async function cloudAPI(path,body,currentUser=null){
   const name=id=>id===currentUser.id?currentUser.handle:peer;const normalize=g=>({...g,players:g.players.map(name),inviter:name(g.inviter),state:{...g.state,winnerActor:g.state.winnerActor?name(g.state.winnerActor):null}});return result.items?{items:result.items.map(normalize)}:normalize(result);
  }
  const query=Object.fromEntries(url.searchParams),result=await checked(cloud.rpc('orbit_api',{path:route,method:body===undefined?'GET':'POST',body:body??query}));
- if(result?.items){if(route==='/feed')result.items=result.items.map(p=>({...p,author:p.handle}));else if(route.endsWith('/comments'))result.items=result.items.map(p=>({...p,author:p.handle}));else if(route.startsWith('/messages/'))result.items=result.items.map(p=>({...p,sender:p.handle}));else if(route==='/circles')result.items=result.items.map(c=>({...c,owner:c.ownerHandle}));}
+ if(result?.items){if(route==='/feed'||route==='/events')result.items=result.items.map(p=>({...p,author:p.handle}));else if(route.endsWith('/comments'))result.items=result.items.map(p=>({...p,author:p.handle}));else if(route.startsWith('/messages/'))result.items=result.items.map(p=>({...p,sender:p.handle}));else if(route==='/circles')result.items=result.items.map(c=>({...c,owner:c.ownerHandle}));}
  if(route.startsWith('/people/')&&result.connection){const peer=route.split('/')[2],name=id=>id===currentUser.id?currentUser.handle:peer;result.connection={...result.connection,sender:name(result.connection.sender),recipient:name(result.connection.recipient)};}
  return result;
 }

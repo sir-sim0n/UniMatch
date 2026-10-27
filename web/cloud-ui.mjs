@@ -1,6 +1,6 @@
-import {createCloudCampus} from './cloud-campus.mjs?v=1.14.0';
-import {icon} from './ui-icons.mjs?v=1.14.0';
-import {cloudAPI} from './cloud-client.mjs?v=1.14.0';
+import {createCloudCampus} from './cloud-campus.mjs?v=1.14.0-r1';
+import {icon} from './ui-icons.mjs?v=1.14.0-r1';
+import {cloudAPI} from './cloud-client.mjs?v=1.14.0-r1';
 const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n},button=(text,fn)=>{const b=el('button',text,'secondary');b.onclick=()=>Promise.resolve(fn()).catch(error);return b},main=document.querySelector('#main'),status=document.querySelector('#status');
 let session={user:null,csrf:null},screen='Home',peer=null,before=null,circle=null,query='',page=0,profileAuthor=null;
 const error=e=>status.textContent=e.message;

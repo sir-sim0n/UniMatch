@@ -2,6 +2,7 @@
 
 - Refined feed cards, six student post purposes, reply previews and threaded discussion reading.
 - Added campus shortcuts and a responsive Around campus panel while retaining Create/Search navigation.
+- Added optional event dates/venues to posts and upcoming public campus events with time and privacy filters.
 - Added circle cover presets, introductions and clearer rules/moderator/pin controls.
 - Added account-scoped device reading preferences and return-to-feed position; cloud saved posts sync with the account.
 - Added cloud comment voting, accepted-answer permissions/deletion handling, private-safe Popular filtering and new RLS-backed save/vote tables.
