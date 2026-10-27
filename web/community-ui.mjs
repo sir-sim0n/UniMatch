@@ -1,4 +1,4 @@
-import {AWARDS,DURATIONS} from './community-core.mjs?v=1.13.0';
+import {AWARDS,DURATIONS} from './community-core.mjs?v=1.14.0';
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(label,click)=>{const b=el('button',label,'secondary');b.type='button';b.onclick=click;return b;};
 const input=(label,max,multi=false)=>{const wrap=el('label',label,'field'),node=el(multi?'textarea':'input');node.maxLength=max;wrap.append(node);return {wrap,node};};

@@ -1,5 +1,5 @@
 // Local demo engagement rules. No external delivery or inferred popularity.
-export const FLAIRS=['Question','Discussion','Study help','Campus tip','Opportunity','Creative'];
+export const FLAIRS=['Question','Discussion','Campus news','Looking for a group','Opportunity','Just for fun','Study help','Campus tip','Creative'];
 export const handles=['personal','naledi','sipho','ayesha'];
 export const mentions=s=>[...new Set([...s.matchAll(/(?:^|[^\w@])@([a-z][a-z0-9_]*)\b/gi)].map(m=>m[1].toLowerCase()).filter(x=>handles.includes(x)))];
 export const hashtags=s=>[...new Set([...s.matchAll(/(?:^|[^\w#])#([\p{L}\p{N}_]{1,40})(?![\p{L}\p{N}_])/gu)].map(m=>m[1].toLowerCase()))];

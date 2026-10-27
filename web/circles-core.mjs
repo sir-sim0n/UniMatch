@@ -1,4 +1,4 @@
-import {readablePost} from './engagement-core.mjs?v=1.13.0';
+import {readablePost} from './engagement-core.mjs?v=1.14.0';
 // Local demo circle rules; production permissions must be enforced by a backend.
 export const seedCircles=()=>[
  {id:'coding',title:'Campus Coding Circle',description:'Learn together, share small projects and find a study partner.',owner:'naledi',members:['naledi']},
@@ -12,6 +12,7 @@ export function validateCircles(d,actors){
  const ids=new Set();
  for(const c of d.circles){if(!c||typeof c.id!=='string'||!c.id||ids.has(c.id)||!text(c.title,60)||!text(c.description,240)||!actors.includes(c.owner)||!Array.isArray(c.members)||!c.members.includes(c.owner)||new Set(c.members).size!==c.members.length||c.members.some(a=>!actors.includes(a)))throw Error('Invalid circle.');ids.add(c.id);
  if(typeof c.rules!=='string'||c.rules.length>2000||typeof c.private!=='boolean'||!Array.isArray(c.moderators)||!c.moderators.includes(c.owner)||new Set(c.moderators).size!==c.moderators.length||c.moderators.some(a=>!c.members.includes(a))||!Array.isArray(c.requests)||new Set(c.requests).size!==c.requests.length||c.requests.some(a=>!actors.includes(a)||c.members.includes(a))||!Array.isArray(c.flairs)||new Set(c.flairs.map(f=>f.actor)).size!==c.flairs.length||c.flairs.some(f=>!c.members.includes(f.actor)||!text(f.text,40)))throw Error('Invalid circle settings.');
+ if(c.introduction!==undefined&&(typeof c.introduction!=='string'||c.introduction.length>1000)||c.cover!==undefined&&!['waves','garden','sky'].includes(c.cover))throw Error('Invalid circle identity.');
  if(c.pinned!==null&&!d.posts.some(p=>p.id===c.pinned&&p.circle===c.id&&p.parent===null&&!p.hidden))throw Error('Invalid circle pin.');
  }
  let last=0;const posts=new Map();
@@ -40,7 +41,7 @@ export function changeCircle(d,actor,op,target,extra,time){
 
  if(op==='circle-leave'){if(actor===c.owner)throw Error('The organiser must stay in their circle in this demo.');if(!c.members.includes(actor))throw Error('Join this circle first.');c.members=c.members.filter(a=>a!==actor);c.moderators=c.moderators.filter(a=>a!==actor);c.flairs=c.flairs.filter(f=>f.actor!==actor);return;}
  if(!c.members.includes(actor))throw Error('Join this circle before posting or replying.');
- if(op==='circle-settings'){if(actor!==c.owner)throw Error('Only the organiser can change privacy and rules.');if(typeof extra.rules!=='string'||extra.rules.length>2000||typeof extra.private!=='boolean')throw Error('Use rules up to 2,000 characters and a valid privacy setting.');c.rules=extra.rules.trim();c.private=extra.private;if(!c.private)c.requests=[];return;}
+ if(op==='circle-settings'){if(actor!==c.owner)throw Error('Only the organiser can change privacy and rules.');if(typeof extra.rules!=='string'||extra.rules.length>2000||typeof extra.private!=='boolean')throw Error('Use rules up to 2,000 characters and a valid privacy setting.');if(extra.introduction!==undefined){if(typeof extra.introduction!=='string'||extra.introduction.length>1000)throw Error('Use an introduction up to 1,000 characters.');c.introduction=extra.introduction.trim();}if(extra.cover!==undefined){if(!['waves','garden','sky'].includes(extra.cover))throw Error('Choose an available cover.');c.cover=extra.cover;}c.rules=extra.rules.trim();c.private=extra.private;if(!c.private)c.requests=[];return;}
  if(op==='circle-moderator'){if(actor!==c.owner)throw Error('Only the organiser can appoint moderators.');if(extra.actor===c.owner||!c.members.includes(extra.actor)||blocked(d,actor,extra.actor))throw Error('Choose another available member.');c.moderators=c.moderators.includes(extra.actor)?c.moderators.filter(a=>a!==extra.actor):[...c.moderators,extra.actor];return;}
  if(op==='circle-flair'){if(typeof extra.text!=='string'||extra.text.length>40)throw Error('Use up to 40 characters.');c.flairs=c.flairs.filter(f=>f.actor!==actor);if(extra.text.trim())c.flairs.push({actor,text:extra.text.trim()});return;}
  if(op==='circle-pin'){if(!c.moderators.includes(actor))throw Error('Only moderators can pin posts.');if(extra.post!==null&&!d.posts.some(p=>p.id===extra.post&&p.circle===target&&p.parent===null&&!p.hidden&&!blocked(d,actor,p.author)&&(p.original==null||readablePost(d,actor,p.original))))throw Error('Post unavailable.');c.pinned=extra.post;return;}

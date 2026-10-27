@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(Orbit VERSION 1.13.0 LANGUAGES CXX)
+project(Orbit VERSION 1.14.0 LANGUAGES CXX)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     message(FATAL_ERROR "Use a separate build directory: -B build/wasm")
@@ -120,6 +120,10 @@ add_custom_target(website ALL
     COMMAND "${CMAKE_COMMAND}" -E make_directory "${UNIMATCH_SITE_DIR}/assets/vendor"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_SOURCE_DIR}/web/vendor/supabase.mjs" "${UNIMATCH_SITE_DIR}/assets/vendor/supabase.mjs"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_SOURCE_DIR}/web/vendor/THIRD_PARTY_NOTICES.txt" "${UNIMATCH_SITE_DIR}/assets/vendor/THIRD_PARTY_NOTICES.txt"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_SOURCE_DIR}/web/campus-core.mjs" "${UNIMATCH_SITE_DIR}/assets/campus-core.mjs"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_SOURCE_DIR}/web/campus-ui.mjs" "${UNIMATCH_SITE_DIR}/assets/campus-ui.mjs"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_SOURCE_DIR}/web/cloud-campus.mjs" "${UNIMATCH_SITE_DIR}/assets/cloud-campus.mjs"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_SOURCE_DIR}/web/campus.css" "${UNIMATCH_SITE_DIR}/assets/campus.css"
     DEPENDS unimatch
     VERBATIM
 )
@@ -127,6 +131,7 @@ add_custom_target(website ALL
 include(CTest)
 if(BUILD_TESTING)
     find_program(UNIMATCH_NODE node REQUIRED)
+    add_test(NAME campus_experience COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/campus-experience.mjs")
     add_test(NAME cloud_games COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/cloud-games.mjs")
     add_test(NAME performance COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/performance.mjs")
     add_test(NAME backend COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/backend.mjs")

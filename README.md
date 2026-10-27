@@ -2,7 +2,9 @@
 
 Orbit is a portfolio demonstration of university student discovery using fictional adult profiles. The project uses a portable C++17 core, Emscripten and Embind, and plain HTML, CSS, and JavaScript.
 
-**Current release: Orbit 1.13.0 — Supabase cloud pilot alongside the full fictional demo.**
+**Current release: Orbit 1.14.0 — student-first campus conversations in the demo and cloud pilot.**
+
+The seven discussion, campus, circle and reading improvements are documented in [Campus conversations](docs/campus-conversations.md).
 
 [Open the cloud pilot](https://sir-sim0n.github.io/UniMatch/cloud.html). See [scope, security, email setup and verification limits](docs/supabase-cloud-pilot.md).
 

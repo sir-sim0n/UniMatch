@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {ReadingState,threadRows,rankPreferences,purpose} from '../web/campus-core.mjs';
+import {DemoSocial} from '../web/demo-social.mjs';
+const values=new Map(),storage={getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,v)};
+const a=new ReadingState('naledi','demo',storage),b=new ReadingState('sipho','demo',storage),post={id:10,topic:'Campus life',flair:'Discussion'};
+a.toggle('hidden','10');assert.equal(a.visible(post),false);assert.equal(b.visible(post),true);assert.equal(new ReadingState('naledi','demo',storage).visible(post),false);
+a.toggle('hidden','10');a.toggle('muted','Campus life');assert.equal(a.visible(post),false);a.toggle('muted','Campus life');assert.equal(a.visible(post),true);
+a.toggle('less','Campus life');assert.deepEqual(rankPreferences([post,{id:11,topic:'Study life'}],a).map(p=>p.id),[11,10]);a.mark(10,4);assert.equal(a.unread(10,7),3);assert.equal(a.unread(10,2),0);assert.equal(a.unread(11,7),0);a.reset();assert.equal(a.visible(post),true);
+const broken=new ReadingState('x','demo',{getItem:()=>'{',setItem:()=>{throw Error('quota')}});assert.equal(broken.toggle('hidden',10),false);assert.equal(broken.visible(post),false);
+assert.equal(purpose({flair:'Study help'}),'Question');assert.equal(purpose({topic:'Questions'}),'Question');
+const replies=[{id:1,parent:null,upvotes:8},{id:2,parent:1,upvotes:2},{id:3,parent:null,upvotes:1},{id:4,parent:99,upvotes:0}];assert.deepEqual(threadRows(replies,{accepted:3}).map(x=>x.reply.id),[3,1,2,4]);assert.equal(threadRows(replies).find(x=>x.reply.id===2).depth,1);assert.equal(threadRows(replies).find(x=>x.reply.id===4).parent,null);
+const deep=Array.from({length:10000},(_,i)=>({id:i+1,parent:i||null,upvotes:0}));assert.equal(threadRows(deep).length,10000);assert.equal(threadRows(deep).at(-1).depth,9999);
+const social=new DemoSocial({storage:()=>({getItem:()=>values.get('social')??null,setItem:(k,v)=>values.set('social',v)})});await social.change('naledi','circle-settings','coding',{rules:'Be kind',private:false,introduction:'Welcome, campus coders.',cover:'sky'});assert.equal(social.circles('naledi').find(c=>c.id==='coding').introduction,'Welcome, campus coders.');await assert.rejects(social.change('sipho','circle-settings','coding',{rules:'No',private:false,introduction:'Stolen',cover:'garden'}));await assert.rejects(social.change('naledi','circle-settings','coding',{rules:'Be kind',private:false,cover:'bad'}));
+console.log('Campus experience: reading isolation/persistence/failure, unread counts, preference ranking, legacy purposes, accepted/orphan/deep threads and circle ownership passed.');
+

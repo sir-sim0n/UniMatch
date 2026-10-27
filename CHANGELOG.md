@@ -1,3 +1,12 @@
+# v1.14.0 — 2026-10-27
+
+- Refined feed cards, six student post purposes, reply previews and threaded discussion reading.
+- Added campus shortcuts and a responsive Around campus panel while retaining Create/Search navigation.
+- Added circle cover presets, introductions and clearer rules/moderator/pin controls.
+- Added account-scoped device reading preferences and return-to-feed position; cloud saved posts sync with the account.
+- Added cloud comment voting, accepted-answer permissions/deletion handling, private-safe Popular filtering and new RLS-backed save/vote tables.
+- Added regression coverage and documented persistence, feature-parity and pilot limits. See docs/campus-conversations.md.
+
 # v1.13.0 — 2026-10-27
 
 - Added a separate Supabase cloud pilot for shared accounts, profiles, posts, connections, circles, messages and both games.

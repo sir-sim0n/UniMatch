@@ -1,4 +1,5 @@
-import {icon} from './ui-icons.mjs?v=1.13.0';
+import {circleCover} from './campus-ui.mjs?v=1.14.0';
+import {icon} from './ui-icons.mjs?v=1.14.0';
 // Profile/catalogue decisions use the C++ API; demo social rules use the local repository adapter.
 const main = document.querySelector('#main');
 const nav = document.querySelector('#navigation');
@@ -86,7 +87,7 @@ async function navigate(next, focus = true) {
 }
 let pendingTarget=null;
 const featureLoads=new Map();
-async function ensureFeature(next){if(next==='circles'&&guest)return;const key=next==='connections'?'social':next;if(featureLoads.has(key))return featureLoads.get(key);const promise=(async()=>{if(key==='messages'){const {createMessagesUI}=await import('./messages-ui.mjs?v=1.13.0');messagesUI=createMessagesUI({accounts,repository:socialRepository,announce:say});}else if(key==='circles'){const {createCirclesUI}=await import('./circles-ui.mjs?v=1.13.0');circlesUI=createCirclesUI({accounts,repository:socialRepository,announce:say,openPost:id=>{feedUI.deepLink(id);navigate('home');}});}else{const {createSocialUI}=await import('./social-ui.mjs?v=1.13.0');socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say,repository:socialRepository,openDiscover:()=>navigate('discover'),openProfile:target=>{feedUI.profile(target);navigate('public-profile');},openMessages:target=>{pendingTarget={destination:'messages',id:target};navigate('messages');}});}})().catch(e=>{featureLoads.delete(key);throw e;});featureLoads.set(key,promise);return promise;}
+async function ensureFeature(next){if(next==='circles'&&guest)return;const key=next==='connections'?'social':next;if(featureLoads.has(key))return featureLoads.get(key);const promise=(async()=>{if(key==='messages'){const {createMessagesUI}=await import('./messages-ui.mjs?v=1.14.0');messagesUI=createMessagesUI({accounts,repository:socialRepository,announce:say});}else if(key==='circles'){const {createCirclesUI}=await import('./circles-ui.mjs?v=1.14.0');circlesUI=createCirclesUI({accounts,repository:socialRepository,announce:say,openPost:id=>{feedUI.deepLink(id);navigate('home');}});}else{const {createSocialUI}=await import('./social-ui.mjs?v=1.14.0');socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say,repository:socialRepository,openDiscover:()=>navigate('discover'),openProfile:target=>{feedUI.profile(target);navigate('public-profile');},openMessages:target=>{pendingTarget={destination:'messages',id:target};navigate('messages');}});}})().catch(e=>{featureLoads.delete(key);throw e;});featureLoads.set(key,promise);return promise;}
 function navIcon(destination){return icon(destination);}
 function renderNavigation() {
   nav.replaceChildren(el('p','YOUR ORBIT','eyebrow'));
@@ -105,7 +106,7 @@ async function publicCircles(){
   main.append(heading('Find your circle.','Browse communities freely. Choose an account to join and see member conversations.'));
   const loaded=await socialRepository.reload();if(ticket!==navigationGeneration)return;
   if(!loaded){main.append(el('p',socialRepository.error,'error'));return;}
-  const grid=el('div',undefined,'account-grid');for(const c of socialRepository.data.circles){const card=el('article',undefined,'panel');card.append(el('h2',c.title),el('p',c.description),el('p',`${c.members.length} demo members`,'hint'),button('Join circle',()=>requireAccount()));grid.append(card);}main.append(grid);
+  const grid=el('div',undefined,'account-grid');for(const c of socialRepository.data.circles){const card=el('article',undefined,'panel');card.append(circleCover(c.title,c.cover),el('h2',c.title),el('p',c.introduction||c.description),el('p',`${c.members.length} demo members`,'hint'),el('h3','Community rules'),el('p',c.rules||'Be kind. Keep your community welcoming.'),el('p','Moderators: '+(c.private?[c.owner]:c.moderators).map(id=>accounts.entries.get(id)?.account.label??id).join(', '),'hint'),button('Join circle',()=>requireAccount()));grid.append(card);}main.append(grid);
 }
 function welcome() {
   const section = el('section', undefined, 'welcome'); const intro = el('div');
@@ -279,10 +280,10 @@ async function start() {
   loading.append(el('p','ONE MOMENT','eyebrow'),el('h1','Finding our common ground…'),el('p','Loading the fictional profiles.'));
   main.append(loading);
   try {
-    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.13.0'), import('./demo-accounts.mjs?v=1.13.0')]);
+    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.14.0'), import('./demo-accounts.mjs?v=1.14.0')]);
     accountsList=ACCOUNTS; accounts=new DemoAccounts({loadClient,report:storageStatus});
-    const {openSocial}=await import('./indexed-social.mjs?v=1.13.0');
-    const { createFeedUI } = await import('./feed-ui.mjs?v=1.13.0');
+    const {openSocial}=await import('./indexed-social.mjs?v=1.14.0');
+    const { createFeedUI } = await import('./feed-ui.mjs?v=1.14.0');
     socialRepository=await openSocial();socialRepository.onExternalChange=()=>say('Social data changed in another tab. Use Refresh or Reload saved data to view it.');
     feedUI=createFeedUI({accounts,repository:socialRepository,getActor:()=>!guest&&state?.visitor?accounts.active.account.id:null,getCatalogues:()=>catalogues,requireAccount,announce:say,onActivity:(destination,circle)=>{renderNavigation();if(circle&&!guest){pendingTarget={destination,id:circle};}if(destination)navigate(destination);}});
     guestClient=await loadClient();client=guestClient;catalogues=client.call('getCatalogues');readState();
