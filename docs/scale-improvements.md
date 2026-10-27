@@ -41,3 +41,7 @@ The separate automated test sorted 10,000 posts in approximately 100 ms in one r
 ## Remaining boundaries
 
 The browser still reads/project-processes the full local social snapshot; pagination bounds DOM work, not the initial dataset load. Complex mutations may still copy/validate multiple collections. Keep profiling on actual phones and larger interaction histories. Do not claim a concurrent-user capacity or production readiness from these tests. The backend needs hosting, cloud identity integration, feature migration, recovery/verification flows and deployment monitoring before a real-user launch.
+
+## Live release verification
+
+GitHub Actions run 40481508414 built and deployed product commit 3cb1581c0401c397357b810cb5d383f26c510d52 successfully. The live site loaded v1.12.0 assets. Four pre-existing posts and the active Dots and Boxes match plus resigned Four in a Row history remained available after migration. My Profile exposed Export social backup and Restore social backup. The live mobile profile had matching client/scroll widths of 375px. No console errors were captured on the fresh live verification tab. Screenshot: orbit-v1.12.0-live.png in the task workspace. The shared backend remains a separate local pilot pending hosting and integration.
