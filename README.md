@@ -2,7 +2,7 @@
 
 Orbit is a portfolio demonstration of university student discovery using fictional adult profiles. The project uses a portable C++17 core, Emscripten and Embind, and plain HTML, CSS, and JavaScript.
 
-**Current release: Orbit 1.11.0 — Four in a Row and Dots and Boxes in Messages.**
+**Current release: Orbit 1.12.0 — faster browsing, IndexedDB storage and a shared local pilot.**
 
 Unified search, post/comment editing and deletion, profile activity tabs, recommendations and follow lists are now available. See [behaviour and limits](docs/discovery-and-profiles.md).
 
@@ -115,3 +115,5 @@ Demo messaging: connect two switchable personas, open Messages, send fictional t
 Interest circles: join a starter circle or create your own, publish fictional posts and replies, and switch to its organiser to test hiding/restoring content. See [circle behaviour and verification](docs/demo-circles.md).
 
 Public-first redesign: Home opens as a guest with public posts, student profiles, threaded discussions and campus/topic filters. Choose a demo account only when participating. See [the redesign contract](docs/public-feed.md).
+
+Scale release details: [v1.12.0 improvements](docs/scale-improvements.md). Shared backend setup and limits: [local pilot](backend/README.md).

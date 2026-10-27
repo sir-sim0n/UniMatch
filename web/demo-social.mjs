@@ -1,18 +1,18 @@
-import {validateGames,changeGame,cancelPairGames} from './games-core.mjs?v=1.11.0';
-import {seedCommunity,validateCommunity,attachPoll,changeCommunity,communityView} from './community-core.mjs?v=1.11.0';
-import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.11.0';
-import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.11.0';
-import {seedEngagement,validateEngagement,readablePost,notificationsFor,recordActivity,changeEngagement} from './engagement-core.mjs?v=1.11.0';
-import {validateDiscovery,changeContent} from './discovery-core.mjs?v=1.11.0';
+import {validateGames,changeGame,cancelPairGames} from './games-core.mjs?v=1.12.0';
+import {seedCommunity,validateCommunity,attachPoll,changeCommunity,communityView} from './community-core.mjs?v=1.12.0';
+import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.12.0';
+import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.12.0';
+import {seedEngagement,validateEngagement,readablePost,notificationsFor,recordActivity,changeEngagement} from './engagement-core.mjs?v=1.12.0';
+import {validateDiscovery,changeContent} from './discovery-core.mjs?v=1.12.0';
 // Demo-only shared state. Not authentication or a security boundary.
 export const SOCIAL_KEY = 'orbit.demo.social.v1';
 export const ACTORS = ['personal', 'naledi', 'sipho', 'ayesha'];
 export const REASONS = ['Spam', 'Harassment', 'Impersonation', 'Other'];
-const empty = () => ({ version: 8, games:[], ...seedCommunity(), profileFlairs:[], ...seedEngagement(), ...seedFeed(), requests: [], blocks: [], reports: [], messages: [], circles:seedCircles(), posts:[] });
+export const emptySocial = () => ({ version: 8, games:[], ...seedCommunity(), profileFlairs:[], ...seedEngagement(), ...seedFeed(), requests: [], blocks: [], reports: [], messages: [], circles:seedCircles(), posts:[] });
 const pair = (a,b) => [a,b].sort().join(':');
 const validActor = a => ACTORS.includes(a);
 function members(a,b) { if (!validActor(a) || !validActor(b) || a===b) throw Error('Choose two different demo accounts.'); }
-function validate(d) {
+export function validateSocial(d) {
   if(d?.version===1)d={...d,version:2,messages:[]};
   if(d?.version===2)d={...d,version:3,circles:seedCircles(),posts:[]};
   if(d?.version===3)d={...d,version:4,...seedFeed()};
@@ -34,9 +34,9 @@ function validate(d) {
 }
 export class DemoSocial {
   constructor({ storage=()=>globalThis.localStorage, now=()=>Date.now(), lock=task=>globalThis.navigator?.locks ? navigator.locks.request(SOCIAL_KEY,task) : task() }={}) {
-    this.storage=storage;this.now=now;this.lock=lock;this.data=empty();this.expected=null;this.error='';this.ready=false;this.reload();
+    this.storage=storage;this.now=now;this.lock=lock;this.data=emptySocial();this.expected=null;this.error='';this.ready=false;this.reload();
   }
-  reload(){try{const text=this.storage().getItem(SOCIAL_KEY);const data=text===null?empty():validate(JSON.parse(text));this.data=data;this.expected=text;this.ready=true;this.error='';return true;}catch{this.ready=false;this.error='Demo social data could not be read. It has been left untouched. Reload saved data or explicitly reset the shared social demo.';return false;}}
+  reload(){try{const text=this.storage().getItem(SOCIAL_KEY);const data=text===null?emptySocial():validateSocial(JSON.parse(text));this.data=data;this.expected=text;this.ready=true;this.error='';return true;}catch{this.ready=false;this.error='Demo social data could not be read. It has been left untouched. Reload saved data or explicitly reset the shared social demo.';return false;}}
   blocked(a,b){return this.data.blocks.some(x=>pair(x.from,x.to)===pair(a,b));}
   relation(a,b){members(a,b);if(this.blocked(a,b))return 'unavailable';const q=this.data.requests.find(x=>pair(x.from,x.to)===pair(a,b));if(!q)return 'none';return q.status==='pending'?(q.from===a?'outgoing':'incoming'):q.status;}
   view(actor){if(!validActor(actor))throw Error('Unknown demo account.');return structuredClone({requests:this.data.requests.filter(q=>(q.from===actor||q.to===actor)&&!this.blocked(q.from,q.to)),blocks:this.data.blocks.filter(b=>b.from===actor),reports:this.data.reports.filter(x=>x.from===actor)});}
@@ -53,8 +53,9 @@ export class DemoSocial {
     return this.lock(async()=>{
       if(!this.ready)throw Error(this.error);
       let store;
-      try{store=this.storage();if(store.getItem(SOCIAL_KEY)!==this.expected){this.ready=false;this.error='Another tab changed demo social data. Reload saved data before continuing.';throw Error(this.error);}}catch(e){throw Error(e.message||'Storage is unavailable.');}
-      const d=structuredClone(this.data),time=this.now();
+      try{if(this.persistence)await this.persistence.assertRevision(this.expected);else {store=this.storage();if(store.getItem(SOCIAL_KEY)!==this.expected){this.ready=false;this.error='Another tab changed demo social data. Reload saved data before continuing.';throw Error(this.error);}}}catch(e){throw Error(e.message||'Storage is unavailable.');}
+      const d=this.persistence?{...this.data}:structuredClone(this.data),time=this.now();
+      if(this.persistence){const touched=op==='feed-vote'?['votes','notifications']:op==='feed-save'?['postSaves']:op==='feed-follow'?['follows','notifications']:op==='feed-notification-read'?['notifications']:['send','read'].includes(op)?['messages','notifications']:Object.keys(this.data).filter(k=>Array.isArray(this.data[k]));for(const key of touched)d[key]=structuredClone(this.data[key]);}
       const same=q=>pair(q.from,q.to)===pair(actor,target);
       let q=d.requests.find(same);
       const blocked=d.blocks.some(same);
@@ -92,10 +93,12 @@ export class DemoSocial {
       }else throw Error('Unknown social operation.');
       if(op==='block'||op==='remove')cancelPairGames(d,actor,target,time);
       recordActivity(d,this.data,actor,op,target,extra,time);
-      validate(d);const text=JSON.stringify(d);
+      if(!this.persistence||!['feed-vote','feed-save','feed-follow','feed-notification-read','send','read'].includes(op))validateSocial(d);
+      if(this.persistence){this.expected=await this.persistence.commit(this.data,d,this.expected);this.data=d;return true;}
+      const text=JSON.stringify(d);
       try{store.setItem(SOCIAL_KEY,text);}catch{throw Error('Could not save demo social data. No change was applied. Free browser storage and try again.');}
       this.data=d;this.expected=text;return true;
     });
   }
-  async resetAll(confirmed){if(confirmed!==true)throw Error('Confirm resetting shared social data.');return this.lock(async()=>{try{this.storage().removeItem(SOCIAL_KEY);}catch{throw Error('Could not reset shared social data.');}this.data=empty();this.expected=null;this.error='';this.ready=true;});}
+  async resetAll(confirmed){if(confirmed!==true)throw Error('Confirm resetting shared social data.');return this.lock(async()=>{if(this.persistence){const next=emptySocial();this.expected=await this.persistence.commit(this.data,next,this.expected);this.data=next;this.ready=true;this.error='';return;}try{this.storage().removeItem(SOCIAL_KEY);}catch{throw Error('Could not reset shared social data.');}this.data=emptySocial();this.expected=null;this.error='';this.ready=true;});}
 }

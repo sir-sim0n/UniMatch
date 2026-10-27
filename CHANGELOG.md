@@ -1,3 +1,12 @@
+# v1.12.0 — 2026-10-27
+
+- Paginated feeds, search, comments and histories; incremental vote/save/follow controls.
+- Indexed ranking/counts/karma and iterative deep-comment traversal.
+- Transactional IndexedDB social migration with backup/restore and stale-write protection.
+- Lazy feature modules, cached profiles/catalogues and on-demand completed game boards.
+- Added a separate authenticated SQLite local pilot with protected messages/circles and authoritative games; cloud hosting remains pending.
+- Added backend and performance regression groups, a repeatable browser storage harness, and CSP-compatible WebAssembly bindings. See docs/scale-improvements.md.
+
 # v1.11.0 — 2026-10-26
 
 - Added Dots and Boxes challenges in Messages with a 3-by-3 box board, scores, extra turns and saved matches.

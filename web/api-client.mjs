@@ -18,10 +18,11 @@ export class Client {
   }
   dispose() { this.session?.delete(); this.session = null; }
 }
+let cataloguePromise;
 export async function loadClient() {
-  const moduleUrl = new URL('./unimatch.mjs?v=1.11.0', import.meta.url);
+  const moduleUrl = new URL('./unimatch.mjs?v=1.12.0', import.meta.url);
   const { default: createUniMatch } = await import(moduleUrl.href);
-  const engine = await createUniMatch({ locateFile: file => new URL(`${file}?v=1.11.0`, moduleUrl).href });
+  const engine = await createUniMatch({ locateFile: file => new URL(`${file}?v=1.12.0`, moduleUrl).href });
   const client = new Client(engine);
   try {
     const fetchText = async name => {
@@ -29,7 +30,8 @@ export async function loadClient() {
       if (!response.ok) throw new Error(`Could not load ${name} (HTTP ${response.status}).`);
       return response.text();
     };
-    const [catalogueJson, profilesJson] = await Promise.all([fetchText('catalogues.json'), fetchText('profiles.json')]);
+    if(!cataloguePromise)cataloguePromise=Promise.all([fetchText('catalogues.json'),fetchText('profiles.json')]).catch(e=>{cataloguePromise=null;throw e;});
+    const [catalogueJson, profilesJson] = await cataloguePromise;
     client.call('initialize', { catalogueJson, profilesJson });
     return client;
   } catch (error) { client.dispose(); throw error; }

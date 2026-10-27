@@ -1,16 +1,16 @@
-import {renderGames} from './games-ui.mjs?v=1.11.0';
-import { ACTORS } from './demo-social.mjs?v=1.11.0';
+import {renderGames} from './games-ui.mjs?v=1.12.0';
+import { ACTORS } from './demo-social.mjs?v=1.12.0';
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(text,action)=>{const b=el('button',text,'secondary');b.type='button';b.onclick=action;return b;};
 export function createMessagesUI({accounts,repository,announce}){
-  let generation=0,selected=null,owner=null;
+  let generation=0,selected=null,owner=null,messageLimit=40;
   const cleanup=[];const clear=()=>{while(cleanup.length)cleanup.pop()();};
   function leave(){generation++;clear();}
   function select(id){selected=id;owner=accounts.active.account.id;}
   async function render(host){
     clear();const stamp=++generation,actor=accounts.active.account.id;
     if(owner!==actor){selected=null;owner=actor;}
-    repository.reload();
+    await repository.reload();if(stamp!==generation)return;
     host.replaceChildren(el('h1','Your campus conversations.'),el('p','Local demo messages only. Switch accounts to reply. Nothing is sent to real people or another device.','notice'));
     host.append(button('Reload saved messages',()=>render(host)));
     const error=el('p','','error');error.setAttribute('role','alert');host.append(error);
@@ -21,7 +21,7 @@ export function createMessagesUI({accounts,repository,announce}){
     const peers=ACTORS.filter(id=>id!==actor&&!repository.blocked(actor,id)&&(repository.relation(actor,id)==='accepted'||repository.conversation(actor,id).length||repository.games(actor,id).length));
     if(!peers.includes(selected))selected=null;
     const list=el('div',undefined,'actions');host.append(list);
-    for(const id of peers){const n=repository.unread(actor,id);const b=button(`${name(id)}${n?` · ${n} unread`:''}`,()=>{selected=id;render(host);});b.setAttribute('aria-pressed',String(id===selected));list.append(b);}
+    for(const id of peers){const n=repository.unread(actor,id);const b=button(`${name(id)}${n?` · ${n} unread`:''}`,()=>{selected=id;messageLimit=40;render(host);});b.setAttribute('aria-pressed',String(id===selected));list.append(b);}
     if(!peers.length){host.append(el('p','No conversations yet. Accept a connection in Discover, then come back to send your first message.','panel'));return;}
     if(!selected){host.append(el('p','Choose a connection to open your conversation.'));return;}
     const target=selected,connected=repository.relation(actor,target)==='accepted';
@@ -34,7 +34,8 @@ export function createMessagesUI({accounts,repository,announce}){
     const history=el('ol',undefined,'message-history');history.setAttribute('aria-label','Message history');
     const messages=repository.conversation(actor,target);
     if(!messages.length)panel.append(el('p','Say hello and find some common ground.','muted'));
-    for(const m of messages){const item=el('li',undefined,m.from===actor?'message outgoing':'message');item.append(el('strong',m.from===actor?'You':name(m.from)),el('p',m.text),el('small',`${new Date(m.at).toLocaleString()} · ${m.from===actor?(m.read?'Read in demo':'Saved locally'):'Received in demo'}`));history.append(item);}
+    if(messages.length>messageLimit)panel.append(button('Load older messages',()=>{messageLimit+=40;render(host);}));
+    for(const m of messages.slice(-messageLimit)){const item=el('li',undefined,m.from===actor?'message outgoing':'message');item.append(el('strong',m.from===actor?'You':name(m.from)),el('p',m.text),el('small',`${new Date(m.at).toLocaleString()} · ${m.from===actor?(m.read?'Read in demo':'Saved locally'):'Received in demo'}`));history.append(item);}
     panel.append(history);host.append(panel);
     renderGames({panel,repository,actor,target,name,connected,refresh:()=>stamp===generation?render(host):undefined,announce,cleanup});
     if(!connected){panel.append(el('p','This connection has ended. Conversation history is read-only. Reconnect before sending new messages.','notice'));return;}

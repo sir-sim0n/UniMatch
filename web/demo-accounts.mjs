@@ -1,4 +1,4 @@
-import { Persistence, STORAGE_KEY } from './persistence.mjs?v=1.11.0';
+import { Persistence, STORAGE_KEY } from './persistence.mjs?v=1.12.0';
 
 export const ACTIVE_KEY = 'orbit.demo.active.v1';
 export const ACCOUNTS = Object.freeze([
@@ -13,7 +13,7 @@ export const ACCOUNTS = Object.freeze([
 export class DemoAccounts {
   constructor({ loadClient, storage = () => globalThis.localStorage, report = () => {} }) {
     this.loadClient = loadClient; this.storage = storage; this.report = report;
-    this.entries = new Map(); this.active = null; this.busy = false;
+    this.profileSnapshots=new Map();this.entries = new Map(); this.active = null; this.busy = false;
   }
   initialId() {
     try { const id = this.storage().getItem(ACTIVE_KEY); return ACCOUNTS.some(a => a.id === id) ? id : 'personal'; }
@@ -63,11 +63,12 @@ export class DemoAccounts {
     for(const account of ACCOUNTS){
       let entry=this.entries.get(account.id),temporary=false;
       if(!entry){
+        let key;try{key=this.storage().getItem(account.key);}catch{}const cached=this.profileSnapshots.get(account.id);if(cached&&cached.key===key){if(cached.profile)list.push(structuredClone(cached.profile));continue;}
         const client=await this.loadClient();entry={account,client};temporary=true;
         try{const p=new Persistence(client,{storage:this.storage,key:account.key});const result=p.restore();if(result==='invalid'||result==='memory'){client.dispose();continue;}if(result==='empty')this.seed(entry);}
         catch(error){client.dispose();throw error;}
       }
-      try{if(entry.persistence?.mode==='recovery')continue;const profile=entry.client.call('getState').visitor;if(profile)list.push({id:account.id,...profile,actorId:account.id});}
+      try{if(entry.persistence?.mode==='recovery')continue;const profile=entry.client.call('getState').visitor;const snapshot=profile?{id:account.id,...profile,actorId:account.id}:null;if(snapshot)list.push(snapshot);if(temporary){let key;try{key=this.storage().getItem(account.key);}catch{}this.profileSnapshots.set(account.id,{key,profile:snapshot});}}
       finally{if(temporary)entry.client.dispose();}
     }
     return list;

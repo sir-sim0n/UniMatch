@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(Orbit VERSION 1.11.0 LANGUAGES CXX)
+project(Orbit VERSION 1.12.0 LANGUAGES CXX)
 
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
     message(FATAL_ERROR "Use a separate build directory: -B build/wasm")
@@ -48,6 +48,7 @@ target_link_options(unimatch PRIVATE
     -sEXPORT_NAME=createUniMatch
     -sENVIRONMENT=web,node
     -sALLOW_MEMORY_GROWTH=1
+    -sDYNAMIC_EXECUTION=0
 )
 
 # Run on every build so edits to web assets do not require a C++ recompile.
@@ -110,6 +111,8 @@ add_custom_target(website ALL
         "${CMAKE_SOURCE_DIR}/web/games-core.mjs" "${UNIMATCH_SITE_DIR}/assets/games-core.mjs"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
         "${CMAKE_SOURCE_DIR}/web/games-ui.mjs" "${UNIMATCH_SITE_DIR}/assets/games-ui.mjs"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/web/indexed-social.mjs" "${UNIMATCH_SITE_DIR}/assets/indexed-social.mjs"
     DEPENDS unimatch
     VERBATIM
 )
@@ -117,6 +120,8 @@ add_custom_target(website ALL
 include(CTest)
 if(BUILD_TESTING)
     find_program(UNIMATCH_NODE node REQUIRED)
+    add_test(NAME performance COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/performance.mjs")
+    add_test(NAME backend COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/backend.mjs")
     add_test(NAME games COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/games.mjs")
     add_test(NAME community COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/community.mjs")
     add_test(NAME theme COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/theme.cjs")

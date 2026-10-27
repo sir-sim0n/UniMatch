@@ -1,4 +1,4 @@
-import { DemoSocial, SOCIAL_KEY, REASONS } from './demo-social.mjs?v=1.11.0';
+import { DemoSocial, SOCIAL_KEY, REASONS } from './demo-social.mjs?v=1.12.0';
 
 const node=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 export function createSocialUI({accounts, getCatalogues, announce, repository, openMessages, openDiscover, openProfile}) {
@@ -6,8 +6,8 @@ export function createSocialUI({accounts, getCatalogues, announce, repository, o
   let generation=0;
   function leave(){generation++;}
   async function render(host){
-    repository.reload();
     const stamp=++generation,actor=accounts.active.account.id;
+    await repository.reload();if(stamp!==generation)return;
     host.replaceChildren(node('h1','Discover · Your connections.'),node('p','Manage requests and connections, or return to Discover to explore student profiles. Everything stays in this browser. No real people are contacted.','muted'));
     const status=node('p','','error');status.setAttribute('role','alert');host.append(status);
     const controls=node('div',undefined,'actions');host.append(controls);

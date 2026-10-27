@@ -11,3 +11,6 @@ Thumbs.db
 /The Prompt.txt
 /UniMatch.pdf
 /Stage-0-Setup.md
+
+# Local shared-pilot database and journals
+/backend/*.sqlite*

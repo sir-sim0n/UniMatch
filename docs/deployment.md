@@ -6,7 +6,7 @@ Site: https://sir-sim0n.github.io/UniMatch/
 
 ## Publish an update
 
-Commit application changes and push to `main`. The **Test, build, and publish Orbit** workflow builds with pinned tools, runs all 21 CTest groups, checks the exact website file list, and uploads only `build/release/site`. Deployment depends on a successful build. Pull requests test without publishing. The workflow can also be run manually from Actions.
+Commit application changes and push to `main`. The **Test, build, and publish Orbit** workflow builds with pinned tools, runs all 23 CTest groups, checks the exact website file list, and uploads only `build/release/site`. Deployment depends on a successful build. Pull requests test without publishing. The workflow can also be run manually from Actions.
 
 Repository Settings > Pages must use **GitHub Actions** as the source. The deployment environment is `github-pages`; its URL is reported by the deployment job. HTTPS is enforced for the default GitHub Pages domain.
 
@@ -25,3 +25,5 @@ Check the latest workflow in Actions. A successful build alone is not a successf
 If a build fails, inspect its first failing step, fix the source, and push again. If deployment fails, check Settings > Pages source, the github-pages environment, and deployment job logs. To restore an earlier version, revert the unwanted source commit and push the revert; the same tests and deployment process will run.
 
 The local preview at `http://127.0.0.1:8000/` works only while `python scripts/serve.py` is running on your computer. It serves the debug build. The public Live Demo does not depend on that local server. Browser data is separate for each origin, so local preview bookmarks do not transfer to the public site.
+
+The v1.12.0 shared pilot is not deployed by GitHub Pages. See backend/README.md for local startup and the hosting boundary.

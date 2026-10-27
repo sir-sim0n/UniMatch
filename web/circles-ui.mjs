@@ -1,11 +1,11 @@
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(text,action)=>{const b=el('button',text,'secondary');b.type='button';b.onclick=action;return b;};
 export function createCirclesUI({accounts,repository,announce,openPost=()=>{}}){
- let generation=0,selected=null,owner=null,pending=null;
+ let generation=0,selected=null,owner=null,pending=null,postLimit=25;
  const leave=()=>{generation++;};
  async function render(host){
   const stamp=++generation,actor=accounts.active.account.id;if(owner!==actor){selected=null;owner=actor;}if(pending){selected=pending;pending=null;}
-  repository.reload();host.replaceChildren(el('h1','Find your circle.'),el('p','Shared interests. Campus conversations. Join a fictional circle or start your own. All activity stays in this browser.','notice'));
+  await repository.reload();if(stamp!==generation)return;host.replaceChildren(el('h1','Find your circle.'),el('p','Shared interests. Campus conversations. Join a fictional circle or start your own. All activity stays in this browser.','notice'));
   host.append(button('Reload saved circles',()=>render(host)));
   const error=el('p','','error');error.setAttribute('role','alert');host.append(error);if(!repository.ready){error.textContent=repository.error;return;}
   let profiles;try{profiles=await accounts.profiles();}catch{error.textContent='Could not load demo profiles.';return;}if(stamp!==generation)return;
@@ -29,7 +29,8 @@ export function createCirclesUI({accounts,repository,announce,openPost=()=>{}}){
   section.append(compose(null,'New post (up to 2,000 characters)'));
   const roots=c.posts.filter(x=>x.parent===null).sort((a,b)=>Number(b.id===c.pinned)-Number(a.id===c.pinned)||b.at-a.at||b.id-a.id);if(!roots.length)section.append(el('p','No posts yet. Start the conversation!'));
   const postNode=(x,reply=false)=>{const article=el('article',undefined,reply?'circle-reply':'circle-post');article.append(el('h3',`${name(x.author)}${x.hidden?' · Hidden by organiser':''}`),el('p',x.text,'post-text'),el('small',new Date(x.at).toLocaleString()));if(c.moderator)article.append(button(`${x.hidden?'Restore':'Hide'} ${reply?'reply':'post'} ${x.id}`,()=>mutate(x.hidden?'circle-restore':'circle-hide',c.id,{post:x.id})));const flair=c.flairs.find(f=>f.actor===x.author);if(flair)article.append(el('span',flair.text,'tag'));if(x.id===c.pinned)article.prepend(el('p','Pinned by moderators','best-answer'));if(c.moderator&&!reply&&!x.hidden)article.append(button(c.pinned===x.id?'Unpin post':`Pin post ${x.id}`,()=>mutate('circle-pin',c.id,{post:c.pinned===x.id?null:x.id})));if(x.original!=null){const source=repository.feed(actor).posts.find(p=>p.id===x.original),credit=el('blockquote',undefined,'quoted-post');if(source&&!source.deleted)credit.append(el('p',`Originally posted by ${name(source.author)}`,'hint'),el('h3',source.title),el('p',source.text),button('View original post',()=>openPost(source.id)));else credit.append(el('p','Original post deleted or unavailable.'));article.append(credit);}return article;};
-  for(const x of roots){const article=postNode(x);for(const reply of c.posts.filter(r=>r.parent===x.id))article.append(postNode(reply,true));if(!x.hidden){const details=el('details');details.append(el('summary',`Reply to post ${x.id}`),compose(x.id,`Reply to post ${x.id} (up to 2,000 characters)`));article.append(details);}section.append(article);}
+  for(const x of roots.slice(0,postLimit)){const article=postNode(x);for(const reply of c.posts.filter(r=>r.parent===x.id).slice(0,postLimit))article.append(postNode(reply,true));if(!x.hidden){const details=el('details');details.append(el('summary',`Reply to post ${x.id}`),compose(x.id,`Reply to post ${x.id} (up to 2,000 characters)`));article.append(details);}section.append(article);if(c.posts.filter(r=>r.parent===x.id).length>postLimit)section.append(button('Load more circle replies',()=>{postLimit+=25;render(host);}));}
+  if(roots.length>postLimit)section.append(button('Load more circle posts',()=>{postLimit+=25;render(host);}));
  }
  return {render,leave,select:id=>{pending=id;}};
 }
