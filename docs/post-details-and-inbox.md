@@ -45,3 +45,7 @@ This migration is recorded in Supabase's migration history. Earlier project migr
 Security/performance advisors found no new public-table RLS or missing-foreign-key-index issues. Existing intentionally policy-free private moderator/rate-limit tables remain inaccessible to clients. The pre-existing leaked-password protection warning remains: [Supabase password security](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection). No paid upgrade or Auth setting change was made. Indexes newly reported as unused were retained because a small pilot has not accumulated representative traffic.
 
 The cloud pilot's existing restricted email delivery and other feature-parity limits still apply; see [cloud pilot scope](supabase-cloud-pilot.md).
+
+## Published release
+
+Source commit `e379f3bfccb08a4eaaef6d6119ca1a68589d005b` passed the build/test and deploy jobs in [Pages run 40603127903](https://github.com/sir-sim0n/UniMatch/actions/runs/40603127903). Both [demo](https://sir-sim0n.github.io/UniMatch/) and [cloud pilot](https://sir-sim0n.github.io/UniMatch/cloud.html) returned HTTP 200 with version 1.15.0 asset references. The published shared discussion module matches the tested local module after normalizing Windows/Linux line endings; its deployed SHA-256 is `28c0c9bc1d1c025e8e9f7eef31170fce5f9055de3eb4daa68e4f944c127452e8`.
