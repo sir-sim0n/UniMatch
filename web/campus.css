@@ -5,3 +5,5 @@
 @media(max-width:700px){.feed-post.panel{padding:16px;margin-bottom:10px}.post-title{font-size:18px}.post-author .hint{font-size:10px}.compact-copy .post-copy{font-size:14px}.post-header-actions{flex-basis:auto;margin:0 0 0 auto;gap:3px}.post-header-actions button{min-height:30px;font-size:10px;padding:4px 6px}.post-header-actions .award-button{font-size:0;min-width:30px}.post-header-actions .award-button:after{content:'✧';font-size:18px}.feed-filter-box form{grid-template-columns:1fr}.feed-comment{margin-left:3px;padding-left:8px}.feed-comment .feed-comment{margin-left:2px}.circle-cover{height:110px}.circle-cover-title{font-size:17px}.cloud-layout .feed-title{font-size:23px}.feed-post .post-actions>button:nth-child(n+3){font-size:12px;gap:5px}.post-thread .actions{gap:4px}}
 
 .feed-post>h2{margin:8px 0}.feed-post>h2 .post-title{margin:0}.feed-column>.text-button{font-size:11px;min-height:28px;padding:3px 8px}.campus-context .panel:first-of-type>p.muted{display:none}
+
+:root[data-theme="dark"] button.post-title,:root[data-theme="dark"] button.menu-toggle{color:var(--ink)}

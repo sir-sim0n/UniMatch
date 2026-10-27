@@ -67,4 +67,3 @@ do $$begin
 end;$$;
 rollback;
 select 'PASS: campus/purpose/following filters, scoped saved posts, threaded replies, votes, accepted answers, private pins, circle identity and anonymous restrictions. Fixtures rolled back.' as validation;
-
