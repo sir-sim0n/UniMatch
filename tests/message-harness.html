@@ -1,0 +1,8 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Orbit inbox regression fixture</title><link rel="stylesheet" href="/assets/styles.css"><link rel="stylesheet" href="/assets/campus.css"><link rel="stylesheet" href="/assets/discussion.css"><script src="/assets/theme.js"></script></head><body><p class="notice">Local inbox fixture · Fictional accounts · Nothing sent to real people</p><p id="status" role="status"></p><main id="main" style="max-width:1100px;margin:20px auto"></main><script type="module">
+import {DemoSocial} from '/assets/demo-social.mjs';
+import {createMessagesUI} from '/assets/messages-ui.mjs';
+const data=new Map(),storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)},repository=new DemoSocial({storage:()=>storage}),names={naledi:'Naledi Mokoena',sipho:'Sipho Dlamini',ayesha:'Ayesha Jacobs'};
+for(const actor of ['sipho','ayesha']){await repository.change('naledi','request',actor);await repository.change(actor,'accept','naledi');await repository.change(actor,'send','naledi',{text:actor==='sipho'?'Are we meeting at the library at two?':'The campus photography walk sounds great!'});}
+await repository.change('naledi','send','sipho',{text:'Yes, see you there. Bring your notes.'});
+const accounts={active:{account:{id:'naledi'}},entries:new Map(),profiles:async()=>Object.entries(names).map(([actorId,displayName])=>({actorId,displayName}))},ui=createMessagesUI({accounts,repository,announce:text=>document.querySelector('#status').textContent=text});await ui.render(document.querySelector('#main'));
+</script></body></html>

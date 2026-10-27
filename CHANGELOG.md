@@ -1,3 +1,14 @@
+# v1.15.0 — 2026-10-28
+
+- Simplified home tiles to the title, post date, likes, repost and share, with Follow and a four-action overflow menu.
+- Open post titles in separate tabs with full text, Best/New/Controversial sorting and collapsible comment threads.
+- Added mutually exclusive comment likes/dislikes, private comment saves, focused comment links and content reports. Dislike totals are not displayed.
+- Reduced circle directory cards to name, description and member count; added dedicated community homepages with existing rules, membership and moderation controls.
+- Removed Notifications search and replaced message-handle entry with a conversation list, latest-message previews and unread indicators.
+- Added checked cloud inbox/read-marker, repost, award, saved-comment and content-report support with row-level access rules; preserved both games.
+- Preserved demo data through a version 8 to 9 migration. Cloud sorting remains within loaded comments by the owner's choice; broader database sorting is deferred.
+- See [release behaviour and validation](docs/post-details-and-inbox.md).
+
 # v1.14.0 — 2026-10-27
 
 - Refined feed cards, six student post purposes, reply previews and threaded discussion reading.

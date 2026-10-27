@@ -1,14 +1,15 @@
-import {validateGames,changeGame,cancelPairGames} from './games-core.mjs?v=1.14.0-r1';
-import {seedCommunity,validateCommunity,attachPoll,changeCommunity,communityView} from './community-core.mjs?v=1.14.0-r1';
-import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.14.0-r1';
-import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.14.0-r1';
-import {seedEngagement,validateEngagement,readablePost,notificationsFor,recordActivity,changeEngagement} from './engagement-core.mjs?v=1.14.0-r1';
-import {validateDiscovery,changeContent} from './discovery-core.mjs?v=1.14.0-r1';
+import {seedDiscussion,validateDiscussion,changeDiscussion,commentSummaries} from './discussion-core.mjs?v=1.15.0';
+import {validateGames,changeGame,cancelPairGames} from './games-core.mjs?v=1.15.0';
+import {seedCommunity,validateCommunity,attachPoll,changeCommunity,communityView} from './community-core.mjs?v=1.15.0';
+import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.15.0';
+import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.15.0';
+import {seedEngagement,validateEngagement,readablePost,notificationsFor,recordActivity,changeEngagement} from './engagement-core.mjs?v=1.15.0';
+import {validateDiscovery,changeContent} from './discovery-core.mjs?v=1.15.0';
 // Demo-only shared state. Not authentication or a security boundary.
 export const SOCIAL_KEY = 'orbit.demo.social.v1';
 export const ACTORS = ['personal', 'naledi', 'sipho', 'ayesha'];
 export const REASONS = ['Spam', 'Harassment', 'Impersonation', 'Other'];
-export const emptySocial = () => ({ version: 8, games:[], ...seedCommunity(), profileFlairs:[], ...seedEngagement(), ...seedFeed(), requests: [], blocks: [], reports: [], messages: [], circles:seedCircles(), posts:[] });
+export const emptySocial = () => ({ version: 9, ...seedDiscussion(), games:[], ...seedCommunity(), profileFlairs:[], ...seedEngagement(), ...seedFeed(), requests: [], blocks: [], reports: [], messages: [], circles:seedCircles(), posts:[] });
 const pair = (a,b) => [a,b].sort().join(':');
 const validActor = a => ACTORS.includes(a);
 function members(a,b) { if (!validActor(a) || !validActor(b) || a===b) throw Error('Choose two different demo accounts.'); }
@@ -20,7 +21,8 @@ export function validateSocial(d) {
   if(d?.version===5)d={...d,version:6,profileFlairs:[]};
   if(d?.version===6)d={...d,version:7,...seedCommunity(),circles:d.circles.map(c=>({...c,rules:'',private:false,moderators:[c.owner],requests:[],flairs:[],pinned:null}))};
   if(d?.version===7)d={...d,version:8,games:[]};
-  if (!d || d.version!==8 || !Array.isArray(d.requests) || !Array.isArray(d.blocks) || !Array.isArray(d.reports)) throw Error('Invalid social data.');
+  if(d?.version===8)d={...d,version:9,...seedDiscussion()};
+  if (!d || d.version!==9 || !Array.isArray(d.requests) || !Array.isArray(d.blocks) || !Array.isArray(d.reports)) throw Error('Invalid social data.');
   const pairs=new Set(), blocks=new Set(), reports=new Set();
   for(const q of d.requests){members(q.from,q.to);const key=pair(q.from,q.to);if(pairs.has(key)||!['pending','accepted','declined','cancelled','removed'].includes(q.status)||!Number.isFinite(q.at)||q.at<0)throw Error('Invalid request.');pairs.add(key);}
   for(const b of d.blocks){members(b.from,b.to);const key=b.from+':'+b.to;if(blocks.has(key))throw Error('Duplicate block.');blocks.add(key);}
@@ -29,7 +31,7 @@ export function validateSocial(d) {
   if(!Array.isArray(d.messages))throw Error('Invalid messages.');
   let last=0;
   for(const m of d.messages){members(m.from,m.to);if(!Number.isSafeInteger(m.id)||m.id<=last||typeof m.text!=='string'||!m.text.trim()||[...m.text].length>2000||typeof m.read!=='boolean'||!Number.isFinite(m.at)||m.at<0)throw Error('Invalid message.');last=m.id;}
-  validateCircles(d,ACTORS);validateFeed(d,ACTORS);validateEngagement(d);validateDiscovery(d);validateCommunity(d,ACTORS);validateGames(d,ACTORS);
+  validateCircles(d,ACTORS);validateFeed(d,ACTORS);validateEngagement(d);validateDiscovery(d);validateCommunity(d,ACTORS);validateGames(d,ACTORS);validateDiscussion(d,ACTORS);
   return d;
 }
 export class DemoSocial {
@@ -39,13 +41,13 @@ export class DemoSocial {
   reload(){try{const text=this.storage().getItem(SOCIAL_KEY);const data=text===null?emptySocial():validateSocial(JSON.parse(text));this.data=data;this.expected=text;this.ready=true;this.error='';return true;}catch{this.ready=false;this.error='Demo social data could not be read. It has been left untouched. Reload saved data or explicitly reset the shared social demo.';return false;}}
   blocked(a,b){return this.data.blocks.some(x=>pair(x.from,x.to)===pair(a,b));}
   relation(a,b){members(a,b);if(this.blocked(a,b))return 'unavailable';const q=this.data.requests.find(x=>pair(x.from,x.to)===pair(a,b));if(!q)return 'none';return q.status==='pending'?(q.from===a?'outgoing':'incoming'):q.status;}
-  view(actor){if(!validActor(actor))throw Error('Unknown demo account.');return structuredClone({requests:this.data.requests.filter(q=>(q.from===actor||q.to===actor)&&!this.blocked(q.from,q.to)),blocks:this.data.blocks.filter(b=>b.from===actor),reports:this.data.reports.filter(x=>x.from===actor)});}
+  view(actor){if(!validActor(actor))throw Error('Unknown demo account.');return structuredClone({requests:this.data.requests.filter(q=>(q.from===actor||q.to===actor)&&!this.blocked(q.from,q.to)),blocks:this.data.blocks.filter(b=>b.from===actor),reports:this.data.reports.filter(x=>x.from===actor),contentReports:this.data.contentReports.filter(x=>x.actor===actor)});}
   conversation(actor,target){members(actor,target);if(!this.ready)throw Error(this.error);if(this.blocked(actor,target))return [];return structuredClone(this.data.messages.filter(m=>pair(m.from,m.to)===pair(actor,target)));}
   games(actor,target){members(actor,target);if(!this.ready)throw Error(this.error);return this.blocked(actor,target)?[]:structuredClone(this.data.games.filter(g=>g.players.includes(actor)&&g.players.includes(target)));}
   unread(actor,target){return this.relation(actor,target)==='accepted'?this.conversation(actor,target).filter(m=>m.to===actor&&!m.read).length:0;}
-  feed(actor=null){if(actor!==null&&!validActor(actor))throw Error('Unknown account.');if(!this.ready)throw Error(this.error);const result=visibleFeed(this.data,actor);result.posts=result.posts.filter(p=>readablePost(this.data,actor,p.id));const ids=new Set(result.posts.map(p=>p.id));result.replies=result.replies.filter(r=>ids.has(r.post));result.pins=structuredClone(this.data.pins);result.graph=structuredClone(this.data.follows.filter(f=>!this.blocked(actor,f.actor)&&!this.blocked(actor,f.to)));result.circles=structuredClone(this.data.circles.filter(c=>!this.blocked(actor,c.owner)).map(c=>({id:c.id,title:c.title,description:c.description,owner:c.owner,members:c.private&&!c.members.includes(actor)?[]:c.members,private:c.private})));result.profileFlairs=structuredClone(this.data.profileFlairs);Object.assign(result,communityView(this.data,actor,ids,result.replies));return result;}
+  feed(actor=null){if(actor!==null&&!validActor(actor))throw Error('Unknown account.');if(!this.ready)throw Error(this.error);const result=visibleFeed(this.data,actor);result.posts=result.posts.filter(p=>readablePost(this.data,actor,p.id));const ids=new Set(result.posts.map(p=>p.id));result.replies=result.replies.filter(r=>ids.has(r.post));result.pins=structuredClone(this.data.pins);result.graph=structuredClone(this.data.follows.filter(f=>!this.blocked(actor,f.actor)&&!this.blocked(actor,f.to)));result.circles=structuredClone(this.data.circles.filter(c=>!this.blocked(actor,c.owner)).map(c=>({id:c.id,title:c.title,description:c.description,owner:c.owner,members:c.private&&!c.members.includes(actor)?[]:c.members,private:c.private})));result.profileFlairs=structuredClone(this.data.profileFlairs);const summaries=commentSummaries(this.data,actor);result.replies=result.replies.map(r=>({...r,...summaries.get(r.id)}));Object.assign(result,communityView(this.data,actor,ids,result.replies));return result;}
   notifications(actor){if(!validActor(actor))throw Error('Choose a demo account.');if(!this.ready)throw Error(this.error);return notificationsFor(this.data,actor);}
-  circles(actor){if(!validActor(actor))throw Error('Unknown demo account.');if(!this.ready)throw Error(this.error);return circleView(this.data,actor);}
+  circles(actor){if(actor!==null&&!validActor(actor))throw Error('Unknown demo account.');if(!this.ready)throw Error(this.error);return circleView(this.data,actor);}
   async change(actor,op,target,extra={}) {
     const feedOp=typeof op==='string'&&op.startsWith('feed-');
     const circleOp=typeof op==='string'&&op.startsWith('circle-');
@@ -59,7 +61,7 @@ export class DemoSocial {
       const same=q=>pair(q.from,q.to)===pair(actor,target);
       let q=d.requests.find(same);
       const blocked=d.blocks.some(same);
-      if(feedOp){if(!changeCommunity(d,actor,op,target,extra,time)&&!changeContent(d,actor,op,target,extra,time)&&!changeEngagement(d,actor,op,target,extra,time)){if(Number.isInteger(target)&&!readablePost(d,actor,target))throw Error('Post unavailable.');changeFeed(d,actor,op,target,extra,time);if(op==='feed-publish'){d.feedPosts.at(-1).flair=extra.flair??null;attachPoll(d,d.feedPosts.at(-1),extra);}}}
+      if(feedOp){if(!changeDiscussion(d,actor,op,target,extra,time,id=>readablePost(d,actor,id),id=>visibleFeed(d,actor).replies.some(r=>r.id===id))&&!changeCommunity(d,actor,op,target,extra,time)&&!changeContent(d,actor,op,target,extra,time)&&!changeEngagement(d,actor,op,target,extra,time)){if(Number.isInteger(target)&&!readablePost(d,actor,target))throw Error('Post unavailable.');changeFeed(d,actor,op,target,extra,time);if(op==='feed-publish'){d.feedPosts.at(-1).flair=extra.flair??null;attachPoll(d,d.feedPosts.at(-1),extra);}}}
       else if(op.startsWith('game-')){changeGame(d,actor,target,op,extra,time);}
       else if(circleOp){changeCircle(d,actor,op,target,extra,time);}
       else if(op==='send'||op==='read'){

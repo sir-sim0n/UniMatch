@@ -21,7 +21,7 @@ await assert.rejects(()=>r.change('sipho','game-move','naledi',{game:2,column:0,
 await r.change('naledi','game-invite','sipho');now+=GAME_TTL;await assert.rejects(()=>r.change('sipho','game-accept','naledi',{game:3}));assert.equal(gameState(r.games('naledi','sipho')[2],now).status,'expired');
 await r.change('naledi','game-invite','sipho');await r.change('sipho','game-decline','naledi',{game:4});await r.change('naledi','game-invite','sipho');await r.change('naledi','game-cancel','sipho',{game:5});
 await r.change('naledi','game-invite','sipho');await r.change('sipho','game-accept','naledi',{game:6});await r.change('naledi','block','sipho');assert.equal(r.data.games[5].status,'cancelled');assert.equal(r.games('naledi','sipho').length,0);await assert.rejects(()=>r.change('sipho','game-move','naledi',{game:6,column:0,expectedMoves:0}));
-const legacy=structuredClone(r.data);legacy.version=7;delete legacy.games;store.value=JSON.stringify(legacy);r=make();assert.equal(r.data.version,8);assert.deepEqual(r.data.games,[]);assert.equal(JSON.parse(store.value).version,7);
+const legacy=structuredClone(r.data);legacy.version=7;delete legacy.games;store.value=JSON.stringify(legacy);r=make();assert.equal(r.data.version,9);assert.deepEqual(r.data.games,[]);assert.equal(JSON.parse(store.value).version,7);
 const bad=structuredClone(r.data);bad.games=[{id:1,players:['naledi','sipho'],inviter:'naledi',status:'active',at:0,updatedAt:1,moves:moves([0,0,0,0,0,0,0])}];store.value=JSON.stringify(bad);assert.equal(make().ready,false);
 console.log('Four in a Row: wins in all directions, draw, full columns, permissions, challenges, turns, stale/duplicate moves, persistence, rematches, resignation, expiry, blocking, rollback and migration passed.');
 

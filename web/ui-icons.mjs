@@ -1,4 +1,5 @@
 const paths={
+ like:'M7 10v11H3V10h4M7 10l5-8c3 0 2 5 2 7h6l-2 12H7',dislike:'M7 14V3H3v11h4M7 14l5 8c3 0 2-5 2-7h6L18 3H7',
  create:'M12 4v16M4 12h16',
  repost:'M4 8h15l-4-4M20 16H5l4 4M20 8v4M4 16v-4',
  popular:'M3 17l6-6 4 4 8-11M15 4h6v6',

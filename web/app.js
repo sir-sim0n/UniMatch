@@ -1,5 +1,5 @@
-import {circleCover} from './campus-ui.mjs?v=1.14.0-r1';
-import {icon} from './ui-icons.mjs?v=1.14.0-r1';
+import {circleCover} from './campus-ui.mjs?v=1.15.0';
+import {icon} from './ui-icons.mjs?v=1.15.0';
 // Profile/catalogue decisions use the C++ API; demo social rules use the local repository adapter.
 const main = document.querySelector('#main');
 const nav = document.querySelector('#navigation');
@@ -76,7 +76,7 @@ async function navigate(next, focus = true) {
   else if (next === 'connections') socialUI.render(main);
   else if(next==='notifications')feedUI.render(main,'notifications');
   else if (next === 'messages') messagesUI.render(main);
-  else if (next === 'circles') {if(guest||!state?.visitor)publicCircles();else circlesUI.render(main);}
+  else if (next === 'circles') circlesUI.render(main);
   else if (next === 'profile') {feedUI.profile(accounts.active.account.id);feedUI.render(main);}
   else if(next==='edit-profile')profileForm();
   else if (next === 'discover') {feedUI.render(main,'directory').then(()=>{if(screen==='discover'&&!guest&&state?.visitor)main.append(button('Explore the 45 sample profiles',()=>{main.replaceChildren();discover();},'secondary'));});}
@@ -87,7 +87,7 @@ async function navigate(next, focus = true) {
 }
 let pendingTarget=null;
 const featureLoads=new Map();
-async function ensureFeature(next){if(next==='circles'&&guest)return;const key=next==='connections'?'social':next;if(featureLoads.has(key))return featureLoads.get(key);const promise=(async()=>{if(key==='messages'){const {createMessagesUI}=await import('./messages-ui.mjs?v=1.14.0-r1');messagesUI=createMessagesUI({accounts,repository:socialRepository,announce:say});}else if(key==='circles'){const {createCirclesUI}=await import('./circles-ui.mjs?v=1.14.0-r1');circlesUI=createCirclesUI({accounts,repository:socialRepository,announce:say,openPost:id=>{feedUI.deepLink(id);navigate('home');}});}else{const {createSocialUI}=await import('./social-ui.mjs?v=1.14.0-r1');socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say,repository:socialRepository,openDiscover:()=>navigate('discover'),openProfile:target=>{feedUI.profile(target);navigate('public-profile');},openMessages:target=>{pendingTarget={destination:'messages',id:target};navigate('messages');}});}})().catch(e=>{featureLoads.delete(key);throw e;});featureLoads.set(key,promise);return promise;}
+async function ensureFeature(next){const key=next==='connections'?'social':next;if(featureLoads.has(key))return featureLoads.get(key);const promise=(async()=>{if(key==='messages'){const {createMessagesUI}=await import('./messages-ui.mjs?v=1.15.0');messagesUI=createMessagesUI({accounts,repository:socialRepository,announce:say});}else if(key==='circles'){const {createCirclesUI}=await import('./circles-ui.mjs?v=1.15.0');circlesUI=createCirclesUI({accounts,repository:socialRepository,getActor:()=>guest?null:accounts.active?.account.id??null,requireAccount,announce:say,openPost:id=>{feedUI.deepLink(id);navigate('home');}});}else{const {createSocialUI}=await import('./social-ui.mjs?v=1.15.0');socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say,repository:socialRepository,openDiscover:()=>navigate('discover'),openProfile:target=>{feedUI.profile(target);navigate('public-profile');},openMessages:target=>{pendingTarget={destination:'messages',id:target};navigate('messages');}});}})().catch(e=>{featureLoads.delete(key);throw e;});featureLoads.set(key,promise);return promise;}
 function navIcon(destination){return icon(destination);}
 function renderNavigation() {
   nav.replaceChildren(el('p','YOUR ORBIT','eyebrow'));
@@ -280,15 +280,14 @@ async function start() {
   loading.append(el('p','ONE MOMENT','eyebrow'),el('h1','Finding our common ground…'),el('p','Loading the fictional profiles.'));
   main.append(loading);
   try {
-    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.14.0-r1'), import('./demo-accounts.mjs?v=1.14.0-r1')]);
+    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.15.0'), import('./demo-accounts.mjs?v=1.15.0')]);
     accountsList=ACCOUNTS; accounts=new DemoAccounts({loadClient,report:storageStatus});
-    const {openSocial}=await import('./indexed-social.mjs?v=1.14.0-r1');
-    const { createFeedUI } = await import('./feed-ui.mjs?v=1.14.0-r1');
+    const {openSocial}=await import('./indexed-social.mjs?v=1.15.0');
+    const { createFeedUI } = await import('./feed-ui.mjs?v=1.15.0');
     socialRepository=await openSocial();socialRepository.onExternalChange=()=>say('Social data changed in another tab. Use Refresh or Reload saved data to view it.');
     feedUI=createFeedUI({accounts,repository:socialRepository,getActor:()=>!guest&&state?.visitor?accounts.active.account.id:null,getCatalogues:()=>catalogues,requireAccount,announce:say,onActivity:(destination,circle)=>{renderNavigation();if(circle&&!guest){pendingTarget={destination,id:circle};}if(destination)navigate(destination);}});
     guestClient=await loadClient();client=guestClient;catalogues=client.call('getCatalogues');readState();
-    const linked=/^#post=(\d+)$/.exec(location.hash);if(linked)feedUI.deepLink(Number(linked[1]));
-    navigate('home',false);
+    const route=new URLSearchParams(location.hash.slice(1)),persona=new URL(location.href).searchParams.get('demo');if(persona&&accountsList.some(a=>a.id===persona))await activateAccount(persona);const id=Number(route.get('post'));if(Number.isSafeInteger(id)&&id>0)feedUI.deepLink(id);if(new URL(location.href).searchParams.get('view')==='circles'){await navigate('circles',false);}else if(route.has('circle')){pendingTarget={destination:'circles',id:route.get('circle')};await navigate('circles',false);}else await navigate('home',false);
   } catch (error) {
     accounts?.dispose(); client = undefined; persistence = undefined;
     loading.replaceChildren(el('h1','The demo could not load.'),el('p','Check your connection and try again. If the problem continues, refresh the page.'),button('Try again',start));

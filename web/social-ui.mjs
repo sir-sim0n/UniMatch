@@ -1,4 +1,4 @@
-import { DemoSocial, SOCIAL_KEY, REASONS } from './demo-social.mjs?v=1.14.0-r1';
+import { DemoSocial, SOCIAL_KEY, REASONS } from './demo-social.mjs?v=1.15.0';
 
 const node=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 export function createSocialUI({accounts, getCatalogues, announce, repository, openMessages, openDiscover, openProfile}) {
@@ -69,6 +69,7 @@ export function createSocialUI({accounts, getCatalogues, announce, repository, o
     safety.append(node('p','Unblocking does not restore old requests or connections. Other accounts’ private block/report lists are not shown in this account view.'));
     if(!data.reports.length)safety.append(node('p','No reports recorded by this account.'));
     for(const q of data.reports){const row=node('article');row.append(node('h3',`${q.reason} · ${name(q.to)}`),node('p',q.details||'No additional details.'),node('p','Recorded locally · Not sent for moderation','hint'));safety.append(row);}
+    for(const q of data.contentReports??[]){const row=node('article');row.append(node('h3',q.reason+' · '+q.kind+' '+q.target),node('p',q.details||'No additional details.'),node('p','Recorded locally · Not sent for moderation','hint'));safety.append(row);}
     host.append(safety);
   }
   return {render,leave,key:SOCIAL_KEY};

@@ -1,4 +1,4 @@
-import {readablePost} from './engagement-core.mjs?v=1.14.0-r1';
+import {readablePost} from './engagement-core.mjs?v=1.15.0';
 // Local demo circle rules; production permissions must be enforced by a backend.
 export const seedCircles=()=>[
  {id:'coding',title:'Campus Coding Circle',description:'Learn together, share small projects and find a study partner.',owner:'naledi',members:['naledi']},
@@ -24,7 +24,7 @@ export function circleView(d,actor){
  const joined=c.members.includes(actor),organiser=c.owner===actor,moderator=c.moderators.includes(actor);
  const visible=x=>!blocked(d,actor,x.author)&&(moderator||!x.hidden)&&(x.original==null||readablePost(d,actor,x.original));
  const roots=d.posts.filter(x=>x.circle===c.id&&x.parent===null&&visible(x));
- return {...c,members:joined?c.members:[],memberCount:c.members.length,moderators:joined?c.moderators:[],flairs:joined?c.flairs:[],requests:moderator?c.requests:c.requests.filter(a=>a===actor),joined,organiser,moderator,posts:joined?d.posts.filter(x=>x.circle===c.id&&visible(x)&&(x.parent===null||roots.some(r=>r.id===x.parent))):[]};
+ return {...c,members:joined?c.members:[],memberCount:c.members.length,moderators:joined?c.moderators:[],flairs:joined?c.flairs:[],requests:moderator?c.requests:c.requests.filter(a=>a===actor),joined,organiser,moderator,posts:(joined||!c.private)?d.posts.filter(x=>x.circle===c.id&&visible(x)&&(x.parent===null||roots.some(r=>r.id===x.parent))):[]};
  }));
 }
 export function changeCircle(d,actor,op,target,extra,time){

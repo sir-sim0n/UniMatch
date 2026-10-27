@@ -18,7 +18,7 @@ export class ReadingState{
 export function threadRows(replies,{sort='Best',accepted=null,score=r=>r.upvotes??0}={}){
  const ids=new Set(replies.map(r=>r.id)),children=new Map();
  for(const r of replies){const parent=ids.has(r.parent)&&r.parent!==r.id?r.parent:null;if(!children.has(parent))children.set(parent,[]);children.get(parent).push(r);}
- const compare=(a,b)=>sort==='Best'?Number(b.id===accepted)-Number(a.id===accepted)||score(b)-score(a)||(a.at??a.id)-(b.at??b.id):(b.at??b.id)-(a.at??a.id);
+ const compare=(a,b)=>sort==='Best'?Number(b.id===accepted)-Number(a.id===accepted)||(b.bestScore??score(b))-(a.bestScore??score(a))||(a.at??a.id)-(b.at??b.id):sort==='Controversial'?(b.controversy??0)-(a.controversy??0)||b.id-a.id:(b.at??b.id)-(a.at??a.id);
  for(const rows of children.values())rows.sort(compare);
  const stack=[...(children.get(null)??[])].reverse().map(r=>({reply:r,depth:0,parent:null})),out=[],seen=new Set();
  while(stack.length){const entry=stack.pop(),r=entry.reply;if(seen.has(r.id))continue;seen.add(r.id);out.push(entry);for(const child of [...(children.get(r.id)??[])].reverse())stack.push({reply:child,depth:entry.depth+1,parent:r.id});}

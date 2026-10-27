@@ -22,8 +22,8 @@ const recent={...data.posts[0],id:100,at:time};assert.equal(sortFeed([...data.po
 await repo.change('naledi','request','sipho');await repo.change('sipho','accept','naledi');await repo.change('naledi','send','sipho',{text:'Hello'});assert.equal(repo.notifications('sipho')[0].kind,'message');
 const before=JSON.stringify(repo.data);storage.fail=true;await assert.rejects(()=>repo.change('ayesha','feed-comment',4,{parent:null,text:'@naledi'}));assert.equal(JSON.stringify(repo.data),before);storage.fail=false;
 const stale=make();await repo.change('naledi','block','sipho');await assert.rejects(()=>stale.change('ayesha','feed-pin',3));assert.ok(!repo.feed('sipho').posts.some(p=>[4,5,6].includes(p.id)));assert.ok(!repo.notifications('sipho').some(n=>n.from==='naledi'));await assert.rejects(()=>repo.change('sipho','feed-vote',6));
-repo=make();assert.equal(repo.data.version,8);assert.ok(repo.notifications('sipho').every(n=>n.to==='sipho'));
-const legacy=structuredClone(repo.data);legacy.version=4;delete legacy.notifications;delete legacy.pins;storage.value=JSON.stringify(legacy);repo=make();assert.equal(repo.data.version,8);assert.equal(repo.data.notifications.length,0);assert.equal(JSON.parse(storage.value).version,4);
+repo=make();assert.equal(repo.data.version,9);assert.ok(repo.notifications('sipho').every(n=>n.to==='sipho'));
+const legacy=structuredClone(repo.data);legacy.version=4;delete legacy.notifications;delete legacy.pins;storage.value=JSON.stringify(legacy);repo=make();assert.equal(repo.data.version,9);assert.equal(repo.data.notifications.length,0);assert.equal(JSON.parse(storage.value).version,4);
 const bad=structuredClone(repo.data);bad.feedPosts[0].original=1;storage.value=JSON.stringify(bad);assert.equal(make().ready,false);
 await repo.resetAll(true);assert.equal(repo.data.notifications.length,0);assert.equal(repo.data.pins.length,0);assert.equal(repo.data.feedPosts.length,3);
 console.log('Engagement: mentions, inbox isolation, deduplication, marks, sharing attribution, pins, ranking, trends, karma, requests/messages, blocking, rollback, stale writes, migration and reset passed.');
