@@ -25,3 +25,5 @@ Pinned packages: supabase-js 2.118.0, CLI 2.122.0, esbuild 0.28.2. npm ci and np
 These checks are not a production load certification. Capacity, account email delivery, actual user sessions and two-device interaction need a controlled human pilot. Free-plan quotas and backups should be reviewed before broader onboarding.
 
 Advisor review: Security and Performance each reported zero errors and zero warnings after fixes. The missing circles.owner index was added. Unused-index suggestions on the empty project are retained until real query traffic justifies changes; private internal RLS tables intentionally have no client policies.
+
+Release verification (2026-10-27): initial GitHub build and Pages deployment succeeded (run 40515670029, e8f7361). The final frontend source is 7b2f44d; its live cloud-ui file includes the navigation guard. Run 40516391170 completed the test/build/upload steps but its overall GitHub status was still waiting when checked. Live guest browsing, signup gating and the unchanged demo were verified; the user chose to test the first confirmed account later. No real account or two-device gameplay success is claimed.
