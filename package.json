@@ -1,0 +1,15 @@
+{
+  "name": "orbit-cloud-pilot",
+  "private": true,
+  "version": "1.13.0",
+  "scripts": {
+    "build:cloud": "node scripts/build-cloud.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.118.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "supabase": "2.122.0"
+  }
+}

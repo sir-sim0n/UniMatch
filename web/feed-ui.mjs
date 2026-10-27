@@ -1,9 +1,9 @@
-import {pollComposer,postCommunity,bestAnswerUI,awardButton} from './community-ui.mjs?v=1.12.0';
-import {icon} from './ui-icons.mjs?v=1.12.0';
-import {FLAIRS,hashtags,karma,sortFeed,trending,feedIndex} from './engagement-core.mjs?v=1.12.0';
-import {profileItems,searchAll,suggestions,filterPeople} from './discovery-core.mjs?v=1.12.0';
-import {REASONS} from './demo-social.mjs?v=1.12.0';
-import {TOPICS} from './feed-core.mjs?v=1.12.0';
+import {pollComposer,postCommunity,bestAnswerUI,awardButton} from './community-ui.mjs?v=1.13.0';
+import {icon} from './ui-icons.mjs?v=1.13.0';
+import {FLAIRS,hashtags,karma,sortFeed,trending,feedIndex} from './engagement-core.mjs?v=1.13.0';
+import {profileItems,searchAll,suggestions,filterPeople} from './discovery-core.mjs?v=1.13.0';
+import {REASONS} from './demo-social.mjs?v=1.13.0';
+import {TOPICS} from './feed-core.mjs?v=1.13.0';
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(text,action,cls='secondary')=>{const b=el('button',text,cls);b.type='button';b.onclick=action;return b;};
 export function createFeedUI({accounts,repository,getActor,getCatalogues,requireAccount,announce,onActivity=()=>{}}){

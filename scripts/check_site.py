@@ -4,7 +4,7 @@ import sys
 
 site = Path(sys.argv[1]).resolve()
 expected = {
-    'index.html', '.nojekyll', 'assets/community-core.mjs', 'assets/community-ui.mjs', 'assets/indexed-social.mjs', 'assets/games-core.mjs', 'assets/games-ui.mjs', 'assets/theme.js', 'assets/discovery-core.mjs', 'assets/engagement-core.mjs', 'assets/demo-accounts.mjs', 'assets/demo-social.mjs', 'assets/social-ui.mjs', 'assets/feed-core.mjs', 'assets/feed-ui.mjs', 'assets/ui-icons.mjs', 'assets/circles-core.mjs', 'assets/circles-ui.mjs', 'assets/messages-ui.mjs', 'assets/app.js', 'assets/api-client.mjs',
+    'index.html', 'cloud.html', 'assets/cloud-ui.mjs', 'assets/cloud-client.mjs', 'assets/cloud-config.mjs', 'assets/vendor/supabase.mjs', 'assets/vendor/THIRD_PARTY_NOTICES.txt', '.nojekyll', 'assets/community-core.mjs', 'assets/community-ui.mjs', 'assets/indexed-social.mjs', 'assets/games-core.mjs', 'assets/games-ui.mjs', 'assets/theme.js', 'assets/discovery-core.mjs', 'assets/engagement-core.mjs', 'assets/demo-accounts.mjs', 'assets/demo-social.mjs', 'assets/social-ui.mjs', 'assets/feed-core.mjs', 'assets/feed-ui.mjs', 'assets/ui-icons.mjs', 'assets/circles-core.mjs', 'assets/circles-ui.mjs', 'assets/messages-ui.mjs', 'assets/app.js', 'assets/api-client.mjs',
     'assets/persistence.mjs', 'assets/styles.css', 'assets/favicon.svg',
     'assets/orbit-mark.svg', 'assets/orbit-logo.svg', 'assets/orbit-logo-stacked.svg', 'assets/unimatch.mjs', 'assets/unimatch.wasm',
     'data/catalogues.json', 'data/profiles.json',

@@ -14,3 +14,9 @@ Thumbs.db
 
 # Local shared-pilot database and journals
 /backend/*.sqlite*
+
+/node_modules/
+/supabase/.temp/
+/supabase/.branches/
+.env
+.env.*

@@ -1,3 +1,10 @@
+# v1.13.0 — 2026-10-27
+
+- Added a separate Supabase cloud pilot for shared accounts, profiles, posts, connections, circles, messages and both games.
+- Added scoped database access, verified-email participation, authoritative game commits and rollback-only cloud security tests.
+- Preserved the full fictional demo; richer feature migration and public email delivery remain pending.
+- Pinned and bundled the Supabase client; expanded release checks. See docs/supabase-cloud-pilot.md for scope, setup and validation limits.
+
 # v1.12.0 — 2026-10-27
 
 - Paginated feeds, search, comments and histories; incremental vote/save/follow controls.

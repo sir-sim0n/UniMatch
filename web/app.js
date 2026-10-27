@@ -1,4 +1,4 @@
-import {icon} from './ui-icons.mjs?v=1.12.0';
+import {icon} from './ui-icons.mjs?v=1.13.0';
 // Profile/catalogue decisions use the C++ API; demo social rules use the local repository adapter.
 const main = document.querySelector('#main');
 const nav = document.querySelector('#navigation');
@@ -54,6 +54,7 @@ function heading(title, description) {
 function requireAccount(){
   if(!guest&&state?.visitor)return true;
   const dialog=el('dialog');dialog.setAttribute('aria-label','Join the conversation');dialog.append(el('h2','Make yourself part of the conversation.'),el('p','You can keep browsing freely. Choose a demo account to post, follow, upvote, save, share or comment. Real sign-up is not available in this demo.'));
+  const cloudLink=el('a','Open the shared cloud pilot','secondary');cloudLink.href='./cloud.html';dialog.append(cloudLink);
   dialog.append(button('Choose a demo account',()=>{dialog.close();navigate('accounts');}),button('Keep browsing',()=>dialog.close(),'secondary'));dialog.onclose=()=>dialog.remove();document.body.append(dialog);dialog.showModal();return false;
 }
 let navigationGeneration=0;
@@ -85,7 +86,7 @@ async function navigate(next, focus = true) {
 }
 let pendingTarget=null;
 const featureLoads=new Map();
-async function ensureFeature(next){if(next==='circles'&&guest)return;const key=next==='connections'?'social':next;if(featureLoads.has(key))return featureLoads.get(key);const promise=(async()=>{if(key==='messages'){const {createMessagesUI}=await import('./messages-ui.mjs?v=1.12.0');messagesUI=createMessagesUI({accounts,repository:socialRepository,announce:say});}else if(key==='circles'){const {createCirclesUI}=await import('./circles-ui.mjs?v=1.12.0');circlesUI=createCirclesUI({accounts,repository:socialRepository,announce:say,openPost:id=>{feedUI.deepLink(id);navigate('home');}});}else{const {createSocialUI}=await import('./social-ui.mjs?v=1.12.0');socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say,repository:socialRepository,openDiscover:()=>navigate('discover'),openProfile:target=>{feedUI.profile(target);navigate('public-profile');},openMessages:target=>{pendingTarget={destination:'messages',id:target};navigate('messages');}});}})().catch(e=>{featureLoads.delete(key);throw e;});featureLoads.set(key,promise);return promise;}
+async function ensureFeature(next){if(next==='circles'&&guest)return;const key=next==='connections'?'social':next;if(featureLoads.has(key))return featureLoads.get(key);const promise=(async()=>{if(key==='messages'){const {createMessagesUI}=await import('./messages-ui.mjs?v=1.13.0');messagesUI=createMessagesUI({accounts,repository:socialRepository,announce:say});}else if(key==='circles'){const {createCirclesUI}=await import('./circles-ui.mjs?v=1.13.0');circlesUI=createCirclesUI({accounts,repository:socialRepository,announce:say,openPost:id=>{feedUI.deepLink(id);navigate('home');}});}else{const {createSocialUI}=await import('./social-ui.mjs?v=1.13.0');socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say,repository:socialRepository,openDiscover:()=>navigate('discover'),openProfile:target=>{feedUI.profile(target);navigate('public-profile');},openMessages:target=>{pendingTarget={destination:'messages',id:target};navigate('messages');}});}})().catch(e=>{featureLoads.delete(key);throw e;});featureLoads.set(key,promise);return promise;}
 function navIcon(destination){return icon(destination);}
 function renderNavigation() {
   nav.replaceChildren(el('p','YOUR ORBIT','eyebrow'));
@@ -121,6 +122,7 @@ function welcome() {
   section.append(intro,art); main.append(section);
 }
 function accountScreen() {
+  const cloudLink=el('a','Try shared cloud accounts','secondary');cloudLink.href='./cloud.html';main.append(cloudLink);
   main.append(heading('Choose your demo account.', 'Switch between fictional students on this device. No passwords, real accounts, or messages to real people.'));
   main.append(el('p','Each account has its own profile, preferences and bookmarks. Use Connections to send requests and switch accounts to respond. Connected accounts can exchange local demo messages in Messages. Switching leaves unsaved form edits behind; use Save profile first.','notice'));
   const grid=el('div',undefined,'account-grid');
@@ -277,10 +279,10 @@ async function start() {
   loading.append(el('p','ONE MOMENT','eyebrow'),el('h1','Finding our common ground…'),el('p','Loading the fictional profiles.'));
   main.append(loading);
   try {
-    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.12.0'), import('./demo-accounts.mjs?v=1.12.0')]);
+    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.13.0'), import('./demo-accounts.mjs?v=1.13.0')]);
     accountsList=ACCOUNTS; accounts=new DemoAccounts({loadClient,report:storageStatus});
-    const {openSocial}=await import('./indexed-social.mjs?v=1.12.0');
-    const { createFeedUI } = await import('./feed-ui.mjs?v=1.12.0');
+    const {openSocial}=await import('./indexed-social.mjs?v=1.13.0');
+    const { createFeedUI } = await import('./feed-ui.mjs?v=1.13.0');
     socialRepository=await openSocial();socialRepository.onExternalChange=()=>say('Social data changed in another tab. Use Refresh or Reload saved data to view it.');
     feedUI=createFeedUI({accounts,repository:socialRepository,getActor:()=>!guest&&state?.visitor?accounts.active.account.id:null,getCatalogues:()=>catalogues,requireAccount,announce:say,onActivity:(destination,circle)=>{renderNavigation();if(circle&&!guest){pendingTarget={destination,id:circle};}if(destination)navigate(destination);}});
     guestClient=await loadClient();client=guestClient;catalogues=client.call('getCatalogues');readState();
