@@ -5,7 +5,7 @@
 - Removed game assets from site packaging and retired game tests. Existing demo data is read without game records and game notifications.
 - Added a Supabase migration and retired Edge Function response. Applying these cloud changes requires separate deployment.
 - Validation: demo messaging and discussion tests passed, along with JavaScript syntax checks. The backend HTTP test was blocked by the sandbox's loopback connection restriction.
-- Delivery status: changes are in pull request #1, awaiting merge and deployment.
+- Merged pull request #1 and published both entry points. Asset URLs now use v=1.15.1 to refresh cached interface modules.
 - See [published-version workflow and search behaviour](docs/published-versions.md).
 - Project changes must include a changelog entry and update relevant behaviour or deployment documentation in the same change.
 

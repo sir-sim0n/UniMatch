@@ -13,3 +13,7 @@ The prior search change was committed to a pull request but had not been deploye
 ## Validation and deployment
 
 The earlier CI run for the removal changes passed. Syntax validation covers the final demo and cloud UI changes. Browser verification of both published versions follows deployment. The separate Supabase migration and Edge Function retirement for message games also require cloud deployment.
+
+## Browser asset caching
+
+Changed interface modules use v=1.15.1 asset URLs. Reusing the earlier v=1.15.0 URLs allowed browsers to retain the previous search UI after publication. Update entry-point and affected module URLs whenever publishing interface changes.
