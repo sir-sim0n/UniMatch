@@ -80,7 +80,8 @@ try:
             request = route.request
             if request.method == 'OPTIONS':
                 route.fulfill(status=204, headers={'Access-Control-Allow-Origin':'*',
-                    'Access-Control-Allow-Headers':'*','Access-Control-Allow-Methods':'POST,GET,OPTIONS'})
+                    'Access-Control-Allow-Headers':'authorization,apikey,content-type,x-client-info,x-supabase-api-version',
+                    'Access-Control-Allow-Methods':'POST,GET,OPTIONS'})
                 return
             payload = request.post_data_json or {}
             path = payload.get('path')
