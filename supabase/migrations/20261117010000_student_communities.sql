@@ -249,8 +249,8 @@ begin
         'appeals',(select coalesce(jsonb_agg(to_jsonb(a)),'[]') from(
           select actor,text,status from orbit_private.student_appeals where status='open' order by id limit 50)a),
         'actions',(select coalesce(jsonb_agg(to_jsonb(a)),'[]') from(
-          select action,reason,(extract(epoch from created)*1000)::bigint as at
-          from orbit_private.moderation_actions order by id desc limit 50)a));
+          select audit.action,audit.reason,(extract(epoch from audit.created)*1000)::bigint as at
+          from orbit_private.moderation_actions audit order by audit.id desc limit 50)a));
     end if;
     operation := body->>'action'; reason := trim(body->>'reason');
     if reason is null or length(reason) not between 1 and 1000 then raise exception 'Add a moderation reason.'; end if;
