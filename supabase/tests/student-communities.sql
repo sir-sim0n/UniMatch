@@ -21,6 +21,16 @@ select public.orbit_api('/student/enrol','POST','{"adult":true,"student":true,"p
 select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000000003',true);
 select public.orbit_api('/student/enrol','POST','{"adult":true,"student":true,"policy":"2026-11-17"}');
 
+reset role;
+delete from orbit_private.student_memberships where actor='10000000-0000-4000-8000-000000000003';
+set local role authenticated;
+select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000000003',true);
+do $$begin
+  perform public.orbit_api('/student/moderation','GET','{}');
+  begin perform public.orbit_api('/feed','GET','{}');raise exception 'Operator bypassed student reading gate';exception when insufficient_privilege then null;end;
+end;$$;
+select public.orbit_api('/student/enrol','POST','{"adult":true,"student":true,"policy":"2026-11-17"}');
+
 select set_config('request.jwt.claim.sub','10000000-0000-4000-8000-000000000001',true);
 do $$declare p bigint;c bigint;begin
   p := (public.orbit_api('/posts','POST','{"title":"Fictional confession","text":"A synthetic experience.","anonymous":true,"category":"Confessions"}')->>'id')::bigint;

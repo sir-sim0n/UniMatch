@@ -224,7 +224,9 @@ begin
       on conflict do nothing;
     return orbit_private.api('/me','GET','{}');
   end if;
-  if not orbit_private.student_member() then raise exception 'Join the verified student community to continue.' using errcode='42501'; end if;
+  if not orbit_private.student_member() and not (orbit_private.platform_mod() and path='/student/moderation') then
+    raise exception 'Join the verified student community to continue.' using errcode='42501';
+  end if;
   if method='POST' then
     perform orbit_private.rate_actor(u);
     if exists(select 1 from orbit_private.student_memberships where actor=u and suspended_until>now())

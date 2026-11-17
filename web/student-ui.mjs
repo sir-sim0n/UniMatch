@@ -150,10 +150,11 @@ export function communityAccountPanel(host, {appeal, remove, onDeleted, reauth =
   const panel = element('section', undefined, 'panel'); panel.append(element('h2', 'Community account controls'));
   const error = element('p', '', 'error'); error.setAttribute('role', 'alert');
   const text = element('textarea'); text.maxLength = 1000; text.setAttribute('aria-label', 'Appeal explanation');
-  panel.append(text, action('Submit appeal', async () => {
+  if (appeal) panel.append(text, action('Submit appeal', async () => {
     try { await appeal(text.value); text.value = ''; error.textContent = 'Appeal submitted for review.'; }
     catch (failure) { error.textContent = failure.message; }
-  }), error, action('Delete account', () => {
+  }));
+  panel.append(error, action('Delete account', () => {
     const dialog = element('dialog'), form = element('form'), confirmation = element('input');
     confirmation.setAttribute('aria-label', 'Type DELETE to confirm'); confirmation.required = true;
     const password = element('input'); password.type = 'password'; password.autocomplete = 'current-password';

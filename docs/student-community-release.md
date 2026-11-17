@@ -10,6 +10,8 @@ The initial pilot defaults to 50 adult students at NWU Vanderbijlpark. The accep
 
 The owner selected email setup for later. Pilot registration therefore starts closed in the database, and the live signup screen explains the pending email/moderator setup. The owner selected providing a moderator username but has not supplied the actual username. No real account has been granted moderation privileges.
 
+An existing non-student-mailbox account can request a confirmed email change or delete its own account before enrollment. An explicitly assigned platform moderator can review the moderation queue without a student membership, while student-feed access continues to require membership.
+
 ## Implemented behaviour
 
 | Area | Browser demo | Cloud application |
@@ -48,3 +50,5 @@ The release workflow exercises the demo and cloud composer in headless Chromium 
 6. Before opening the pilot, configure custom email delivery, confirm the sender domain, choose the actual moderator account and test two independent devices. Set pilot_settings.registration_open only after those steps. Recruit the pilot group and monitor posting, replies and report response times.
 
 The paid-service budget, sender/domain credentials and recruitment of actual students remain owner decisions. No external invitations or messages have been sent.
+
+The earlier game endpoint retirement was deployed separately to the existing project as orbit-games version 3, with JWT verification enabled. The student migrations and account-deletion function remain pending production approval.
