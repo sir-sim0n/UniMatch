@@ -1,11 +1,11 @@
-import { Persistence, STORAGE_KEY } from './persistence.mjs?v=1.15.0';
+import { Persistence, STORAGE_KEY } from './persistence.mjs?v=1.16.0';
 
 export const ACTIVE_KEY = 'orbit.demo.active.v1';
 export const ACCOUNTS = Object.freeze([
   { id: 'personal', label: 'Your original demo', description: 'Your existing profile and bookmarks, or a blank profile to make your own.', key: STORAGE_KEY },
-  { id: 'naledi', label: 'Naledi Demo', description: 'A fictional Computer Science student at NWU Mahikeng.', key: 'orbit.demo.account.naledi.v1', campus: 'nwu-mahikeng' },
-  { id: 'sipho', label: 'Sipho Demo', description: 'A fictional Computer Science student at NWU Potchefstroom.', key: 'orbit.demo.account.sipho.v1', campus: 'nwu-potchefstroom' },
-  { id: 'ayesha', label: 'Ayesha Demo', description: 'A fictional Computer Science student at NWU Vanderbijlpark.', key: 'orbit.demo.account.ayesha.v1', campus: 'nwu-vanderbijlpark' }
+  { id: 'naledi', label: 'campusowl', description: 'A fictional Computer Science student at NWU Mahikeng.', key: 'orbit.demo.account.naledi.v1', campus: 'nwu-mahikeng' },
+  { id: 'sipho', label: 'midnightcoder', description: 'A fictional Computer Science student at NWU Potchefstroom.', key: 'orbit.demo.account.sipho.v1', campus: 'nwu-potchefstroom' },
+  { id: 'ayesha', label: 'quietcomet', description: 'A fictional Computer Science student at NWU Vanderbijlpark.', key: 'orbit.demo.account.ayesha.v1', campus: 'nwu-vanderbijlpark' }
 ]);
 
 // Local persona repository. Each identity owns a separate validated C++ session.

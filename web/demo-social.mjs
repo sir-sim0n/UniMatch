@@ -1,14 +1,15 @@
-import {seedDiscussion,validateDiscussion,changeDiscussion,commentSummaries} from './discussion-core.mjs?v=1.15.1';
-import {seedCommunity,validateCommunity,attachPoll,changeCommunity,communityView} from './community-core.mjs?v=1.15.1';
-import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.15.1';
-import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.15.1';
-import {seedEngagement,validateEngagement,readablePost,notificationsFor,recordActivity,changeEngagement} from './engagement-core.mjs?v=1.15.1';
-import {validateDiscovery,changeContent} from './discovery-core.mjs?v=1.15.1';
+import {seedCampusCircles,seedStudentState,validateStudentState,assertStudentWrite,changeStudent} from './student-core.mjs?v=1.16.0';
+import {seedDiscussion,validateDiscussion,changeDiscussion,commentSummaries} from './discussion-core.mjs?v=1.16.0';
+import {seedCommunity,validateCommunity,attachPoll,changeCommunity,communityView} from './community-core.mjs?v=1.16.0';
+import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.16.0';
+import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.16.0';
+import {seedEngagement,validateEngagement,readablePost,notificationsFor,recordActivity,changeEngagement} from './engagement-core.mjs?v=1.16.0';
+import {validateDiscovery,changeContent} from './discovery-core.mjs?v=1.16.0';
 // Demo-only shared state. Not authentication or a security boundary.
 export const SOCIAL_KEY = 'orbit.demo.social.v1';
 export const ACTORS = ['personal', 'naledi', 'sipho', 'ayesha'];
-export const REASONS = ['Spam', 'Harassment', 'Impersonation', 'Other'];
-export const emptySocial = () => ({ version: 9, ...seedDiscussion(), ...seedCommunity(), profileFlairs:[], ...seedEngagement(), ...seedFeed(), requests: [], blocks: [], reports: [], messages: [], circles:seedCircles(), posts:[] });
+export const REASONS = ['Personal information', 'Harassment', 'Threats', 'Impersonation', 'Spam', 'Other'];
+export const emptySocial = () => ({ version: 10, ...seedStudentState(), ...seedDiscussion(), ...seedCommunity(), profileFlairs:[], ...seedEngagement(), ...seedFeed(), requests: [], blocks: [], reports: [], messages: [], circles:[...seedCircles(),...seedCampusCircles()], posts:[] });
 const pair = (a,b) => [a,b].sort().join(':');
 const validActor = a => ACTORS.includes(a);
 function members(a,b) { if (!validActor(a) || !validActor(b) || a===b) throw Error('Choose two different demo accounts.'); }
@@ -21,7 +22,8 @@ export function validateSocial(d) {
   if(d?.version===6)d={...d,version:7,...seedCommunity(),circles:d.circles.map(c=>({...c,rules:'',private:false,moderators:[c.owner],requests:[],flairs:[],pinned:null}))};
   if(d?.version===7)d={...d,version:8,games:[]};
   if(d?.version===8)d={...d,version:9,...seedDiscussion()};
-  if (!d || d.version!==9 || !Array.isArray(d.requests) || !Array.isArray(d.blocks) || !Array.isArray(d.reports)) throw Error('Invalid social data.');
+  if(d?.version===9)d={...d,version:10,...seedStudentState(),circles:[...d.circles,...seedCampusCircles().filter(c=>!d.circles.some(old=>old.id===c.id))]};
+  if (!d || d.version!==10 || !Array.isArray(d.requests) || !Array.isArray(d.blocks) || !Array.isArray(d.reports)) throw Error('Invalid social data.');
   if (d.games !== undefined) {
     d = {...d, notifications: d.notifications.filter(n => n.kind !== "game")};
     delete d.games;
@@ -34,7 +36,7 @@ export function validateSocial(d) {
   if(!Array.isArray(d.messages))throw Error('Invalid messages.');
   let last=0;
   for(const m of d.messages){members(m.from,m.to);if(!Number.isSafeInteger(m.id)||m.id<=last||typeof m.text!=='string'||!m.text.trim()||[...m.text].length>2000||typeof m.read!=='boolean'||!Number.isFinite(m.at)||m.at<0)throw Error('Invalid message.');last=m.id;}
-  validateCircles(d,ACTORS);validateFeed(d,ACTORS);validateEngagement(d);validateDiscovery(d);validateCommunity(d,ACTORS);validateDiscussion(d,ACTORS);
+  validateCircles(d,ACTORS);validateFeed(d,ACTORS);validateEngagement(d);validateDiscovery(d);validateCommunity(d,ACTORS);validateDiscussion(d,ACTORS);validateStudentState(d,ACTORS);
   return d;
 }
 export class DemoSocial {
@@ -53,7 +55,8 @@ export class DemoSocial {
   async change(actor,op,target,extra={}) {
     const feedOp=typeof op==='string'&&op.startsWith('feed-');
     const circleOp=typeof op==='string'&&op.startsWith('circle-');
-    if(circleOp||feedOp){if(!validActor(actor))throw Error('Unknown demo account.');}else members(actor,target);
+    const studentOp=typeof op==='string'&&op.startsWith('student-');
+    if(circleOp||feedOp||studentOp){if(!validActor(actor))throw Error('Unknown demo account.');}else members(actor,target);
     return this.lock(async()=>{
       if(!this.ready)throw Error(this.error);
       let store;
@@ -63,7 +66,9 @@ export class DemoSocial {
       const same=q=>pair(q.from,q.to)===pair(actor,target);
       let q=d.requests.find(same);
       const blocked=d.blocks.some(same);
-      if(feedOp){if(!changeDiscussion(d,actor,op,target,extra,time,id=>readablePost(d,actor,id),id=>visibleFeed(d,actor).replies.some(r=>r.id===id))&&!changeCommunity(d,actor,op,target,extra,time)&&!changeContent(d,actor,op,target,extra,time)&&!changeEngagement(d,actor,op,target,extra,time)){if(Number.isInteger(target)&&!readablePost(d,actor,target))throw Error('Post unavailable.');changeFeed(d,actor,op,target,extra,time);if(op==='feed-publish'){d.feedPosts.at(-1).flair=extra.flair??null;attachPoll(d,d.feedPosts.at(-1),extra);}}}
+      assertStudentWrite(d,actor,op,time);
+      if(studentOp){changeStudent(d,actor,op,target,extra,time);}
+      else if(feedOp){if(!changeDiscussion(d,actor,op,target,extra,time,id=>readablePost(d,actor,id),id=>visibleFeed(d,actor).replies.some(r=>r.id===id))&&!changeCommunity(d,actor,op,target,extra,time)&&!changeContent(d,actor,op,target,extra,time)&&!changeEngagement(d,actor,op,target,extra,time)){if(Number.isInteger(target)&&!readablePost(d,actor,target))throw Error('Post unavailable.');changeFeed(d,actor,op,target,extra,time);if(op==='feed-publish'){d.feedPosts.at(-1).flair=extra.flair??null;attachPoll(d,d.feedPosts.at(-1),extra);}}}
       else if(circleOp){changeCircle(d,actor,op,target,extra,time);}
       else if(op==='send'||op==='read'){
         if(blocked||!q||q.status!=='accepted')throw Error('An active connection is required to message this account.');

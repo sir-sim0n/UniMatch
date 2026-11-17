@@ -83,3 +83,8 @@ dialog form{display:grid;gap:12px}dialog input,dialog textarea,dialog select{wid
 
 .post-header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-left:auto}.post-header-actions .award-button{font-size:12px;min-height:34px;padding:6px 10px;border-radius:20px}.post-actions{flex-wrap:wrap}@media(max-width:600px){.post-header-actions{flex-basis:100%;margin:8px 0 0}.post-author{flex-wrap:wrap}.post-actions{gap:4px}.post-actions button{padding:7px}}
 @media(max-width:600px){.post-actions>button:nth-child(n+3){font-size:0;gap:0;min-width:40px;padding:8px}.post-actions>button:nth-child(n+3) .ui-icon{width:20px;height:20px}}
+
+.student-avatar {font-size: 2rem; background: #dbeeed; color: #236b73;}
+.avatar-sun {background:#fff0c9;color:#845800;}
+.avatar-leaf {background:#d9efdf;color:#27633b;}
+.avatar-star {background:#ece4f7;color:#674181;}

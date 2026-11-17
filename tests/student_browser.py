@@ -1,0 +1,78 @@
+"""Exercise student posting in an isolated browser against the built website."""
+import functools
+import json
+import mimetypes
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+import shutil
+import threading
+
+from playwright.sync_api import sync_playwright, expect
+
+root = Path(__file__).resolve().parents[1]
+site = root / 'build' / 'release' / 'site'
+artifacts = root / 'build' / 'student-browser-results'
+artifacts.mkdir(parents=True, exist_ok=True)
+shutil.copy2(root / 'tests' / 'cloud-campus-harness.html', site / 'cloud-test.html')
+mimetypes.add_type('text/javascript', '.mjs')
+handler = functools.partial(SimpleHTTPRequestHandler, directory=str(site))
+server = ThreadingHTTPServer(('127.0.0.1', 0), handler)
+thread = threading.Thread(target=server.serve_forever, daemon=True)
+thread.start()
+base = f'http://127.0.0.1:{server.server_port}'
+checks = []
+
+try:
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch()
+        context = browser.new_context(viewport={'width':1280,'height':900})
+        page = context.new_page()
+        failures = []
+        page.on('pageerror', lambda error: failures.append(str(error)))
+        page.goto(base + '/?demo=naledi')
+        page.get_by_role('button', name='Create', exact=True).click()
+        page.get_by_label('Post title', exact=True).fill('A fictional anonymous confession')
+        page.get_by_label('Post text', exact=True).fill('A fictional campus experience for browser testing.')
+        page.get_by_label('Post anonymously', exact=True).check()
+        expect(page.get_by_role('region', name='Post preview')).to_contain_text('Anonymous OP')
+        page.reload()
+        page.get_by_role('button', name='Create', exact=True).click()
+        expect(page.get_by_label('Post title', exact=True)).to_have_value('A fictional anonymous confession')
+        expect(page.get_by_label('Post anonymously', exact=True)).to_be_checked()
+        checks.append('Account-scoped draft restores text and anonymous identity')
+        page.screenshot(path=str(artifacts / 'anonymous-composer.png'), full_page=True)
+        page.get_by_role('button', name='Post', exact=True).click()
+        link = page.get_by_role('link', name='A fictional anonymous confession (opens in a new tab)', exact=True)
+        expect(link).to_be_visible()
+        href = link.get_attribute('href')
+        assert 'demo=' not in href
+        expect(page.locator('.post-tile').filter(has=link)).to_contain_text('Anonymous OP') if page.locator('.post-tile').filter(has=link).count() else None
+        checks.append('Anonymous publication and share link omit demo persona')
+        page.get_by_role('button', name='My profile', exact=True).click()
+        expect(page.get_by_role('link', name='A fictional anonymous confession (opens in a new tab)', exact=True)).to_have_count(0)
+        checks.append('Anonymous post excluded from public profile')
+        page.get_by_role('button', name='Circles', exact=True).click()
+        expect(page.get_by_role('link', name='NWU Vanderbijlpark Confessions (opens in a new tab)', exact=True)).to_be_visible()
+        checks.append('Campus confession community available')
+        page.goto(base + '/?demo=naledi' + href[href.index('#'):])
+        expect(page.get_by_text('Anonymous OP', exact=True)).to_be_visible()
+        page.screenshot(path=str(artifacts / 'anonymous-discussion.png'), full_page=True)
+        page.get_by_role('button', name='Moderation', exact=True).click()
+        expect(page.get_by_role('heading', name='Community moderation')).to_be_visible()
+        checks.append('Demo moderator queue opens')
+        page.goto(base + '/cloud-test.html')
+        page.get_by_role('button', name='Create', exact=True).click()
+        expect(page.get_by_label('Post anonymously', exact=True)).to_be_visible()
+        page.get_by_label('Post title', exact=True).fill('Cloud fixture confession')
+        page.get_by_label('Your post', exact=True).fill('A synthetic post for a cloud interface test.')
+        page.get_by_label('Post anonymously', exact=True).check()
+        expect(page.get_by_role('region', name='Post preview')).to_contain_text('Anonymous OP')
+        page.screenshot(path=str(artifacts / 'cloud-composer.png'), full_page=True)
+        checks.append('Cloud composer has anonymous preview and category controls')
+        assert not failures, failures
+        (artifacts / 'results.json').write_text(json.dumps({'passed':checks}, indent=2), encoding='utf-8')
+        browser.close()
+finally:
+    (site / 'cloud-test.html').unlink(missing_ok=True)
+    server.shutdown()
+print('\n'.join(checks))

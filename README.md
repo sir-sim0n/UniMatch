@@ -1,5 +1,7 @@
 # Orbit
 
+Student-community implementation for 1.16.0 is under review. See [feature behaviour and remaining launch steps](docs/student-community-release.md).
+
 Orbit is a portfolio demonstration of university student discovery using fictional adult profiles. The project uses a portable C++17 core, Emscripten and Embind, and plain HTML, CSS, and JavaScript.
 
 **Current release: Orbit 1.15.0 — compact post tiles, dedicated discussions, circle homepages and a conversation inbox.**

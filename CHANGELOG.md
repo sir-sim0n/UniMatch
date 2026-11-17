@@ -1,3 +1,14 @@
+# 1.16.0 implementation - pending production approval
+
+- Added private usernames, symbolic avatars, optional Anonymous OP posting and profile isolation.
+- Added campus confession/question communities, student-life categories, audience/identity previews and account-scoped session drafts.
+- Added content/account report review, moderation reasons, remove/restore controls, 24-hour restrictions, appeals and action history.
+- Added member-only cloud content, NWU student-mailbox enrollment and a 50-student pilot cap. Email setup is deferred by the owner, so registration starts closed.
+- Added password recovery/reset and recently authenticated account deletion with an idempotent data purge and operator retry tracking.
+- Added privacy/migration regression checks, isolated PostgreSQL CI and browser journey checks for both application surfaces.
+- The production database migration was rejected by automatic approval review because broad permission/API changes could cause an outage or lockout. Publication awaits explicit production approval.
+- See [behaviour, validation and deployment](docs/student-community-release.md).
+
 # Unreleased - 2026-11-17
 
 - Removed Four in a Row and Dots and Boxes from Messages across the browser demo, local backend and cloud pilot, including invitations, boards, rematches and game-only inbox entries.
