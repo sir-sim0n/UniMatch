@@ -72,6 +72,43 @@ try:
         expect(page.get_by_role('region', name='Post preview')).to_contain_text('Anonymous OP')
         page.screenshot(path=str(artifacts / 'cloud-composer.png'), full_page=True)
         checks.append('Cloud composer has anonymous preview and category controls')
+        account = context.new_page()
+        account.on('pageerror', lambda error: failures.append(str(error)))
+        identity = {'user':None}
+
+        def cloud_response(route):
+            request = route.request
+            if request.method == 'OPTIONS':
+                route.fulfill(status=204, headers={'Access-Control-Allow-Origin':'*',
+                    'Access-Control-Allow-Headers':'*','Access-Control-Allow-Methods':'POST,GET,OPTIONS'})
+                return
+            payload = request.post_data_json or {}
+            path = payload.get('path')
+            responses = {'/me':identity,
+                '/student/status':{'version':'1.16.0','registrationOpen':False,'member':False},
+                '/student/moderation':{'reports':[],'appeals':[],'actions':[]}}
+            if path not in responses:
+                route.abort()
+                return
+            route.fulfill(status=200, content_type='application/json',
+                headers={'Access-Control-Allow-Origin':'*'},body=json.dumps(responses[path]))
+
+        account.route('https://*.supabase.co/**', cloud_response)
+        account.goto(base + '/cloud.html')
+        expect(account.get_by_role('button', name='Create account', exact=True)).to_be_disabled()
+        expect(account.get_by_label('Private username', exact=True)).to_be_visible()
+        expect(account.get_by_role('button', name='Send password reset link', exact=True)).to_be_visible()
+        checks.append('Cloud registration remains closed while email setup is deferred')
+        identity['user'] = {'id':'11111111-1111-4111-8111-111111111111','handle':'fixture_operator',
+            'displayName':'fixture_operator','studentMember':False,'isModerator':True,
+            'deletionRequested':False,'university':'','campus':''}
+        account.reload()
+        expect(account.get_by_role('button', name='Verify a student mailbox', exact=True)).to_be_visible()
+        expect(account.get_by_role('button', name='Delete account', exact=True)).to_be_visible()
+        account.get_by_role('button', name='Reports', exact=True).click()
+        expect(account.get_by_role('heading', name='Community moderation', exact=True)).to_be_visible()
+        account.screenshot(path=str(artifacts / 'cloud-moderation.png'), full_page=True)
+        checks.append('Explicit operator access and pre-enrollment account controls remain available')
         assert not failures, failures
         (artifacts / 'results.json').write_text(json.dumps({'passed':checks}, indent=2), encoding='utf-8')
         browser.close()
