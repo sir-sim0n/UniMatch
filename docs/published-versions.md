@@ -16,4 +16,8 @@ The earlier CI run for the removal changes passed. Syntax validation covers the 
 
 ## Browser asset caching
 
-Changed interface modules use v=1.15.1 asset URLs. Reusing the earlier v=1.15.0 URLs allowed browsers to retain the previous search UI after publication. Update entry-point and affected module URLs whenever publishing interface changes.
+Changed interface modules use v=1.15.1 asset URLs. Reusing earlier v=1.15.0 URLs allowed browsers to retain the previous search UI after publication. Update entry-point and affected module URLs when publishing interface changes.
+
+## Verified publication - 17 November 2026
+
+GitHub Pages run 44144919333 passed both build/test and deploy jobs. Browser checks on the published demo and cloud pilot confirmed Discover and Popular have no inline search fields. Demo Discover retains campus/interest filters; cloud Discover retains its campus filter. Refreshing the existing browser loaded the new v=1.15.1 asset URLs successfully.
