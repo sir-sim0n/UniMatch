@@ -108,10 +108,6 @@ add_custom_target(website ALL
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
         "${CMAKE_SOURCE_DIR}/web/community-ui.mjs" "${UNIMATCH_SITE_DIR}/assets/community-ui.mjs"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-        "${CMAKE_SOURCE_DIR}/web/games-core.mjs" "${UNIMATCH_SITE_DIR}/assets/games-core.mjs"
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
-        "${CMAKE_SOURCE_DIR}/web/games-ui.mjs" "${UNIMATCH_SITE_DIR}/assets/games-ui.mjs"
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
         "${CMAKE_SOURCE_DIR}/web/indexed-social.mjs" "${UNIMATCH_SITE_DIR}/assets/indexed-social.mjs"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_SOURCE_DIR}/web/cloud.html" "${UNIMATCH_SITE_DIR}/cloud.html"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_SOURCE_DIR}/web/cloud-ui.mjs" "${UNIMATCH_SITE_DIR}/assets/cloud-ui.mjs"
@@ -136,10 +132,8 @@ if(BUILD_TESTING)
     find_program(UNIMATCH_NODE node REQUIRED)
     add_test(NAME discussion_experience COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/discussion-experience.mjs")
     add_test(NAME campus_experience COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/campus-experience.mjs")
-    add_test(NAME cloud_games COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/cloud-games.mjs")
     add_test(NAME performance COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/performance.mjs")
     add_test(NAME backend COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/backend.mjs")
-    add_test(NAME games COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/games.mjs")
     add_test(NAME community COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/community.mjs")
     add_test(NAME theme COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/theme.cjs")
     add_executable(core_smoke tests/core_smoke.cpp)

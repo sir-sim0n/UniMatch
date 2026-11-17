@@ -11,11 +11,6 @@ export async function cloudAPI(path,body,currentUser=null){
  }
  if(route==='/auth/login'){await checked(cloud.auth.signInWithPassword({email:body.email,password:body.password}));return checked(cloud.rpc('orbit_api',{path:'/me'}));}
  if(route==='/auth/logout'){await checked(cloud.auth.signOut());return {ok:true};}
- if(route.startsWith('/games/')){
-  const peer=decodeURIComponent(route.split('/')[2]),{data:{session}}=await cloud.auth.getSession();if(!session)throw Error('Sign in first.');const endpoint=new URL(SUPABASE_URL+'/functions/v1/orbit-games');endpoint.searchParams.set('peer',peer);for(const [key,value] of url.searchParams)endpoint.searchParams.set(key,value);
-  const response=await fetch(endpoint,{method:body===undefined?'GET':'POST',headers:{apikey:SUPABASE_PUBLISHABLE_KEY,Authorization:'Bearer '+session.access_token,...(body===undefined?{}:{'Content-Type':'application/json'})},body:body===undefined?undefined:JSON.stringify({...body,peer})}),result=await response.json();if(!response.ok)throw Error(result.error??result.message??'Could not load the game.');
-  const name=id=>id===currentUser.id?currentUser.handle:peer;const normalize=g=>({...g,players:g.players.map(name),inviter:name(g.inviter),state:{...g.state,winnerActor:g.state.winnerActor?name(g.state.winnerActor):null}});return result.items?{items:result.items.map(normalize)}:normalize(result);
- }
  const query=Object.fromEntries(url.searchParams),result=await checked(cloud.rpc('orbit_api',{path:route,method:body===undefined?'GET':'POST',body:body??query}));
  if(result?.items){if(route==='/feed'||route==='/events')result.items=result.items.map(p=>({...p,rawAuthor:p.author,author:p.handle}));else if(route.endsWith('/comments'))result.items=result.items.map(p=>({...p,rawAuthor:p.author,author:p.handle}));else if(route.startsWith('/messages/'))result.items=result.items.map(p=>({...p,sender:p.handle}));else if(route==='/circles')result.items=result.items.map(c=>({...c,owner:c.ownerHandle}));}
  if(route.startsWith('/people/')&&result.connection){const peer=route.split('/')[2],name=id=>id===currentUser.id?currentUser.handle:peer;result.connection={...result.connection,sender:name(result.connection.sender),recipient:name(result.connection.recipient)};}
