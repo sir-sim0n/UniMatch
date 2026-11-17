@@ -1,3 +1,14 @@
+# Unreleased - 2026-11-17
+
+- Removed Four in a Row and Dots and Boxes from Messages across the browser demo, local backend and cloud pilot, including invitations, boards, rematches and game-only inbox entries.
+- Removed inline search from Discover and Popular across the demo and cloud pilot. Campus and interest filters remain available.
+- Removed game assets from site packaging and retired game tests. Existing demo data is read without game records and game notifications.
+- Added a Supabase migration and retired Edge Function response. Applying these cloud changes requires separate deployment.
+- Validation: demo messaging and discussion tests passed, along with JavaScript syntax checks. The backend HTTP test was blocked by the sandbox's loopback connection restriction.
+- Delivery status: changes are in pull request #1, awaiting merge and deployment.
+- See [published-version workflow and search behaviour](docs/published-versions.md).
+- Project changes must include a changelog entry and update relevant behaviour or deployment documentation in the same change.
+
 # v1.15.0 — 2026-10-28
 
 - Simplified home tiles to the title, post date, likes, repost and share, with Follow and a four-action overflow menu.
