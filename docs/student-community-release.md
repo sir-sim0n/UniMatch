@@ -52,3 +52,11 @@ The release workflow exercises the demo and cloud composer in headless Chromium 
 The paid-service budget, sender/domain credentials and recruitment of actual students remain owner decisions. No external invitations or messages have been sent.
 
 The earlier game endpoint retirement was deployed separately to the existing project as orbit-games version 3, with JWT verification enabled. The student migrations and account-deletion function remain pending production approval.
+
+## Checked implementation evidence
+
+Tested code commit ae6b180964d00ea13732df6d53de0ec0e7197c71. Release workflow 44156518448 passed all 25 CTest groups, publication validation, account-function TypeScript syntax and Chromium browser journeys. Isolated PostgreSQL workflow 44156518444 passed fresh migrations and student privacy/permission regressions.
+
+Browser evidence is available at https://github.com/sir-sim0n/UniMatch/actions/runs/44156518448/artifacts/14360678645 and includes anonymous composer/discussion, cloud composer/moderation screenshots and results.json. Mocked cloud account checks contact no real Auth users or email recipients.
+
+Live baseline API anchors were inspected and match the migration's expected author filter, circle-owner guard and profile projection. Production migration approval is still required. Real email delivery, real-session deletion and cross-device user testing remain pending email setup and production rollout.
