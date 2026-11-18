@@ -8,7 +8,7 @@
 - Added privacy/migration regression checks, isolated PostgreSQL CI and browser journey checks for both application surfaces.
 - Owner approved production rollout on 18 November. Applied the three reviewed migrations, deployed orbit-account v1 with JWT verification and passed the rollback-only production privacy/permission suite. Both interfaces published and verified in Pages run 44274618408.
 - Selected moderator simon has no matching live account; role assignment remains pending. Registration remains closed pending email setup and launch checks.
-- Corrected stale live-site visitor-access wording after publication; versioned the changed cloud UI asset to refresh caches. Student-only reading remains enforced by the database.
+- Corrected stale live-site visitor-access wording after publication; versioned the changed cloud UI asset to refresh caches. Student-only reading remains enforced by the database. Final Pages run 44275316460 passed tests/deployment, and both published entry points were reverified.
 - See [behaviour, validation and deployment](docs/student-community-release.md).
 
 # Unreleased - 2026-11-17
