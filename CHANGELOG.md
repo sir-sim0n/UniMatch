@@ -1,3 +1,11 @@
+# Demo UI review — 2026-11-18
+
+- Demo only: added comment-count links next to likes, short body excerpts and optional image/video attachments below post titles.
+- Added the N/A category, compact category/anonymous controls and moved Circles immediately below Create.
+- Attachments persist locally with published posts, are removed with deleted content and must be reselected after draft reload. Images: 5 MB; videos: 20 MB.
+- Froze the live cloud UI and its complete dependency assets at approved commit 162ec1906431eb90e93483673120784358ae2c75 during demo publication. No live database changes.
+- Added media validation/persistence/deletion checks, browser journeys and a byte-verified live packaging manifest. See [demo review behaviour and rollout](docs/demo-ui-review.md).
+
 # 1.16.0 — 2026-11-18
 
 - Added private usernames, symbolic avatars, optional Anonymous OP posting and profile isolation.

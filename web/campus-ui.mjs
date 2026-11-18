@@ -1,4 +1,4 @@
-import {purpose,topicKey,eventInfo} from './campus-core.mjs?v=1.16.0';
+import {purpose,topicKey,eventInfo} from './campus-core.mjs?v=1.17.0-demo';
 export const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 export const action=(label,fn,cls='text-button')=>{const b=node('button',label,cls);b.type='button';b.onclick=fn;return b;};
 export function purposeChip(p){const label=purpose(p),n=node('span',label,'purpose-chip');n.dataset.purpose=label;return n;}

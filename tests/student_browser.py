@@ -6,6 +6,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import shutil
 import threading
+import base64
 
 from playwright.sync_api import sync_playwright, expect
 
@@ -110,6 +111,65 @@ try:
         expect(account.get_by_role('heading', name='Community moderation', exact=True)).to_be_visible()
         account.screenshot(path=str(artifacts / 'cloud-moderation.png'), full_page=True)
         checks.append('Explicit operator access and pre-enrollment account controls remain available')
+        # Demo-only review: local attachments, previews, compact controls and navigation.
+        media_page = context.new_page()
+        media_page.on('pageerror', lambda error: failures.append(str(error)))
+        media_page.goto(base + '/?demo=naledi')
+        nav = media_page.locator('#navigation')
+        labels = nav.get_by_role('button').all_text_contents()
+        assert labels.index('Circles') == labels.index('Create') + 1, labels
+        media_page.get_by_role('button',name='Create',exact=True).click()
+        selector = media_page.get_by_label('Conversation category',exact=True)
+        selector.select_option('N/A')
+        assert selector.evaluate('(node) => node.getBoundingClientRect().height') <= 50
+        checkbox = media_page.get_by_label('Post anonymously',exact=True)
+        assert checkbox.evaluate('(node) => node.getBoundingClientRect().height') <= 24
+        image = base64.b64decode(media_page.evaluate("() => {const c=document.createElement('canvas');c.width=32;c.height=32;c.getContext('2d').fillRect(0,0,32,32);return c.toDataURL('image/png');}").split(',')[1])
+        media_page.get_by_label('Image or video',exact=True).set_input_files({'name':'fictional.png','mimeType':'image/png','buffer':image})
+        expect(media_page.get_by_text('Attachment ready. It will appear below your title.',exact=True)).to_be_visible()
+        media_page.get_by_label('Post title',exact=True).fill('Demo image review')
+        media_page.get_by_label('Post text',exact=True).fill('A brief fictional caption beneath this attachment.')
+        media_page.set_viewport_size({'width':390,'height':844})
+        assert media_page.evaluate('document.documentElement.scrollWidth <= document.documentElement.clientWidth')
+        media_page.screenshot(path=str(artifacts/'demo-mobile-composer.png'),full_page=True)
+        media_page.set_viewport_size({'width':1280,'height':900})
+        media_page.get_by_role('button',name='Post',exact=True).click()
+        tile = media_page.locator('.post-tile').filter(has=media_page.get_by_role('link',name='Demo image review (opens in a new tab)',exact=True))
+        expect(tile.locator('img.post-media')).to_be_visible()
+        assert tile.locator('img.post-media').evaluate('(node) => node.complete && node.naturalWidth > 0')
+        expect(tile.locator('.post-excerpt')).to_have_text('A brief fictional caption beneath this attachment.')
+        expect(tile.locator('.comment-count')).to_contain_text('0')
+        order = tile.evaluate('(node) => [...node.children].map(n => n.tagName)')
+        assert order.index('H2') < order.index('IMG') < order.index('P'), order
+        media_page.screenshot(path=str(artifacts/'demo-image-feed.png'),full_page=True)
+        discussion_url = tile.locator('.comment-count').get_attribute('href')
+        media_page.goto(discussion_url.replace('#','?demo=naledi#',1))
+        comment = media_page.get_by_role('textbox',name='Comment on post',exact=False)
+        comment.fill('A fictional browser-test reply.')
+        comment.press('Tab')
+        media_page.get_by_role('button',name='Reply',exact=True).first.click()
+        media_page.get_by_role('button',name='Home',exact=True).click()
+        tile = media_page.locator('.post-tile').filter(has=media_page.get_by_role('link',name='Demo image review (opens in a new tab)',exact=True))
+        expect(tile.locator('.comment-count')).to_contain_text('1')
+        media_page.get_by_role('button',name='Create',exact=True).click()
+        # Create an actual playable short WebM clip with Chromium's recorder.
+        clip = media_page.evaluate('''async () => {
+          const canvas=document.createElement('canvas');canvas.width=32;canvas.height=32;
+          const stream=canvas.captureStream(5), recorder=new MediaRecorder(stream,{mimeType:'video/webm'}), chunks=[];
+          const done=new Promise(resolve=>{recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=async()=>{const bytes=new Uint8Array(await new Blob(chunks).arrayBuffer());stream.getTracks().forEach(t=>t.stop());resolve(Array.from(bytes));};});
+          recorder.start();canvas.getContext('2d').fillRect(0,0,32,32);await new Promise(r=>setTimeout(r,300));recorder.stop();return done;
+        }''')
+        media_page.get_by_label('Image or video',exact=True).set_input_files({'name':'fictional.webm','mimeType':'video/webm','buffer':bytes(clip)})
+        expect(media_page.get_by_text('Attachment ready. It will appear below your title.',exact=True)).to_be_visible()
+        media_page.get_by_label('Post title',exact=True).fill('Demo video review')
+        media_page.get_by_label('Post text',exact=True).fill('')
+        media_page.get_by_role('button',name='Post',exact=True).click()
+        video_tile=media_page.locator('.post-tile').filter(has=media_page.get_by_role('link',name='Demo video review (opens in a new tab)',exact=True))
+        expect(video_tile.locator('video[controls]')).to_be_visible()
+        media_page.reload()
+        expect(media_page.get_by_role('link',name='Demo video review (opens in a new tab)',exact=True)).to_be_visible()
+        expect(media_page.locator('video[controls]').first).to_be_visible()
+        checks.append('Demo N/A, image/video persistence, comment totals, media order, compact mobile controls and Circles order')
         assert not failures, failures
         (artifacts / 'results.json').write_text(json.dumps({'passed':checks}, indent=2), encoding='utf-8')
         browser.close()

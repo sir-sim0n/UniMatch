@@ -1,5 +1,5 @@
 export const STUDENT_CATEGORIES = Object.freeze([
-  'Confessions', 'Relationships and friendships', 'Academic questions',
+  'N/A', 'Confessions', 'Relationships and friendships', 'Academic questions',
   'Residence life', 'Money and student survival', 'Rants and advice', 'Everyday experiences'
 ]);
 export const REPORT_REASONS = Object.freeze([
@@ -97,7 +97,7 @@ export function changeStudent(data, actor, operation, target, extra, now) {
   if (operation === 'student-delete') {
     if (extra.confirm !== 'DELETE') throw Error('Type DELETE to confirm.');
     for (const p of data.feedPosts.filter(p => p.author === actor)) {
-      p.deleted = true; p.title = 'Deleted post'; p.text = '[Deleted]';
+      p.deleted = true; p.title = 'Deleted post'; p.text = '[Deleted]'; delete p.media;
     }
     for (const r of data.feedReplies.filter(r => r.author === actor)) { r.deleted = true; r.text = '[Deleted]'; }
     for (const p of data.posts.filter(p => p.author === actor)) { p.hidden = true; p.text = '[Deleted]'; }

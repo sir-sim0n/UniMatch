@@ -1,4 +1,5 @@
-import {STUDENT_CATEGORIES, DraftStore, PILOT} from './student-core.mjs?v=1.16.0';
+import {mediaComposer} from './demo-media.mjs?v=1.17.0-demo';
+import {STUDENT_CATEGORIES, DraftStore, PILOT} from './student-core.mjs?v=1.17.0-demo';
 
 function element(tag, text, className) {
   const node = document.createElement(tag);
@@ -18,14 +19,16 @@ function action(text, callback) {
 }
 
 export function postingOptions(form, {account, draftAccount = account, title, body, cloud = false, audience = null}) {
+  if (!cloud) form.classList.add('demo-post-form');
   const drafts = new DraftStore((cloud ? 'cloud:' : 'demo:') + draftAccount);
   const category = element('select');
   category.setAttribute('aria-label', 'Conversation category');
-  for (const value of STUDENT_CATEGORIES) {
+  for (const value of (cloud ? STUDENT_CATEGORIES.filter(v => v !== 'N/A') : STUDENT_CATEGORIES)) {
     const option = element('option', value); option.value = value; category.append(option);
   }
+  category.value = 'Everyday experiences';
   const anonymous = element('input'); anonymous.type = 'checkbox';
-  const identityLabel = element('label', undefined, 'field');
+  const identityLabel = element('label', undefined, 'field identity-choice');
   identityLabel.append(anonymous, document.createTextNode(' Post anonymously'));
   const audienceLabel = element('p', '', 'hint');
   const preview = element('section', undefined, 'panel');
@@ -41,6 +44,7 @@ export function postingOptions(form, {account, draftAccount = account, title, bo
       ? 'An anonymous post is hidden from your public profile. Authorised operators can access account records for moderation. Readers may recognise details you share.'
       : 'This fictional demo simulates anonymous display. Switchable personas and browser backups contain the underlying demo records.', 'hint'),
     preview, status);
+  const attachment = cloud ? null : mediaComposer(form,{body,preview,before:previewBody});
   const saved = drafts.read();
   if (saved && typeof saved.title === 'string' && typeof saved.text === 'string') {
     title.value = saved.title; body.value = saved.text;
@@ -64,10 +68,10 @@ export function postingOptions(form, {account, draftAccount = account, title, bo
   category.addEventListener('change', () => update(true));
   audience?.addEventListener('change', () => update(true));
   form.append(action('Discard draft', () => {
-    drafts.clear(); title.value = ''; body.value = ''; update(); status.textContent = 'Draft discarded.';
+    drafts.clear(); attachment?.reset(); title.value = ''; body.value = ''; update(); status.textContent = 'Draft discarded.';
   }));
   update();
-  return {read:() => ({anonymous:anonymous.checked, category:category.value}), clear:() => drafts.clear()};
+  return {read:() => ({anonymous:anonymous.checked, category:category.value, ...(!cloud ? {media:attachment.read()} : {})}), clear:() => drafts.clear()};
 }
 
 export function privacyInformation(host) {

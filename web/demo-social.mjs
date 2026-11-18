@@ -1,10 +1,10 @@
-import {seedCampusCircles,seedStudentState,validateStudentState,assertStudentWrite,changeStudent} from './student-core.mjs?v=1.16.0';
-import {seedDiscussion,validateDiscussion,changeDiscussion,commentSummaries} from './discussion-core.mjs?v=1.16.0';
-import {seedCommunity,validateCommunity,attachPoll,changeCommunity,communityView} from './community-core.mjs?v=1.16.0';
-import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.16.0';
-import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.16.0';
-import {seedEngagement,validateEngagement,readablePost,notificationsFor,recordActivity,changeEngagement} from './engagement-core.mjs?v=1.16.0';
-import {validateDiscovery,changeContent} from './discovery-core.mjs?v=1.16.0';
+import {seedCampusCircles,seedStudentState,validateStudentState,assertStudentWrite,changeStudent} from './student-core.mjs?v=1.17.0-demo';
+import {seedDiscussion,validateDiscussion,changeDiscussion,commentSummaries} from './discussion-core.mjs?v=1.17.0-demo';
+import {seedCommunity,validateCommunity,attachPoll,changeCommunity,communityView} from './community-core.mjs?v=1.17.0-demo';
+import { seedCircles, validateCircles, circleView, changeCircle } from './circles-core.mjs?v=1.17.0-demo';
+import {seedFeed,validateFeed,visibleFeed,changeFeed} from './feed-core.mjs?v=1.17.0-demo';
+import {seedEngagement,validateEngagement,readablePost,notificationsFor,recordActivity,changeEngagement} from './engagement-core.mjs?v=1.17.0-demo';
+import {validateDiscovery,changeContent} from './discovery-core.mjs?v=1.17.0-demo';
 // Demo-only shared state. Not authentication or a security boundary.
 export const SOCIAL_KEY = 'orbit.demo.social.v1';
 export const ACTORS = ['personal', 'naledi', 'sipho', 'ayesha'];
