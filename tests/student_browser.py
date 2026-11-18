@@ -166,7 +166,7 @@ try:
         media_page.get_by_role('button',name='Post',exact=True).click()
         video_tile=media_page.locator('.post-tile').filter(has=media_page.get_by_role('link',name='Demo video review (opens in a new tab)',exact=True))
         expect(video_tile.locator('video[controls]')).to_be_visible()
-        media_page.reload()
+        media_page.goto(base + '/?demo=naledi')
         expect(media_page.get_by_role('link',name='Demo video review (opens in a new tab)',exact=True)).to_be_visible()
         expect(media_page.locator('video[controls]').first).to_be_visible()
         checks.append('Demo N/A, image/video persistence, comment totals, media order, compact mobile controls and Circles order')

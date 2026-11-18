@@ -25,3 +25,5 @@ Promotion requires an explicit owner decision to change the approved live source
 ## Validation and publication
 
 Local checks passed for attachment persistence, N/A, anonymous attachment storage, file-type/size/data validation, large-file validation, post/account deletion, student privacy and existing discussion/feed behaviour. JavaScript syntax checks passed. CI also checks image/video publication and reload, comment totals, ordering, compact controls, mobile overflow and navigation in Chromium, alongside the existing release/database checks. Publication and browser verification evidence will be appended after rollout.
+
+Manual local browser preview confirmed Home excerpts/comment links, Circles immediately below Create, a 44-pixel category selector and compact inline anonymous control. The local Windows preview needed the standard JavaScript MIME mapping for .mjs files; GitHub Pages and the CI harness supply it. Media persistence browser checks reopen Home explicitly after navigating through a discussion, so an existing discussion URL does not select the earlier post on reload.
