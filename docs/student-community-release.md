@@ -1,6 +1,6 @@
 # Student community implementation
 
-Prepared 17 November 2026 for Orbit 1.16.0. Production migration approval and deployment are pending.
+Prepared 17 November 2026 for Orbit 1.16.0. Production migration approved and applied 18 November 2026; website publication in progress.
 
 ## Product direction
 
@@ -8,7 +8,7 @@ Orbit hosts student experiences, confessions, questions and advice under private
 
 The initial pilot defaults to 50 adult students at NWU Vanderbijlpark. The accepted student mailbox domain is mynwu.ac.za, documented by NWU at https://services.nwu.ac.za/information-technology/student-email. Mailbox verification proves mailbox control. Current enrolment, campus and age are declarations.
 
-The owner selected email setup for later. Pilot registration therefore starts closed in the database, and the live signup screen explains the pending email/moderator setup. The owner selected providing a moderator username but has not supplied the actual username. No real account has been granted moderation privileges.
+The owner selected email setup for later. Pilot registration therefore starts closed in the database, and the live signup screen explains the pending email/moderator setup. The owner selected simon as the moderator on 18 November 2026, but no matching live orbit_profiles account exists. No real account has been granted moderation privileges.
 
 An existing non-student-mailbox account can request a confirmed email change or delete its own account before enrollment. An explicitly assigned platform moderator can review the moderation queue without a student membership, while student-feed access continues to require membership.
 
@@ -51,7 +51,7 @@ The release workflow exercises the demo and cloud composer in headless Chromium 
 
 The paid-service budget, sender/domain credentials and recruitment of actual students remain owner decisions. No external invitations or messages have been sent.
 
-The earlier game endpoint retirement was deployed separately to the existing project as orbit-games version 3, with JWT verification enabled. The student migrations and account-deletion function remain pending production approval.
+The earlier game endpoint retirement was deployed separately to the existing project as orbit-games version 3, with JWT verification enabled. The student migrations were applied on 18 November 2026 and orbit-account version 1 is active with JWT verification enabled.
 
 ## Checked implementation evidence
 
@@ -59,4 +59,10 @@ Tested code commit ae6b180964d00ea13732df6d53de0ec0e7197c71. Release workflow 44
 
 Browser evidence is available at https://github.com/sir-sim0n/UniMatch/actions/runs/44156518448/artifacts/14360678645 and includes anonymous composer/discussion, cloud composer/moderation screenshots and results.json. Mocked cloud account checks contact no real Auth users or email recipients.
 
-Live baseline API anchors were inspected and match the migration's expected author filter, circle-owner guard and profile projection. Production migration approval is still required. Real email delivery, real-session deletion and cross-device user testing remain pending email setup and production rollout.
+Live baseline API anchors were inspected and match the migration's expected author filter, circle-owner guard and profile projection. Production migration approval was supplied on 18 November 2026. Real email delivery, real-session deletion and cross-device user testing remain pending email setup and production rollout.
+
+## Production rollout — 18 November 2026
+
+Owner explicitly approved the production migration and deployment to both sites. Applied only retire_message_games, student_communities and student_account_lifecycle; earlier incomplete migration history remains unreconciled. Deployed orbit-account version 1 with JWT verification. The complete rollback-only student regression suite passed on production and left zero synthetic Auth fixtures. Registration remains closed. No live account has handle simon, so moderator assignment is pending creation or identification of that account; no other account was promoted.
+
+Security advisors reported the intentional deny-by-default private tables (RLS with no browser policies), plus disabled leaked-password protection, which remains an Auth setup item before recruitment. Email delivery, real-session deletion and independent-device tests remain pending. Website publication evidence will be recorded after deployment.
