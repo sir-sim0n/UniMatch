@@ -6,8 +6,9 @@
 - Added member-only cloud content, NWU student-mailbox enrollment and a 50-student pilot cap. Email setup is deferred by the owner, so registration starts closed.
 - Added password recovery/reset and recently authenticated account deletion with an idempotent data purge and operator retry tracking.
 - Added privacy/migration regression checks, isolated PostgreSQL CI and browser journey checks for both application surfaces.
-- Owner approved production rollout on 18 November. Applied the three reviewed migrations, deployed orbit-account v1 with JWT verification and passed the rollback-only production privacy/permission suite. Publication to both interfaces is in progress.
+- Owner approved production rollout on 18 November. Applied the three reviewed migrations, deployed orbit-account v1 with JWT verification and passed the rollback-only production privacy/permission suite. Both interfaces published and verified in Pages run 44274618408.
 - Selected moderator simon has no matching live account; role assignment remains pending. Registration remains closed pending email setup and launch checks.
+- Corrected stale live-site visitor-access wording after publication; versioned the changed cloud UI asset to refresh caches. Student-only reading remains enforced by the database.
 - See [behaviour, validation and deployment](docs/student-community-release.md).
 
 # Unreleased - 2026-11-17

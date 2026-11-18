@@ -1,6 +1,6 @@
 # Student community implementation
 
-Prepared 17 November 2026 for Orbit 1.16.0. Production migration approved and applied 18 November 2026; website publication in progress.
+Prepared 17 November 2026 for Orbit 1.16.0. Production migration approved and applied 18 November 2026; both website entry points published and verified.
 
 ## Product direction
 
@@ -65,4 +65,6 @@ Live baseline API anchors were inspected and match the migration's expected auth
 
 Owner explicitly approved the production migration and deployment to both sites. Applied only retire_message_games, student_communities and student_account_lifecycle; earlier incomplete migration history remains unreconciled. Deployed orbit-account version 1 with JWT verification. The complete rollback-only student regression suite passed on production and left zero synthetic Auth fixtures. Registration remains closed. No live account has handle simon, so moderator assignment is pending creation or identification of that account; no other account was promoted.
 
-Security advisors reported the intentional deny-by-default private tables (RLS with no browser policies), plus disabled leaked-password protection, which remains an Auth setup item before recruitment. Email delivery, real-session deletion and independent-device tests remain pending. Website publication evidence will be recorded after deployment.
+Security advisors reported the intentional deny-by-default private tables (RLS with no browser policies), plus disabled leaked-password protection, which remains an Auth setup item before recruitment. Email delivery, real-session deletion and independent-device tests remain pending. GitHub Pages run 44274618408 passed build, all 25 test groups, browser checks and deployment for commit c0bb0beec0550c689f0a57a5c762fe39583aac65. Published demo shows private usernames, categories and campus communities; cloud shows the membership gate and disabled registration.
+
+Published-page verification also found stale cloud banner/footer and guest-status wording that still implied visitor reading. Corrected those labels to describe verified student access and closed registration; cloud-ui now uses a fresh v=1.16.0.1 asset URL. The actual production access gate passed before this copy correction.
