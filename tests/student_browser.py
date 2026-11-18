@@ -116,6 +116,7 @@ try:
         media_page.on('pageerror', lambda error: failures.append(str(error)))
         media_page.goto(base + '/?demo=naledi')
         nav = media_page.locator('#navigation')
+        expect(nav.get_by_role('button',name='Create',exact=True)).to_be_visible()
         labels = nav.get_by_role('button').all_text_contents()
         assert labels.index('Circles') == labels.index('Create') + 1, labels
         media_page.get_by_role('button',name='Create',exact=True).click()
