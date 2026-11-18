@@ -88,3 +88,19 @@ dialog form{display:grid;gap:12px}dialog input,dialog textarea,dialog select{wid
 .avatar-sun {background:#fff0c9;color:#845800;}
 .avatar-leaf {background:#d9efdf;color:#27633b;}
 .avatar-star {background:#ece4f7;color:#674181;}
+
+/* Demo review: compact sharing controls, readable previews and local media. */
+.demo-post-form {display:block;min-width:0}
+.demo-post-form .field {display:grid;gap:7px;margin:14px 0}
+.demo-post-form .field>select {flex:none;height:44px;min-height:44px;width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--white);color:var(--ink)}
+.demo-post-form .identity-choice {display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:10px;width:fit-content;padding:9px 12px;border:1px solid var(--line);border-radius:9px;min-height:44px}
+.demo-post-form .identity-choice input[type=checkbox] {width:18px;height:18px;min-height:0;flex:0 0 18px;margin:0;padding:0;accent-color:var(--green)}
+.media-picker {margin:14px 0;padding:12px 0;min-width:0}
+.media-picker label {display:grid;gap:8px;font-size:14px;font-weight:600}
+.demo-post-form .media-picker input[type=file] {width:100%;min-height:44px;padding:9px;height:auto;background:var(--white);color:var(--ink);border:1px solid var(--line);border-radius:9px}
+.media-picker .hint {font-size:12px;margin:8px 0}
+.post-media {display:block;max-width:100%;width:100%;max-height:480px;object-fit:contain;border-radius:12px;margin:0 0 16px;background:var(--paper)}
+.post-excerpt {color:var(--muted);font-size:15px;line-height:1.65;margin:0 0 18px;overflow-wrap:anywhere;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tile-footer .comment-count {display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:40px;min-height:40px;padding:8px;text-decoration:none;border-radius:9px}
+.tile-footer .comment-count:hover {background:var(--soft-green)}
+@media(max-width:480px){.tile-footer{gap:2px;flex-wrap:wrap}.tile-footer time{flex:1 0 100%;margin-bottom:2px}.post-media{max-height:340px}.tile-footer .comment-count{padding:6px}}

@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {DemoSocial} from '../web/demo-social.mjs';
+import {validateMedia,MEDIA_LIMITS} from '../web/demo-media.mjs';
+const records=new Map(),storage={getItem:k=>records.get(k)??null,setItem:(k,v)=>records.set(k,v)};
+const repo=new DemoSocial({storage:()=>storage});
+const media={type:'image',mime:'image/png',name:'fictional.png',size:3,data:'data:image/png;base64,YWJj'};
+await repo.change('naledi','feed-publish',null,{title:'Image confession',text:'',topic:null,category:'N/A',media,anonymous:true});
+const id=repo.data.feedPosts.at(-1).id;
+assert.deepEqual(repo.data.feedPosts.at(-1).media,media);
+const restored=new DemoSocial({storage:()=>storage});
+assert.equal(restored.ready,true);assert.equal(restored.feed('naledi').posts.find(p=>p.id===id).media.data,media.data);
+assert.throws(()=>validateMedia({...media,data:'https://untrusted.example/x.png'}));
+assert.throws(()=>validateMedia({...media,mime:'image/svg+xml'}));
+assert.throws(()=>validateMedia({...media,type:'video'}));
+assert.throws(()=>validateMedia({...media,size:MEDIA_LIMITS.image+1}));
+assert.throws(()=>validateMedia({...media,data:media.data+'='}));
+// Large attachments must not overflow the regexp stack during validation.
+const size=1024*1024;validateMedia({...media,size,data:'data:image/png;base64,'+Buffer.alloc(size).toString('base64')});
+await assert.rejects(repo.change('naledi','feed-publish',null,{title:'Empty post',text:'',topic:null}));
+await repo.change('naledi','feed-delete-post',id,{confirmed:true});
+assert.equal(repo.data.feedPosts.find(p=>p.id===id).media,undefined);
+await repo.change('sipho','feed-publish',null,{title:'Local clip',text:'A caption',topic:null,category:'N/A',media:{...media,type:'video',mime:'video/webm',data:'data:video/webm;base64,YWJj'}});
+await repo.change('sipho','student-delete',null,{confirm:'DELETE'});
+assert.equal(repo.data.feedPosts.at(-1).media,undefined);
+console.log('Demo media persistence, N/A, anonymous attachments, validation and deletion passed.');
