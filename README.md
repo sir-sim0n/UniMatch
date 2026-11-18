@@ -1,5 +1,7 @@
 # Orbit
 
+Student-community implementation for 1.16.0 is under review. See [feature behaviour and remaining launch steps](docs/student-community-release.md).
+
 Orbit is a portfolio demonstration of university student discovery using fictional adult profiles. The project uses a portable C++17 core, Emscripten and Embind, and plain HTML, CSS, and JavaScript.
 
 **Current release: Orbit 1.15.0 — compact post tiles, dedicated discussions, circle homepages and a conversation inbox.**
@@ -37,7 +39,7 @@ ctest --preset wasm-debug
 
 Activate the tools once per new terminal. Configure downloads the exact pinned nlohmann/json source on the first run, so that first run needs Internet access. Later builds reuse it in `build/wasm/_deps/`.
 
-Expected result: CTest reports 24 passing test groups. The website and production JSON files are assembled in `build/wasm/site/`. Generated files stay inside `build/`; do not edit or commit them.
+Expected result: CTest reports 25 passing test groups. The website and production JSON files are assembled in `build/wasm/site/`. Generated files stay inside `build/`; do not edit or commit them.
 
 ## Open the local site
 

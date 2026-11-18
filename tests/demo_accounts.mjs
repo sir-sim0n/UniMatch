@@ -11,7 +11,7 @@ const storage={data:new Map([['unrelated','keep']]),getItem(k){return this.data.
 const make=()=>new DemoAccounts({storage:()=>storage,loadClient:async()=>{const c=new Client(engine);c.call('initialize',{catalogueJson,profilesJson});return c;}});
 let a=make();assert.equal(a.initialId(),'personal');
 let original=await a.activate('personal');assert.equal(original.client.call('getState').visitor,null);
-let n=await a.activate('naledi');assert.equal(n.client.call('getState').visitor.displayName,'Naledi Demo');
+let n=await a.activate('naledi');assert.equal(n.client.call('getState').visitor.displayName,'campusowl');
 n.client.call('save',{id:'fictional-001'});assert.equal(n.persistence.save(),true);
 const before=storage.getItem(n.account.key);
 let s=await a.activate('sipho');assert.deepEqual(s.client.call('getState').savedIds,[]);
@@ -24,7 +24,7 @@ await a.activate('sipho');await a.activate('naledi');assert.deepEqual(n.client.c
 storage.fail=false;n.persistence.save();
 // Only the selected persona resets; starter and unrelated data remain.
 assert.equal(a.resetActive(),true);assert.deepEqual(n.client.call('getState').savedIds,[]);
-assert.equal(n.client.call('getState').visitor.displayName,'Naledi Demo');
+assert.equal(n.client.call('getState').visitor.displayName,'campusowl');
 await a.activate('sipho');assert.deepEqual(s.client.call('getState').savedIds,['fictional-002']);
 a.dispose();a=make();assert.equal(a.initialId(),'sipho');s=await a.activate(a.initialId());assert.deepEqual(s.client.call('getState').savedIds,['fictional-002']);
 // Legacy state remains in its original key and restores without migration.

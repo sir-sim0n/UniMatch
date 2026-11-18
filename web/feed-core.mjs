@@ -1,4 +1,5 @@
-import {applyEvent,validateEvent} from './campus-core.mjs?v=1.15.0';
+import {STUDENT_CATEGORIES} from './student-core.mjs?v=1.16.0';
+import {applyEvent,validateEvent} from './campus-core.mjs?v=1.16.0';
 export const TOPICS=['Study life','Campus life','Questions','Creativity','Sport','Technology'];
 export const seedFeed=()=>({feedPosts:[
  {id:1,author:'naledi',title:'Does anyone else learn more when they explain it to a friend?',text:'Looking for a relaxed study group. We could each bring one tricky concept and work through it together. What helps you when a topic just will not click?',topic:'Study life',at:1792785600000},
@@ -16,12 +17,12 @@ export function validateFeed(d,actors){
  for(const key of ['follows','votes','postSaves']){const ids=new Set();for(const x of d[key]){const target=key==='follows'?x.to:x.post;if(!actors.includes(x.actor)||(key==='follows'?(!actors.includes(target)||target===x.actor):!posts.has(target))||ids.has(x.actor+':'+target))throw Error('Invalid feed relation.');ids.add(x.actor+':'+target);}}
 }
 export function visibleFeed(d,actor){
- const posts=d.feedPosts.filter(p=>!isBlocked(d,actor,p.author)),ids=new Set(posts.map(p=>p.id)),visible=new Set();
- const replies=d.feedReplies.filter(r=>{const ok=ids.has(r.post)&&!isBlocked(d,actor,r.author)&&(r.parent===null||visible.has(r.parent));if(ok)visible.add(r.id);return ok;});
+ const posts=d.feedPosts.filter(p=>!p.moderationHidden&&!isBlocked(d,actor,p.author)),ids=new Set(posts.map(p=>p.id)),visible=new Set();
+ const replies=d.feedReplies.filter(r=>{const ok=!r.moderationHidden&&ids.has(r.post)&&!isBlocked(d,actor,r.author)&&(r.parent===null||visible.has(r.parent));if(ok)visible.add(r.id);return ok;});
  return structuredClone({posts,replies,follows:d.follows.filter(f=>f.actor===actor&&!isBlocked(d,actor,f.to)),votes:d.votes,postSaves:d.postSaves.filter(s=>s.actor===actor)});
 }
 export function changeFeed(d,actor,op,target,extra,time){
- if(op==='feed-publish'){if(!text(extra.title,180)||!text(extra.text,4000)||!(extra.topic===null||TOPICS.includes(extra.topic)))throw Error('Add a title (up to 180 characters) and a post (up to 4,000 characters).');d.feedPosts.push({id:(d.feedPosts.at(-1)?.id??0)+1,author:actor,title:extra.title.trim(),text:extra.text.trim(),topic:extra.topic,at:time});applyEvent(d.feedPosts.at(-1),extra);return;}
+ if(op==='feed-publish'){if(!text(extra.title,180)||!text(extra.text,4000)||!(extra.topic===null||TOPICS.includes(extra.topic)))throw Error('Add a title (up to 180 characters) and a post (up to 4,000 characters).');if(extra.circle!=null&&!d.circles.some(c=>c.id===extra.circle&&c.members.includes(actor)&&!isBlocked(d,actor,c.owner)))throw Error('Join the community before posting.');if(extra.anonymous!==undefined&&typeof extra.anonymous!=='boolean')throw Error('Choose a post identity.');if(extra.category!==undefined&&!STUDENT_CATEGORIES.includes(extra.category))throw Error('Choose a category.');d.feedPosts.push({id:(d.feedPosts.at(-1)?.id??0)+1,author:actor,circle:extra.circle??null,anonymous:extra.anonymous===true,category:extra.category??'Everyday experiences',title:extra.title.trim(),text:extra.text.trim(),topic:extra.topic,at:time});applyEvent(d.feedPosts.at(-1),extra);return;}
  if(op==='feed-follow'){if(!['personal','naledi','sipho','ayesha'].includes(target)||target===actor||isBlocked(d,actor,target))throw Error('This student is unavailable to follow.');const found=d.follows.some(f=>f.actor===actor&&f.to===target);d.follows=d.follows.filter(f=>!(f.actor===actor&&f.to===target));if(!found)d.follows.push({actor,to:target});return;}
  const post=d.feedPosts.find(p=>p.id===target);if(!post||post.deleted||isBlocked(d,actor,post.author))throw Error('This post is unavailable.');
  if(op==='feed-comment'){if(!text(extra.text,2000))throw Error('Write a comment of 1 to 2,000 characters.');if(extra.parent!==null&&!visibleFeed(d,actor).replies.some(r=>r.id===extra.parent&&r.post===target&&!r.deleted))throw Error('This comment is unavailable.');d.feedReplies.push({id:(d.feedReplies.at(-1)?.id??0)+1,post:target,author:actor,text:extra.text.trim(),parent:extra.parent,at:time});return;}

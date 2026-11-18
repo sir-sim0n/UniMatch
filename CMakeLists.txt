@@ -93,6 +93,10 @@ add_custom_target(website ALL
         "${CMAKE_SOURCE_DIR}/web/feed-ui.mjs" "${UNIMATCH_SITE_DIR}/assets/feed-ui.mjs"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
         "${CMAKE_SOURCE_DIR}/web/ui-icons.mjs" "${UNIMATCH_SITE_DIR}/assets/ui-icons.mjs"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/web/student-core.mjs" "${UNIMATCH_SITE_DIR}/assets/student-core.mjs"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${CMAKE_SOURCE_DIR}/web/student-ui.mjs" "${UNIMATCH_SITE_DIR}/assets/student-ui.mjs"
     COMMAND "${CMAKE_COMMAND}" -E touch "${UNIMATCH_SITE_DIR}/.nojekyll"
     COMMAND "${CMAKE_COMMAND}" -E make_directory "${UNIMATCH_SITE_DIR}/data"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
@@ -130,6 +134,7 @@ add_custom_target(website ALL
 include(CTest)
 if(BUILD_TESTING)
     find_program(UNIMATCH_NODE node REQUIRED)
+    add_test(NAME student_communities COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/student-communities.mjs")
     add_test(NAME discussion_experience COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/discussion-experience.mjs")
     add_test(NAME campus_experience COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/campus-experience.mjs")
     add_test(NAME performance COMMAND "${UNIMATCH_NODE}" "${CMAKE_SOURCE_DIR}/tests/performance.mjs")

@@ -1,6 +1,7 @@
-import {inboxRows} from './discussion-core.mjs?v=1.15.1';
-import {chatRow} from './discussion-ui.mjs?v=1.15.1';
-import { ACTORS } from './demo-social.mjs?v=1.15.1';
+import {DEMO_NAMES} from './student-core.mjs?v=1.16.0';
+import {inboxRows} from './discussion-core.mjs?v=1.16.0';
+import {chatRow} from './discussion-ui.mjs?v=1.16.0';
+import { ACTORS } from './demo-social.mjs?v=1.16.0';
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(text,action)=>{const b=el('button',text,'secondary');b.type='button';b.onclick=action;return b;};
 export function createMessagesUI({accounts,repository,announce}){
@@ -17,7 +18,7 @@ export function createMessagesUI({accounts,repository,announce}){
     if(!repository.ready){error.textContent=repository.error;return;}
     let profiles;try{profiles=await accounts.profiles();}catch{error.textContent='Demo profiles could not be loaded.';return;}
     if(stamp!==generation)return;
-    const name=id=>profiles.find(p=>p.actorId===id)?.displayName??accounts.entries.get(id)?.account.label??id;
+    const name=id=>repository.data.studentProfiles.find(p=>p.actor===id)?.name??DEMO_NAMES[id]??id;
     const peers=ACTORS.filter(id=>id!==actor&&!repository.blocked(actor,id)&&(repository.relation(actor,id)==='accepted'||repository.conversation(actor,id).length));
     if(!peers.includes(selected))selected=null;
     const layout=el('div',undefined,'chat-layout'),inbox=el('section',undefined,'panel chat-inbox'),list=el('ul',undefined,'chat-list');inbox.append(el('h2','Messages'),list);layout.append(inbox);host.append(layout);if(selected)layout.classList.add('has-conversation');

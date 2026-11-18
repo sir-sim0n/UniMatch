@@ -1,5 +1,5 @@
-import {applyEvent} from './campus-core.mjs?v=1.15.0';
-import {hashtags,FLAIRS} from './engagement-core.mjs?v=1.15.0';
+import {applyEvent} from './campus-core.mjs?v=1.16.0';
+import {hashtags,FLAIRS} from './engagement-core.mjs?v=1.16.0';
 const validText=(x,max)=>typeof x==='string'&&!!x.trim()&&[...x].length<=max;
 export function validateDiscovery(d){
  if(!Array.isArray(d.profileFlairs))throw Error('Invalid profile flair data.');const actors=new Set();
@@ -19,8 +19,8 @@ export function changeContent(d,actor,op,id,extra,time){
 }
 export function profileItems(data,actor,tab){
  if(tab==='Saved')return data.posts.filter(p=>!p.deleted&&data.postSaves.some(s=>s.actor===actor&&s.post===p.id));
- if(tab==='Replies')return data.replies.filter(r=>r.author===actor&&!r.deleted).sort((a,b)=>b.at-a.at||b.id-a.id);
- return data.posts.filter(p=>!p.deleted&&(tab==='Upvoted'?data.votes.some(v=>v.actor===actor&&v.post===p.id):p.author===actor&&(tab==='Reposts'?p.kind==='repost':p.kind!=='repost')));
+ if(tab==='Replies')return data.replies.filter(r=>r.author===actor&&!r.deleted&&!data.posts.find(p=>p.id===r.post)?.anonymous).sort((a,b)=>b.at-a.at||b.id-a.id);
+ return data.posts.filter(p=>!p.deleted&&!p.anonymous&&(tab==='Upvoted'?data.votes.some(v=>v.actor===actor&&v.post===p.id):p.author===actor&&(tab==='Reposts'?p.kind==='repost':p.kind!=='repost')));
 }
 export function searchAll(data,profiles,query){
  const q=query.trim().toLocaleLowerCase().slice(0,120),match=s=>s.toLocaleLowerCase().includes(q),out={posts:[],people:[],circles:[],hashtags:[]};if(!q)return out;
