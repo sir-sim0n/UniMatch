@@ -18,7 +18,7 @@ Reloading retains attachments on published posts. Text drafts retain their exist
 
 ## Freeze the live release
 
-The Pages workflow separately checks out the approved source commit 162ec1906431eb90e93483673120784358ae2c75, builds its pinned Supabase bundle and packages its complete web assets under live-assets. cloud.html uses those frozen assets. No production database or Supabase configuration change is included. Shared demo module/CSS edits therefore do not change the cloud interface. The package script checks every copied asset byte-for-byte and writes live-release.json with the source commit and SHA-256 digests.
+The Pages workflow separately checks out the approved source commit 162ec1906431eb90e93483673120784358ae2c75 and builds its pinned Supabase bundle. New demo assets go under demo-assets. The original cloud.html and original assets paths retain the approved live source byte-for-byte, including for cached HTML and already-open cloud tabs. No production database or Supabase configuration change is included. Shared demo module/CSS edits therefore do not change the cloud interface. The package script checks every frozen asset and cloud.html byte-for-byte and writes live-release.json with the source commit and SHA-256 digests.
 
 Promotion requires an explicit owner decision to change the approved live source. Until then, the workflow pin keeps every new demo release separate from the cloud application, including browser-cached modules.
 
