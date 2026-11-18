@@ -1,7 +1,7 @@
-import {DEMO_NAMES} from './student-core.mjs?v=1.17.0-demo';
-import {circleURL} from './discussion-core.mjs?v=1.17.0-demo';
-import {newTab} from './discussion-ui.mjs?v=1.17.0-demo';
-import {circleCover} from './campus-ui.mjs?v=1.17.0-demo';
+import {DEMO_NAMES} from './student-core.mjs?v=1.18.0-demo';
+import {circleURL} from './discussion-core.mjs?v=1.18.0-demo';
+import {newTab} from './discussion-ui.mjs?v=1.18.0-demo';
+import {circleCover} from './campus-ui.mjs?v=1.18.0-demo';
 const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 const button=(label,fn)=>{const b=el('button',label,'secondary');b.type='button';b.onclick=fn;return b;};
 export function createCirclesUI({accounts,repository,getActor=()=>accounts.active?.account.id??null,requireAccount=()=>true,announce,openPost=()=>{},onCompose=()=>{}}){

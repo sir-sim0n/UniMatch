@@ -1,6 +1,6 @@
-import {validateMedia} from './demo-media.mjs?v=1.17.0-demo';
-import {STUDENT_CATEGORIES} from './student-core.mjs?v=1.17.0-demo';
-import {applyEvent,validateEvent} from './campus-core.mjs?v=1.17.0-demo';
+import {validateMedia} from './demo-media.mjs?v=1.18.0-demo';
+import {STUDENT_CATEGORIES} from './student-core.mjs?v=1.18.0-demo';
+import {applyEvent,validateEvent} from './campus-core.mjs?v=1.18.0-demo';
 export const TOPICS=['Study life','Campus life','Questions','Creativity','Sport','Technology'];
 export const seedFeed=()=>({feedPosts:[
  {id:1,author:'naledi',title:'Does anyone else learn more when they explain it to a friend?',text:'Looking for a relaxed study group. We could each bring one tricky concept and work through it together. What helps you when a topic just will not click?',topic:'Study life',at:1792785600000},

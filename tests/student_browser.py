@@ -35,6 +35,7 @@ try:
         page.get_by_label('Post title', exact=True).fill('A fictional anonymous confession')
         page.get_by_label('Post text', exact=True).fill('A fictional campus experience for browser testing.')
         page.get_by_label('Post anonymously', exact=True).check()
+        page.get_by_text('Preview your post', exact=True).click()
         expect(page.get_by_role('region', name='Post preview')).to_contain_text('Anonymous OP')
         page.reload()
         page.get_by_role('button', name='Create', exact=True).click()
@@ -119,7 +120,33 @@ try:
         expect(nav.get_by_role('button',name='Create',exact=True)).to_be_visible()
         labels = nav.get_by_role('button').all_text_contents()
         assert labels.index('Circles') == labels.index('Create') + 1, labels
+        filters = media_page.locator('.feed-filter-box')
+        expect(filters).not_to_have_attribute('open', '')
+        expect(media_page.get_by_label('Conversation category',exact=True)).to_be_hidden()
+        filters.locator('summary').first.click()
+        media_page.get_by_label('Conversation category',exact=True).select_option('Confessions')
+        expect(filters.locator('summary').first).to_contain_text('Active')
+        expect(media_page.locator('.post-tile')).to_have_count(0)
+        expect(media_page.get_by_text('No posts match this view. Try another campus or topic.',exact=True)).to_be_visible()
+        media_page.get_by_label('Conversation category',exact=True).select_option('')
+        filters.locator('summary').first.click()
+        expect(nav.locator('.nav-group')).to_have_count(4)
+        media_page.set_viewport_size({'width':390,'height':844})
+        assert media_page.evaluate('document.documentElement.scrollWidth <= document.documentElement.clientWidth')
+        media_page.screenshot(path=str(artifacts/'demo-refined-mobile-feed.png'),full_page=True)
+        media_page.set_viewport_size({'width':1280,'height':900})
         media_page.get_by_role('button',name='Create',exact=True).click()
+        form = media_page.locator('.demo-post-form')
+        positions = form.evaluate('''node => {
+          const selectors=['[aria-label="Post title"]','.media-picker','[aria-label="Post text"]','[aria-label="Conversation category"]','.identity-choice','.composer-publish'];
+          return selectors.map(s => node.querySelector(s).getBoundingClientRect().top);
+        }''')
+        assert positions == sorted(positions), positions
+        expect(form.locator('.composer-extras')).not_to_have_attribute('open','')
+        media_page.get_by_text('More options',exact=True).click()
+        expect(media_page.get_by_label('Post topic',exact=True)).to_be_visible()
+        media_page.get_by_text('More options',exact=True).click()
+        checks.append('Refined filters, grouped navigation, mobile feed and logical composer order')
         selector = media_page.get_by_label('Conversation category',exact=True)
         selector.select_option('N/A')
         assert selector.evaluate('(node) => node.getBoundingClientRect().height') <= 50

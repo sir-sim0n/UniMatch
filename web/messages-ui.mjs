@@ -1,7 +1,7 @@
-import {DEMO_NAMES} from './student-core.mjs?v=1.17.0-demo';
-import {inboxRows} from './discussion-core.mjs?v=1.17.0-demo';
-import {chatRow} from './discussion-ui.mjs?v=1.17.0-demo';
-import { ACTORS } from './demo-social.mjs?v=1.17.0-demo';
+import {DEMO_NAMES} from './student-core.mjs?v=1.18.0-demo';
+import {inboxRows} from './discussion-core.mjs?v=1.18.0-demo';
+import {chatRow} from './discussion-ui.mjs?v=1.18.0-demo';
+import { ACTORS } from './demo-social.mjs?v=1.18.0-demo';
 const el=(tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;};
 const button=(text,action)=>{const b=el('button',text,'secondary');b.type='button';b.onclick=action;return b;};
 export function createMessagesUI({accounts,repository,announce}){
