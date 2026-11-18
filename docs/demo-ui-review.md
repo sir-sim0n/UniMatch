@@ -1,5 +1,7 @@
 # Demo UI review — 18 November 2026
 
+Status: published and verified after the owner's explicit demo-publication approval; live HTML and dependencies unchanged.
+
 The owner requested demo-only UI iteration. Publish UI changes to the fictional demo for review; update the live cloud interface only after explicit promotion approval. This overrides the earlier shared-publication default in AGENTS.md.
 
 ## Home and discussion
@@ -24,7 +26,7 @@ Promotion requires an explicit owner decision to change the approved live source
 
 ## Validation and publication
 
-Local checks passed for attachment persistence, N/A, anonymous attachment storage, file-type/size/data validation, large-file validation, post/account deletion, student privacy and existing discussion/feed behaviour. JavaScript syntax checks passed. CI also checks image/video publication and reload, comment totals, ordering, compact controls, mobile overflow and navigation in Chromium, alongside the existing release/database checks. Publication and browser verification evidence will be appended after rollout.
+Local checks passed for attachment persistence, N/A, anonymous attachment storage, file-type/size/data validation, large-file validation, post/account deletion, student privacy and existing discussion/feed behaviour. JavaScript syntax checks passed. CI also checks image/video publication and reload, comment totals, ordering, compact controls, mobile overflow and navigation in Chromium, alongside the existing release/database checks. Final publication and browser verification evidence is recorded below.
 
 Manual local browser preview confirmed Home excerpts/comment links, Circles immediately below Create, a 44-pixel category selector and compact inline anonymous control. The local Windows preview needed the standard JavaScript MIME mapping for .mjs files; GitHub Pages and the CI harness supply it. Media persistence browser checks reopen Home explicitly after navigating through a discussion, so an existing discussion URL does not select the earlier post on reload.
 
@@ -38,4 +40,14 @@ Superseded pull-request checks are cancelled when a newer review commit arrives;
 
 Code commit dfa65a4f35d90517d0683239ac0b6208af15b68c passed release run 44304216643: all 25 CTest groups, the media persistence/validation/deletion suite, publication validation, 38 byte-verified approved live assets, and all Chromium journeys including image/video publication and reload, comment totals, preview order, compact controls, mobile overflow and Circles placement. Isolated database run 44304216683 also passed. Screenshots/results: https://github.com/sir-sim0n/UniMatch/actions/runs/44304216643/artifacts/14428840109.
 
-PR #3 is ready for publication approval. Automatic approval review rejected a direct main ref update because it triggers deployment of both entry points. Neither published site was changed by this review work. On approved publication, the demo will use demo-assets and cloud.html plus its existing asset paths will retain the approved release. This checkpoint changes documentation only.
+PR #3 originally awaited publication approval. Automatic approval review rejected a direct main ref update because it triggers deployment of both entry points. Before the approved rollout, neither published site was changed by the review work. On approved publication, the demo will use demo-assets and cloud.html plus its existing asset paths will retain the approved release. This checkpoint changes documentation only.
+
+## Approved publication — 18 November 2026
+
+The owner approved merging PR #3 and publishing the demo while keeping the live site unchanged. PR #3 merged as 43efd65cebc0aae394312a0568a2a3f03547863f. Pages run 44366615646 passed all release/media/browser checks and deployed successfully; isolated database run 44366615685 passed.
+
+After deployment, public HTTP checks confirmed that index.html loads the new demo-assets application. All 38 published entries matched live-release.json, pinned to approved source 162ec1906431eb90e93483673120784358ae2c75. The 19 live HTML/dependency files captured before deployment retained identical SHA-256 fingerprints afterward, with no mismatches or request failures.
+
+Published-browser verification confirmed Home body excerpts and comment links, Circles immediately below Create, the optional image/video picker, N/A category and compact anonymous checkbox. Measured category height was 44 pixels and checkbox height 18 pixels. The cloud account screen retained its prior navigation and closed-registration behaviour. No real post was created during publication verification. Attachments remain local to the fictional demo.
+
+This documentation-only checkpoint does not alter deployed application files.

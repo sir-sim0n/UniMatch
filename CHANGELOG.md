@@ -4,7 +4,7 @@
 - Added the N/A category, compact category/anonymous controls and moved Circles immediately below Create.
 - Attachments persist locally with published posts, are removed with deleted content and must be reselected after draft reload. Images: 5 MB; videos: 20 MB.
 - Froze the live cloud UI and its complete dependency assets at approved commit 162ec1906431eb90e93483673120784358ae2c75 during demo publication. No live database changes.
-- Validation passed: 25 release test groups, media regression checks, Chromium journeys and 38 byte-verified live assets (run 44304216643); isolated database checks passed (44304216683). PR #3 awaits demo publication approval. Neither published site changed. See [demo review behaviour and rollout](docs/demo-ui-review.md).
+- Validation passed: 25 release test groups, media regression checks, Chromium journeys and 38 byte-verified live assets (run 44304216643); isolated database checks passed (44304216683). PR #3 was approved and merged; demo publication and verification passed in run 44366615646. All 19 pre-deployment live fingerprints and 38 published manifest checks matched; live files remain unchanged. See [demo review behaviour and rollout](docs/demo-ui-review.md).
 
 # 1.16.0 — 2026-11-18
 
