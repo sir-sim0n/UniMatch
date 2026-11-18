@@ -29,3 +29,5 @@ Local checks passed for attachment persistence, N/A, anonymous attachment storag
 Manual local browser preview confirmed Home excerpts/comment links, Circles immediately below Create, a 44-pixel category selector and compact inline anonymous control. The local Windows preview needed the standard JavaScript MIME mapping for .mjs files; GitHub Pages and the CI harness supply it. Media persistence browser checks reopen Home explicitly after navigating through a discussion, so an existing discussion URL does not select the earlier post on reload.
 
 The first extended Chromium run reached all existing demo/cloud journeys, then found that its new navigation assertion read the page before initialization completed. The assertion now waits for Create to become visible before checking menu order.
+
+Superseded pull-request checks are cancelled when a newer review commit arrives; main publication runs retain their previous non-cancelling behaviour.
