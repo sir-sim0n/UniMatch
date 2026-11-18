@@ -33,3 +33,9 @@ The first extended Chromium run reached all existing demo/cloud journeys, then f
 The comment-link browser check opens a separate discussion page, matching the product's new-tab link behaviour; navigating only the hash of an already initialized Home page does not initialize a new discussion.
 
 Superseded pull-request checks are cancelled when a newer review commit arrives; main publication runs retain their previous non-cancelling behaviour.
+
+## Passing review evidence
+
+Code commit dfa65a4f35d90517d0683239ac0b6208af15b68c passed release run 44304216643: all 25 CTest groups, the media persistence/validation/deletion suite, publication validation, 38 byte-verified approved live assets, and all Chromium journeys including image/video publication and reload, comment totals, preview order, compact controls, mobile overflow and Circles placement. Isolated database run 44304216683 also passed. Screenshots/results: https://github.com/sir-sim0n/UniMatch/actions/runs/44304216643/artifacts/14428840109.
+
+PR #3 is ready for publication approval. Automatic approval review rejected a direct main ref update because it triggers deployment of both entry points. Neither published site was changed by this review work. On approved publication, the demo will use demo-assets and cloud.html plus its existing asset paths will retain the approved release. This checkpoint changes documentation only.
