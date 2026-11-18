@@ -30,4 +30,6 @@ Manual local browser preview confirmed Home excerpts/comment links, Circles imme
 
 The first extended Chromium run reached all existing demo/cloud journeys, then found that its new navigation assertion read the page before initialization completed. The assertion now waits for Create to become visible before checking menu order.
 
+The comment-link browser check opens a separate discussion page, matching the product's new-tab link behaviour; navigating only the hash of an already initialized Home page does not initialize a new discussion.
+
 Superseded pull-request checks are cancelled when a newer review commit arrives; main publication runs retain their previous non-cancelling behaviour.
