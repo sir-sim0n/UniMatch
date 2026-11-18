@@ -34,6 +34,7 @@ try:
         page.get_by_role('button', name='Create', exact=True).click()
         page.get_by_label('Post title', exact=True).fill('A fictional anonymous confession')
         page.get_by_label('Post text', exact=True).fill('A fictional campus experience for browser testing.')
+        expect(page.get_by_text('Draft saved for this tab and account.',exact=True)).to_be_visible()
         page.get_by_label('Post anonymously', exact=True).check()
         page.get_by_text('Preview your post', exact=True).click()
         expect(page.get_by_role('region', name='Post preview')).to_contain_text('Anonymous OP')

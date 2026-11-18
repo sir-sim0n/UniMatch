@@ -91,7 +91,7 @@ export function organizeDemoComposer(form,{title,body,select,flair,audience,subm
   const notes=element('details',undefined,'composer-notes');notes.append(element('summary','Audience and privacy'));
   for(const node of [...form.children])if(node.tagName==='P'&&!node.hasAttribute('role'))notes.append(node);
   const discard=[...form.querySelectorAll('button')].find(b=>b.textContent==='Discard draft');
-  const status=form.querySelector('[role="status"]');
+  const status=[...form.children].find(node=>node.getAttribute('role')==='status');
   actions.replaceChildren(discard,submit);actions.classList.add('composer-publish');
   form.replaceChildren(titleField,...(media?[media]:[]),bodyField,category,field('Community',audience),identity,extras,previewDetails,notes,status,actions);
 }
