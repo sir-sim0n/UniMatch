@@ -1,5 +1,5 @@
-import {mediaNode} from './demo-media.mjs?v=1.17.0-demo';
-import {icon} from './ui-icons.mjs?v=1.17.0-demo';
+import {mediaNode} from './demo-media.mjs?v=1.18.0-demo';
+import {icon} from './ui-icons.mjs?v=1.18.0-demo';
 export const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
 export const action=(label,fn,cls='text-button')=>{const b=node('button',label,cls);b.type='button';b.onclick=async()=>{try{await fn();}catch(e){const status=(document.querySelector('#status')??document.querySelector('#announcement')??document.querySelector('[role="status"]'));if(status)status.textContent=e.message;}};return b;};
 export function newTab(text,href,cls='post-title'){const a=node('a',text,cls);a.href=href;a.target='_blank';a.rel='noopener noreferrer';a.setAttribute('aria-label',text+' (opens in a new tab)');return a;}

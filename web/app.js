@@ -1,5 +1,5 @@
-import {circleCover} from './campus-ui.mjs?v=1.17.0-demo';
-import {icon} from './ui-icons.mjs?v=1.17.0-demo';
+import {circleCover} from './campus-ui.mjs?v=1.18.0-demo';
+import {icon} from './ui-icons.mjs?v=1.18.0-demo';
 // Profile/catalogue decisions use the C++ API; demo social rules use the local repository adapter.
 const main = document.querySelector('#main');
 const nav = document.querySelector('#navigation');
@@ -88,17 +88,19 @@ async function navigate(next, focus = true) {
 }
 let pendingTarget=null;
 const featureLoads=new Map();
-async function ensureFeature(next){const key=next==='connections'?'social':next;if(featureLoads.has(key))return featureLoads.get(key);const promise=(async()=>{if(key==='messages'){const {createMessagesUI}=await import('./messages-ui.mjs?v=1.17.0-demo');messagesUI=createMessagesUI({accounts,repository:socialRepository,announce:say});}else if(key==='circles'){const {createCirclesUI}=await import('./circles-ui.mjs?v=1.17.0-demo');circlesUI=createCirclesUI({accounts,repository:socialRepository,getActor:()=>guest?null:accounts.active?.account.id??null,requireAccount,announce:say,openPost:id=>{feedUI.deepLink(id);navigate('home');},onCompose:id=>{feedUI.composeInCircle(id);navigate('create');}});}else{const {createSocialUI}=await import('./social-ui.mjs?v=1.17.0-demo');socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say,repository:socialRepository,openDiscover:()=>navigate('discover'),openProfile:target=>{feedUI.profile(target);navigate('public-profile');},openMessages:target=>{pendingTarget={destination:'messages',id:target};navigate('messages');}});}})().catch(e=>{featureLoads.delete(key);throw e;});featureLoads.set(key,promise);return promise;}
+async function ensureFeature(next){const key=next==='connections'?'social':next;if(featureLoads.has(key))return featureLoads.get(key);const promise=(async()=>{if(key==='messages'){const {createMessagesUI}=await import('./messages-ui.mjs?v=1.18.0-demo');messagesUI=createMessagesUI({accounts,repository:socialRepository,announce:say});}else if(key==='circles'){const {createCirclesUI}=await import('./circles-ui.mjs?v=1.18.0-demo');circlesUI=createCirclesUI({accounts,repository:socialRepository,getActor:()=>guest?null:accounts.active?.account.id??null,requireAccount,announce:say,openPost:id=>{feedUI.deepLink(id);navigate('home');},onCompose:id=>{feedUI.composeInCircle(id);navigate('create');}});}else{const {createSocialUI}=await import('./social-ui.mjs?v=1.18.0-demo');socialUI=createSocialUI({accounts,getCatalogues:()=>catalogues,announce:say,repository:socialRepository,openDiscover:()=>navigate('discover'),openProfile:target=>{feedUI.profile(target);navigate('public-profile');},openMessages:target=>{pendingTarget={destination:'messages',id:target};navigate('messages');}});}})().catch(e=>{featureLoads.delete(key);throw e;});featureLoads.set(key,promise);return promise;}
 function navIcon(destination){return icon(destination);}
 function renderNavigation() {
-  nav.replaceChildren(el('p','YOUR ORBIT','eyebrow'));
+  nav.replaceChildren();
+  let group;
   const signed=!guest&&!!state?.visitor;
   document.querySelector('#active-account').textContent=signed?`Using ${accounts.active.account.label} · Demo account`:'Browsing as a guest · Everyone belongs here';
   document.querySelector('#storage-status').hidden=!signed;
   for(const [destination,name,icon] of [['home','Home','⌂'],['create','Create','+'],['circles','Circles','○'],['popular','Popular','↗'],['search','Search','⌕'],['discover','Discover','◎'],['messages','Messages','◷'],['notifications','Notifications','♧'],['profile','My profile','◯'],['moderation','Moderation',''],['accounts','Demo accounts','⇄']]){
-    const item=button('',()=>{if(destination==='home')feedUI.home();navigate(destination);},'text-button');const symbol=navIcon(destination);item.append(symbol,document.createTextNode(name));if(destination==='notifications'&&signed&&socialRepository.ready){const count=socialRepository.notifications(accounts.active.account.id).filter(n=>!n.read).length;if(count)item.append(el('span',String(count),'notification-count'));}if((['connections','discover','public-profile'].includes(screen)?'discover':['saved','edit-profile'].includes(screen)?'profile':screen)===destination)item.setAttribute('aria-current','page');nav.append(item);
+    if(['home','messages','profile','moderation'].includes(destination)){group=el('section',undefined,'nav-group');const label={home:'Explore',messages:'Conversations',profile:'Account',moderation:'Demo tools'}[destination];group.setAttribute('aria-label',label);group.append(el('p',label,'nav-group-label'));nav.append(group);}
+    const item=button('',()=>{if(destination==='home')feedUI.home();navigate(destination);},'text-button');const symbol=navIcon(destination);item.append(symbol,document.createTextNode(name));if(destination==='notifications'&&signed&&socialRepository.ready){const count=socialRepository.notifications(accounts.active.account.id).filter(n=>!n.read).length;if(count)item.append(el('span',String(count),'notification-count'));}if((['connections','discover','public-profile'].includes(screen)?'discover':['saved','edit-profile'].includes(screen)?'profile':screen)===destination)item.setAttribute('aria-current','page');group.append(item);
   }
-  nav.append(button('Reset demo',()=>{if(requireAccount())resetDialog.showModal();},'text-button'));
+  group.append(button('Reset demo',()=>{if(requireAccount())resetDialog.showModal();},'text-button'));
   if(signed)nav.append(button('Browse as guest',()=>{guest=true;feedUI.home();navigate('home');},'secondary'));
   else nav.append(button('Join the conversation',()=>navigate('accounts')));
 }
@@ -281,10 +283,10 @@ async function start() {
   loading.append(el('p','ONE MOMENT','eyebrow'),el('h1','Finding our common ground…'),el('p','Loading the fictional profiles.'));
   main.append(loading);
   try {
-    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.17.0-demo'), import('./demo-accounts.mjs?v=1.17.0-demo')]);
+    const [{ loadClient }, { DemoAccounts, ACCOUNTS }] = await Promise.all([import('./api-client.mjs?v=1.18.0-demo'), import('./demo-accounts.mjs?v=1.18.0-demo')]);
     accountsList=ACCOUNTS; accounts=new DemoAccounts({loadClient,report:storageStatus});
-    const {openSocial}=await import('./indexed-social.mjs?v=1.17.0-demo');
-    const { createFeedUI } = await import('./feed-ui.mjs?v=1.17.0-demo');
+    const {openSocial}=await import('./indexed-social.mjs?v=1.18.0-demo');
+    const { createFeedUI } = await import('./feed-ui.mjs?v=1.18.0-demo');
     socialRepository=await openSocial();socialRepository.onExternalChange=()=>say('Social data changed in another tab. Use Refresh or Reload saved data to view it.');
     feedUI=createFeedUI({accounts,repository:socialRepository,getActor:()=>!guest&&state?.visitor?accounts.active.account.id:null,getCatalogues:()=>catalogues,requireAccount,announce:say,onActivity:(destination,circle)=>{renderNavigation();if(circle&&!guest){pendingTarget={destination,id:circle};}if(destination)navigate(destination);}});
     guestClient=await loadClient();client=guestClient;catalogues=client.call('getCatalogues');readState();

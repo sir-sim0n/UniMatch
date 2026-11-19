@@ -1,5 +1,5 @@
-import {mediaComposer} from './demo-media.mjs?v=1.17.0-demo';
-import {STUDENT_CATEGORIES, DraftStore, PILOT} from './student-core.mjs?v=1.17.0-demo';
+import {mediaComposer} from './demo-media.mjs?v=1.18.0-demo';
+import {STUDENT_CATEGORIES, DraftStore, PILOT} from './student-core.mjs?v=1.18.0-demo';
 
 function element(tag, text, className) {
   const node = document.createElement(tag);
@@ -72,6 +72,28 @@ export function postingOptions(form, {account, draftAccount = account, title, bo
   }));
   update();
   return {read:() => ({anonymous:anonymous.checked, category:category.value, ...(!cloud ? {media:attachment.read()} : {})}), clear:() => drafts.clear()};
+}
+
+export function organizeDemoComposer(form,{title,body,select,flair,audience,submit,actions}) {
+  const field=(text,input)=>{const label=element('label',text,'field');label.append(input);return label;};
+  const titleField=field('Title',title),bodyField=field('Your post',body);
+  form.prepend(titleField);
+  const media=form.querySelector('.media-picker');
+  // The final ordering below retains the existing input nodes.
+  const identity=form.querySelector('.identity-choice');
+  const category=form.querySelector('[aria-label="Conversation category"]').closest('label');
+  const preview=form.querySelector('[aria-label="Post preview"]');
+  const previewDetails=element('details',undefined,'composer-preview');
+  previewDetails.append(element('summary','Preview your post'),preview);
+  const extras=element('details',undefined,'composer-extras');
+  extras.append(element('summary','More options'),field('Topic',select),field('Post purpose',flair));
+  for(const node of form.querySelectorAll('.event-fields,.community-options'))extras.append(node);
+  const notes=element('details',undefined,'composer-notes');notes.append(element('summary','Audience and privacy'));
+  for(const node of [...form.children])if(node.tagName==='P'&&!node.hasAttribute('role'))notes.append(node);
+  const discard=[...form.querySelectorAll('button')].find(b=>b.textContent==='Discard draft');
+  const status=[...form.children].find(node=>node.getAttribute('role')==='status');
+  actions.replaceChildren(discard,submit);actions.classList.add('composer-publish');
+  form.replaceChildren(titleField,...(media?[media]:[]),bodyField,category,field('Community',audience),identity,extras,previewDetails,notes,status,actions);
 }
 
 export function privacyInformation(host) {

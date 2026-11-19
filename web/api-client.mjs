@@ -20,9 +20,9 @@ export class Client {
 }
 let cataloguePromise;
 export async function loadClient() {
-  const moduleUrl = new URL('./unimatch.mjs?v=1.17.0-demo', import.meta.url);
+  const moduleUrl = new URL('./unimatch.mjs?v=1.18.0-demo', import.meta.url);
   const { default: createUniMatch } = await import(moduleUrl.href);
-  const engine = await createUniMatch({ locateFile: file => new URL(`${file}?v=1.17.0-demo`, moduleUrl).href });
+  const engine = await createUniMatch({ locateFile: file => new URL(`${file}?v=1.18.0-demo`, moduleUrl).href });
   const client = new Client(engine);
   try {
     const fetchText = async name => {

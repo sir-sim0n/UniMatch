@@ -1,3 +1,11 @@
+# Demo interface refinement — 2026-11-18
+
+- Consolidated Home campus, topic, category and reading controls into Filters; retained the sort row and active-filter indicator.
+- Grouped navigation, tightened post cards and typography, strengthened dark-mode contrast and prioritized circles in the quieter context rail.
+- Reordered Create as title, optional attachment, body, category, community and identity, with collapsed optional controls/preview/privacy and a bottom Post action.
+- Preserved existing posting, drafts, media limits and account behavior. Demo asset revision: 1.18.0-demo. Live remains pinned to 162ec1906431eb90e93483673120784358ae2c75; no database changes.
+- Validation passed: 25 release test groups, 10 demo/cloud browser journeys, media regression checks, isolated database checks and 38 byte-verified live assets. PR #4 awaits release approval; neither published site has changed. See [interface refinement](docs/interface-refinement.md).
+
 # Demo UI review — 2026-11-18
 
 - Demo only: added comment-count links next to likes, short body excerpts and optional image/video attachments below post titles.

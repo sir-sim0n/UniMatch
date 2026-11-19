@@ -1,4 +1,4 @@
-import {DemoSocial,SOCIAL_KEY,emptySocial,validateSocial} from './demo-social.mjs?v=1.17.0-demo';
+import {DemoSocial,SOCIAL_KEY,emptySocial,validateSocial} from './demo-social.mjs?v=1.18.0-demo';
 const request=req=>new Promise((resolve,reject)=>{req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});
 const completed=tx=>new Promise((resolve,reject)=>{tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error??Error('Storage transaction aborted.'));tx.onerror=()=>{};});
 export async function openSocial({indexedDB=globalThis.indexedDB,legacy=()=>globalThis.localStorage,name='orbit-social-v2'}={}){

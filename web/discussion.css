@@ -6,3 +6,98 @@
 .comment-form>.field{width:100%;min-width:0}.comment-form .field textarea{width:100%}.comment-form{width:100%}.comment-tile>.reply-content>.comment-footer{margin-top:10px}.circle-stream .panel{margin-bottom:14px}
 
 :root[data-theme="dark"] button.chat-row{color:var(--ink)}.chat-row-head strong{color:var(--ink)}
+
+/* Demo interface refinement. Live keeps its approved, separately packaged assets. */
+.demo-interface {--muted:#526966;--line:#d4e2dd;background:#f3f7f5}
+:root[data-theme="dark"] .demo-interface {--ink:#edf5f2;--muted:#b4c8c2;--line:#34504a;--white:#182925;--paper:#11201d;background:#11201d}
+.demo-interface h1,.demo-interface h2,.demo-interface h3 {font-family:inherit}
+.demo-interface .site-header {padding-block:14px}
+.demo-interface .session-note {font-size:12px;background:transparent;padding-block:7px}
+.demo-interface .sidebar {background:transparent;border:0;border-radius:0;padding:0 8px 0 0}
+.demo-interface .nav-group {padding:0 0 14px;margin:0 0 10px;border-bottom:1px solid var(--line)}
+.demo-interface .nav-group-label {font-size:12px;font-weight:650;color:var(--muted);margin:0 12px 6px;letter-spacing:.025em}
+.demo-interface .nav-group button {min-height:44px;font-weight:500;border-radius:8px;margin:2px 0}
+.demo-interface .nav-group button[aria-current] {font-weight:700;background:var(--tone-ddede7,#ddede7);color:var(--green)}
+.demo-interface .nav-group:last-of-type button {font-size:13px;min-height:38px}
+.demo-interface .account-banner {font-size:12px;padding-bottom:18px}
+.demo-interface .storage-status[data-warning="false"] {background:transparent;border:0;padding:0 2px;margin:0 0 12px;font-size:12px;color:var(--muted)}
+.demo-interface .storage-status[data-warning="false"] p {margin:0}
+.demo-interface .feed-title {font-size:clamp(23px,2.3vw,30px);font-weight:720;line-height:1.25;letter-spacing:-.75px;margin:0 0 22px}
+.demo-interface .feed-tabs {gap:4px;margin:0;border-bottom:1px solid var(--line);padding-bottom:10px;flex-wrap:nowrap}
+.demo-interface .feed-tabs button {background:transparent;color:var(--muted);font-size:14px;font-weight:550;padding:8px 12px;border-radius:7px;white-space:nowrap}
+.demo-interface .feed-tabs button[aria-pressed="true"] {background:var(--tone-ddede7,#ddede7);color:var(--ink);font-weight:700}
+.demo-interface .feed-tabs .text-button {font-size:12px}
+.demo-interface .feed-toolbar {margin:10px 0 8px}
+.demo-interface .feed-filter-box {border:0;background:transparent;margin:0;padding:0}
+.demo-interface .feed-filter-box>summary {display:flex;align-items:center;gap:7px;list-style:none;padding:6px 0;color:var(--muted);font-size:14px;font-weight:550;cursor:pointer;width:fit-content;min-height:36px}
+.demo-interface .feed-filter-box>summary::-webkit-details-marker {display:none}
+.demo-interface .feed-filter-box>summary::after {content:'+';margin-left:4px}
+.demo-interface .feed-filter-box[open]>summary::after {content:'−'}
+.demo-interface .feed-filter-box[open] {padding:0 14px 12px;border:1px solid var(--line);border-radius:10px;background:var(--white)}
+.demo-interface .feed-filters {display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.demo-interface .feed-filters select {width:100%;min-height:44px;font-size:14px;flex:none}
+.demo-interface .campus-scopes {margin:8px 0 12px}
+.demo-interface .feed-column>.hint {font-size:12px;color:var(--muted);margin-bottom:14px}
+.demo-interface .feed-post.panel {padding:18px 20px;border-radius:12px;margin:0 0 12px;background:var(--white);border:1px solid var(--line)}
+.demo-interface .post-tile .tile-head {margin-bottom:10px;min-height:36px}
+.demo-interface .person-peek>summary {font-size:14px;color:var(--ink)}
+.demo-interface .post-tile h2 {font-family:inherit;font-size:20px;line-height:1.4;letter-spacing:-.35px;margin:0 0 10px;font-weight:700}
+.demo-interface .post-tile .post-title {font-size:inherit;font-weight:inherit;line-height:inherit;letter-spacing:inherit;margin:0;color:var(--ink)}
+.demo-interface .post-excerpt {font-size:16px;line-height:1.6;color:var(--muted);margin:0 0 14px}
+.demo-interface .tile-footer {border-top:0;padding-top:0;font-size:12px;gap:4px}
+.demo-interface .tile-footer button,.demo-interface .tile-footer .comment-count {color:var(--muted)}
+.demo-interface .post-media {border-radius:8px;margin-bottom:12px}
+.demo-interface .community-rail {padding-top:2px}
+.demo-interface .campus-context .panel {border:0;border-radius:0;background:transparent;padding:0 0 20px;margin:0 0 20px;border-bottom:1px solid var(--line)}
+.demo-interface .campus-context h2 {font-family:inherit;font-size:15px;font-weight:700;margin-bottom:10px;color:var(--ink)}
+.demo-interface .campus-context .hint {font-size:12px}
+.demo-interface .campus-context .text-button {font-size:14px;line-height:1.4;padding:6px 0}
+.demo-interface .suggested-person {padding:8px 0;border:0;gap:8px}
+.demo-interface .suggested-person .hint:empty {display:none}
+.demo-interface .campus-context .person-peek>summary {font-size:14px}
+.demo-interface .feed-composer {padding:24px;border-radius:12px;background:var(--white);border:1px solid var(--line)}
+.demo-interface .feed-composer>h2 {display:none}
+.demo-interface .demo-post-form {display:grid;gap:16px}
+.demo-interface .demo-post-form .field {margin:0;font-size:14px;font-weight:600;gap:8px}
+.demo-interface .demo-post-form input,.demo-interface .demo-post-form textarea {margin:0;background:var(--paper);border-color:var(--line);font-size:16px}
+.demo-interface .demo-post-form textarea {min-height:150px;line-height:1.6}
+.demo-interface .demo-post-form select {font-size:14px;border-radius:8px;color:var(--ink);background:var(--white)}
+.demo-interface .media-picker {margin:0;padding:0}
+.demo-interface .media-picker .hint {font-size:12px;line-height:1.5;margin:6px 0 0}
+.demo-interface .media-picker button[hidden] {display:none}
+.demo-interface .identity-choice {border:0;padding:4px 0;min-height:36px}
+.demo-interface .composer-extras,.demo-interface .composer-preview,.demo-interface .composer-notes {border-top:1px solid var(--line);padding-top:14px;font-size:14px}
+.demo-interface .demo-post-form summary {cursor:pointer;color:var(--muted);font-weight:550;min-height:28px}
+.demo-interface .composer-extras>.field {margin-top:14px}
+.demo-interface .composer-preview .panel {border:0;border-radius:8px;background:var(--paper);margin:12px 0 0;padding:16px}
+.demo-interface .composer-preview h2 {display:none}
+.demo-interface .composer-notes p {font-size:13px;margin:10px 0 0;color:var(--muted)}
+.demo-interface .composer-publish {border-top:1px solid var(--line);padding-top:18px;justify-content:space-between}
+.demo-interface .composer-publish button[type="submit"] {min-width:130px}
+.demo-interface .demo-post-form>[role="status"]:empty {display:none}
+.demo-interface .feed-layout.account-layout {max-width:760px;margin-inline:auto}
+@media(max-width:1200px){
+  .demo-interface .feed-layout>.community-rail {order:1;margin-top:24px;position:static}
+  .demo-interface .campus-context {background:transparent;border:0;border-top:1px solid var(--line);border-radius:0;padding:0}
+  .demo-interface .campus-context[open] {padding-bottom:12px}
+}
+@media(max-width:700px){
+  .demo-interface .sidebar {padding:0}
+  .demo-interface .sidebar.mobile-nav-open nav {padding:14px}
+  .demo-interface .nav-group {width:100%;margin-bottom:4px;padding-bottom:10px}
+  .demo-interface .nav-group-label {display:block;margin-left:10px}
+  .demo-interface .feed-title {margin-bottom:16px;font-size:24px}
+  .demo-interface .feed-tabs {gap:0;flex-wrap:wrap}
+  .demo-interface .feed-tabs button {padding:8px 9px;font-size:13px}
+  .demo-interface .feed-tabs .text-button {margin-left:auto}
+  .demo-interface .feed-tabs .text-button {font-size:0;min-width:36px;padding:8px}
+  .demo-interface .site-header {flex-wrap:nowrap;gap:12px}
+  .demo-interface .brand-subtitle {display:none}
+  .demo-interface .demo-badge {font-size:9px;letter-spacing:.08em;padding:5px 8px}
+  .demo-interface .feed-post.panel {padding:16px;border-radius:10px}
+  .demo-interface .post-tile h2 {font-size:19px}
+  .demo-interface .tile-footer time {flex:auto;margin:0 auto 0 0}
+  .demo-interface .feed-composer {padding:18px}
+  .demo-interface .feed-filters {grid-template-columns:1fr}
+  .demo-interface .account-banner {padding-bottom:12px}
+}

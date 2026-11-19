@@ -1,4 +1,4 @@
-import { Persistence, STORAGE_KEY } from './persistence.mjs?v=1.17.0-demo';
+import { Persistence, STORAGE_KEY } from './persistence.mjs?v=1.18.0-demo';
 
 export const ACTIVE_KEY = 'orbit.demo.active.v1';
 export const ACCOUNTS = Object.freeze([
